@@ -114,6 +114,9 @@ namespace obit_manager_api
 
         /// <summary>
         ///     Remove all user permissions from folder.</summary>
+        ///     
+        /// If the user with name `username` exists, it will be preserved.
+        /// 
         /// <param name="fullPath">
         ///     Full path to the folder on which to remove all user permissions.</param>
         /// <param name="username">
@@ -143,6 +146,70 @@ namespace obit_manager_api
         }
 
         /// <summary>
+        ///     Return a list of all users who have any permissions on the folder.</summary>
+        /// <param name="fullPath">
+        ///     Full path to the folder to query form users with permissions.</param>
+        /// <returns>List of user names.</returns>
+        public static List<string> GetUsersWithPermissions(string fullPath)
+        {
+            // Is the function being run by an administrator?
+            if (!Utils.IsAdministrator())
+            {
+                throw new InvalidOperationException("This method must be run by an administrator.");
+            }
+
+            // Initialize list of user names
+            var userNames = new List<string>();
+
+            // Get directory security
+            System.IO.DirectoryInfo dirinfo = new System.IO.DirectoryInfo(fullPath);
+            System.Security.AccessControl.DirectorySecurity dsec = dirinfo.GetAccessControl(System.Security.AccessControl.AccessControlSections.All);
+
+            // Extract user names
+            AuthorizationRuleCollection rules = dsec.GetAccessRules(true, true, typeof(System.Security.Principal.NTAccount));
+            foreach (AccessRule rule in rules)
+            {
+                userNames.Add(rule.IdentityReference.Value);
+            }
+
+            // Return the list of user names
+            return userNames;
+        }
+
+        /// <summary>
+        ///     Get the ownership of a folder or file.</summary>
+        /// <param name="fullPath">
+        ///     Full path to the folder or file for which to query the ownership.</param>
+        /// <returns>
+        ///     Owner's username.</returns>
+        public static string GetOwner(string fullPath)
+        {
+            // Is the function being run by an administrator?
+            if (!Utils.IsAdministrator())
+            {
+                throw new InvalidOperationException("This method must be run by an administrator.");
+            }
+
+            // Owner's user name
+            string username = "";
+
+            // Depending on whether we have a file or a folder, we call different methods
+            if (System.IO.Directory.Exists(fullPath))
+            {
+                var ds = System.IO.File.GetAccessControl(fullPath);
+                username = ds.GetOwner(typeof(System.Security.Principal.NTAccount)).ToString();
+            }
+            else if (System.IO.File.Exists(fullPath))
+            {
+                var fs = System.IO.File.GetAccessControl(fullPath);
+                username = fs.GetOwner(typeof(System.Security.Principal.NTAccount)).ToString();
+            }
+
+            //Return the username
+            return username;
+        }
+
+        /// <summary>
         ///     Set the ownership on a folder to the specified user.</summary>
         /// <param name="fullPath">
         ///     Full path to the folder on which to set the ownership.</param>
@@ -156,8 +223,17 @@ namespace obit_manager_api
                 throw new InvalidOperationException("This method must be run by an administrator.");
             }
 
-            System.IO.DirectoryInfo dInfo = new System.IO.DirectoryInfo(fullPath);
-            SetOwnershipRecursively(dInfo, username);
+            // Depending on whether we have a file or a folder, we call different methods
+            if (System.IO.Directory.Exists(fullPath))
+            {
+                System.IO.DirectoryInfo dInfo = new System.IO.DirectoryInfo(fullPath);
+                SetOwnershipRecursively(dInfo, username);
+            }
+            else if (System.IO.File.Exists(fullPath))
+            {
+                System.IO.FileInfo fi = new System.IO.FileInfo(fullPath);
+                SetOwnershipOnFile(fi, username);
+            }
         }
 
         /// <summary>
@@ -173,6 +249,9 @@ namespace obit_manager_api
             {
                 throw new InvalidOperationException("This method must be run by an administrator.");
             }
+
+            // Set permission on the directory itself before we recurse into subfolders
+            SetOwnershipOnDirectory(root, username);
 
             // Store files and directories to process
             System.IO.FileInfo[] children = null;
@@ -240,7 +319,7 @@ namespace obit_manager_api
             // Sometimes this is required and other times it works without it. Not sure when.
             WinAPI.ModifyPrivilege(PrivilegeName.SeTakeOwnershipPrivilege, true);
 
-            // Set owner to SYSTEM
+            // Set owner to `username`
             var fs = System.IO.File.GetAccessControl(item.FullName);
             fs.SetOwner(new System.Security.Principal.NTAccount(username));
             item.SetAccessControl(fs);

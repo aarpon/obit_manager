@@ -3,19 +3,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using obit_manager_api;
+
 
 namespace obit_manager_driver
 {
-    class Program
+    [TestClass]
+    public class FileSystemTests
     {
-        static void Main(string[] args)
+        [TestMethod]
+        static void TestPathOperations(string[] args)
         {
+            bool success = false;
+
             // Current user
             string username = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
 
-            //FileSystem.GrantFullAccessToEveryone(@"E:\eula.1028.txt");
+            // Path to work with
             string fullPath = @"E:\temp";
+
+            // Create if it does not exist
+            (new System.IO.FileInfo(fullPath)).Directory.Create();
 
             // Remove inherited permissions
             FileSystem.RemoveInheritedPermissionsForFolder(fullPath);
@@ -31,6 +40,9 @@ namespace obit_manager_driver
 
             // Set ownership to current user
             FileSystem.SetOwnership(fullPath, username);
+
+            success = true;
+            Assert.AreEqual(success, true);
         }
     }
 }
