@@ -57,7 +57,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\obit_manager\obit_installer_api\obit_manager_api.csproj">
+    <ProjectReference Include="..\obit_installer_api\obit_manager_api.csproj">
       <Project>{9CCE9A17-179A-44FB-937A-E97D6A2A4529}</Project>
       <Name>obit_manager_api</Name>
     </ProjectReference>

@@ -10,7 +10,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "obit_manager_gui", "obit_ma
 		{9CCE9A17-179A-44FB-937A-E97D6A2A4529} = {9CCE9A17-179A-44FB-937A-E97D6A2A4529}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "obit_manager_test", "onit_manager_test\obit_manager_test.csproj", "{B26D7FC2-A5DA-47EA-A4A8-9A8875C3F900}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "obit_manager_test", "obit_manager\obit_manager_test\obit_manager_test.csproj", "{B26D7FC2-A5DA-47EA-A4A8-9A8875C3F900}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
