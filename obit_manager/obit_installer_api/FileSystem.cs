@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.AccessControl;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace obit_manager_api
 {
@@ -19,7 +16,7 @@ namespace obit_manager_api
         public static void GrantFullAccessToEveryone(string fullPath)
         {
             // Is the function being run by an administrator?
-            if (! Utils.IsAdministrator())
+            if (! LocalUserManager.IsAdministrator())
             {
                 throw new InvalidOperationException("This method must be run by an administrator.");
             }
@@ -61,7 +58,7 @@ namespace obit_manager_api
         public static void GrantFullAccessToUser(string fullPath, string username)
         {
             // Is the function being run by an administrator?
-            if (!Utils.IsAdministrator())
+            if (!LocalUserManager.IsAdministrator())
             {
                 throw new InvalidOperationException("This method must be run by an administrator.");
             }
@@ -101,7 +98,7 @@ namespace obit_manager_api
         public static void RemoveInheritedPermissionsForFolder(string fullPath)
         {
             // Is the function being run by an administrator?
-            if (!Utils.IsAdministrator())
+            if (!LocalUserManager.IsAdministrator())
             {
                 throw new InvalidOperationException("This method must be run by an administrator.");
             }
@@ -124,7 +121,7 @@ namespace obit_manager_api
         public static void removePermissionsForAllUsersButOne(string fullPath, string username)
         {
             // Is the function being run by an administrator?
-            if (!Utils.IsAdministrator())
+            if (!LocalUserManager.IsAdministrator())
             {
                 throw new InvalidOperationException("This method must be run by an administrator.");
             }
@@ -153,7 +150,7 @@ namespace obit_manager_api
         public static List<string> GetUsersWithPermissions(string fullPath)
         {
             // Is the function being run by an administrator?
-            if (!Utils.IsAdministrator())
+            if (!LocalUserManager.IsAdministrator())
             {
                 throw new InvalidOperationException("This method must be run by an administrator.");
             }
@@ -185,7 +182,7 @@ namespace obit_manager_api
         public static string GetOwner(string fullPath)
         {
             // Is the function being run by an administrator?
-            if (!Utils.IsAdministrator())
+            if (!LocalUserManager.IsAdministrator())
             {
                 throw new InvalidOperationException("This method must be run by an administrator.");
             }
@@ -218,7 +215,7 @@ namespace obit_manager_api
         public static void SetOwnership(string fullPath, string username)
         {
             // Is the function being run by an administrator?
-            if (!Utils.IsAdministrator())
+            if (!LocalUserManager.IsAdministrator())
             {
                 throw new InvalidOperationException("This method must be run by an administrator.");
             }
@@ -245,7 +242,7 @@ namespace obit_manager_api
         private static void SetOwnershipRecursively(System.IO.DirectoryInfo root, string username)
         {
             // Is the function being run by an administrator?
-            if (!Utils.IsAdministrator())
+            if (!LocalUserManager.IsAdministrator())
             {
                 throw new InvalidOperationException("This method must be run by an administrator.");
             }
@@ -308,7 +305,7 @@ namespace obit_manager_api
         private static void SetOwnershipOnFile(System.IO.FileInfo item, string username)
         {
             // Is the function being run by an administrator?
-            if (!Utils.IsAdministrator())
+            if (!LocalUserManager.IsAdministrator())
             {
                 throw new InvalidOperationException("This method must be run by an administrator.");
             }
@@ -334,7 +331,7 @@ namespace obit_manager_api
         private static void SetOwnershipOnDirectory(System.IO.DirectoryInfo item, string username)
         {
             // Is the function being run by an administrator?
-            if (!Utils.IsAdministrator())
+            if (!LocalUserManager.IsAdministrator())
             {
                 throw new InvalidOperationException("This method must be run by an administrator.");
             }
