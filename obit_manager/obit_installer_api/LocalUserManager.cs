@@ -80,5 +80,48 @@ namespace obit_manager_api
             // Return success
             return true;
         }
+
+        /// <summary>
+        /// Check if a local user with given name exists.
+        /// </summary>
+        /// <param name="username">User name.</param>
+        /// <returns>True if the user exists on the local machine, false otherwise.</returns>
+        public static bool UserExists(string username)
+        {
+            using (var ctx = new System.DirectoryServices.AccountManagement.PrincipalContext(
+                System.DirectoryServices.AccountManagement.ContextType.Machine))
+            {
+                using (var up = System.DirectoryServices.AccountManagement.UserPrincipal.FindByIdentity(
+                    ctx,
+                    System.DirectoryServices.AccountManagement.IdentityType.SamAccountName, username))
+                {
+                    return (up != null);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Delete a local user with given name.
+        /// </summary>
+        /// <param name="username">User name.</param>
+        /// <returns>True if the user could be deleted successfully, false otherwise.</returns>
+        public static bool DeleteUser(string username)
+        {
+            using (var ctx = new System.DirectoryServices.AccountManagement.PrincipalContext(
+                System.DirectoryServices.AccountManagement.ContextType.Machine))
+            {
+                using (var up = System.DirectoryServices.AccountManagement.UserPrincipal.FindByIdentity(
+                    ctx, 
+                    System.DirectoryServices.AccountManagement.IdentityType.SamAccountName, username))
+                {
+                    if (up != null)
+                    {
+                        up.Delete();
+                        return true;
+                    }
+                    return false;
+                }
+            }
+        }
     }
 }

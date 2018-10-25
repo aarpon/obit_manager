@@ -11,12 +11,31 @@ namespace obit_manager_test
     public class LocalUserTests
     {
         [TestMethod]
-        public void TestUserCreation()
+        public void TestUserOperations()
         {
+            // User name
+            string username = "obit_test_user";
+
+            // If the user already exists, delete it first
+            if (LocalUserManager.UserExists(username))
+            {
+                // Delete the user
+                Assert.AreEqual(LocalUserManager.DeleteUser(username), 
+                    true, "Could not delete user!");
+            }
+
             // Create a test user with password that never exprires
-            bool success = LocalUserManager.CreateUser("obit_test_user", "Areh45wldy8d",
+            bool success = LocalUserManager.CreateUser(username, "Areh45wldy8d",
                 out string errorMessage, "oBIT Test User", "Users", true);
             Assert.AreEqual(success, true, errorMessage);
+
+            // Make sure the user really exists
+            Assert.AreEqual(LocalUserManager.UserExists(username), true,
+                "Could not find the newly created user!");
+
+            // Clean up after creation
+            Assert.AreEqual(LocalUserManager.DeleteUser(username),
+                true, "Could not delete user!");
         }
     }
 }
