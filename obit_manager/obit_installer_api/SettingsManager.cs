@@ -37,12 +37,12 @@ namespace obit_manager_api
                 // Load the settings XML file.
                 settings = System.Xml.Linq.XElement.Load(settingsFileName);
             }
-            catch (System.IO.DirectoryNotFoundException e)
+            catch (System.IO.DirectoryNotFoundException)
             {
                 Console.WriteLine("The path to the settings file was not correct!");
                 return false;
             }
-            catch (System.IO.FileNotFoundException e)
+            catch (System.IO.FileNotFoundException)
             {
                 Console.WriteLine("SettingsManager file not found!");
                 return false;
