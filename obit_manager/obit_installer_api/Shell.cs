@@ -19,6 +19,7 @@ namespace obit_manager_api
                 RedirectStandardError = true,
                 RedirectStandardOutput = true,
                 Domain = System.Environment.MachineName,
+                WorkingDirectory = @"C:\temp",
                 Arguments = arguments,
             };
 
@@ -60,6 +61,8 @@ namespace obit_manager_api
                 RedirectStandardInput = true,
                 RedirectStandardError = true,
                 RedirectStandardOutput = true,
+                LoadUserProfile = true,
+                WorkingDirectory = @"C:\temp",
                 Domain = domain,
                 Arguments = arguments,
                 UserName = username,
