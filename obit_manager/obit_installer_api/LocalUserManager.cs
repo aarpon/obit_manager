@@ -1,15 +1,22 @@
 ﻿using System;
+using System.Diagnostics;
 using System.DirectoryServices;
-
+using System.IO;
+using System.Runtime.InteropServices;
 
 namespace obit_manager_api
 {
     public static class LocalUserManager
     {
+        // Import DeleteProfile from userenv.dll
+        [DllImport("userenv.dll", CharSet = CharSet.Unicode, ExactSpelling = false, SetLastError = true)]
+        public static extern bool DeleteProfile(string sidString, string profilePath, string computerName);
+
         /// <summary>
-        /// Check whether the current user is an administrator.</summary>
-        /// <returns>
-        /// True if current user is an administrator, false otherwise.</returns>
+        /// Check whether the current user is an administrator.
+        /// </summary>
+        /// <returns>True if current user is an administrator, false otherwise.
+        ///     </returns>
         public static bool IsAdministrator()
         {
             return (new System.Security.Principal.WindowsPrincipal(
@@ -22,7 +29,8 @@ namespace obit_manager_api
         /// </summary>
         /// <param name="username">User name.</param>
         /// <param name="password">User password.</param>
-        /// <returns>True if the user could be created successfully, false otherwise.</returns>
+        /// <returns>True if the user could be created successfully, false
+        ///     otherwise.</returns>
         public static bool CreateUser(string username, string password,
             out string errorMessage, string description = "",
             string groupname = "Users", bool passwordNeverExpires = true)
@@ -85,7 +93,8 @@ namespace obit_manager_api
         /// Check if a local user with given name exists.
         /// </summary>
         /// <param name="username">User name.</param>
-        /// <returns>True if the user exists on the local machine, false otherwise.</returns>
+        /// <returns>True if the user exists on the local machine, false
+        ///     otherwise.</returns>
         public static bool UserExists(string username)
         {
             using (var ctx = new System.DirectoryServices.AccountManagement.PrincipalContext(
@@ -103,8 +112,11 @@ namespace obit_manager_api
         /// <summary>
         /// Delete a local user with given name.
         /// </summary>
+        /// It also deletes the local user folder and the profile in the
+        /// registry.
         /// <param name="username">User name.</param>
-        /// <returns>True if the user could be deleted successfully, false otherwise.</returns>
+        /// <returns>True if the user could be deleted successfully, false
+        ///     otherwise.</returns>
         public static bool DeleteUser(string username)
         {
             using (var ctx = new System.DirectoryServices.AccountManagement.PrincipalContext(
@@ -116,9 +128,20 @@ namespace obit_manager_api
                 {
                     if (up != null)
                     {
+                        // User SID
+                        string upSid = up.Sid.ToString();
+
+                        // Delete the user
                         up.Delete();
+
+                        // Delete the info from the registry
+                        DeleteProfile(upSid, null, null);
+
+                        // Done
                         return true;
                     }
+
+                    // User not found
                     return false;
                 }
             }

@@ -30,6 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.obitManagerNotifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
+            this.buttonOBITInstallationDirectory = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // obitManagerNotifyIcon
@@ -37,11 +38,21 @@
             this.obitManagerNotifyIcon.Text = "oBIT manager";
             this.obitManagerNotifyIcon.Visible = true;
             // 
+            // buttonOBITInstallationDirectory
+            // 
+            this.buttonOBITInstallationDirectory.Location = new System.Drawing.Point(12, 12);
+            this.buttonOBITInstallationDirectory.Name = "buttonOBITInstallationDirectory";
+            this.buttonOBITInstallationDirectory.Size = new System.Drawing.Size(776, 34);
+            this.buttonOBITInstallationDirectory.TabIndex = 0;
+            this.buttonOBITInstallationDirectory.Text = "oBIT installation dir";
+            this.buttonOBITInstallationDirectory.UseVisualStyleBackColor = true;
+            // 
             // obit_manager
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.buttonOBITInstallationDirectory);
             this.Name = "obit_manager";
             this.Text = "oBIT manager";
             this.ResumeLayout(false);
@@ -51,6 +62,7 @@
         #endregion
 
         private System.Windows.Forms.NotifyIcon obitManagerNotifyIcon;
+        private System.Windows.Forms.Button buttonOBITInstallationDirectory;
     }
 }
 

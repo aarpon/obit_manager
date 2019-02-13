@@ -8,11 +8,8 @@ namespace obit_manager_api
 {
     public class Instance
     {
-        // Minimum accepted Java Runtime version
-        private int _MinJavaMajorVersion = 8;
-
         // Public members
-        public enum ATAcqType { FLOW_CYTOMETRY, MICROSCOPY };
+        public enum AcquisitionStationType { FLOW_CYTOMETRY, MICROSCOPY };
 
         // Public properties
 
@@ -41,7 +38,10 @@ namespace obit_manager_api
         public string InstallationDir { get; set; } = "C:\\oBIT";
 
         // Annotation Tool acquisition instrument type (default is FLOW_CYTOMETRY)
-        public ATAcqType AnnotationToolAcqType { get; set; } = ATAcqType.FLOW_CYTOMETRY;
+        public AcquisitionStationType AnnotationToolAcqType { get; set; } = AcquisitionStationType.FLOW_CYTOMETRY;
+
+        // Minimum accepted Java Runtime version
+        public int MinJavaMajorVersion { get; } = 8;
 
         // Computer hostname
         public string ComputerHostName { get; } = Environment.MachineName;

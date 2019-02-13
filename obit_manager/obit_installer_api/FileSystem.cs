@@ -1,18 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO.Compression;
 using System.Security.AccessControl;
+
 
 namespace obit_manager_api
 {
     public static class FileSystem
     {
-        /**
-         * <summary>Grant full access to Everyone on the specified folder.</summary>
-         * 
-         * This function can only be run by an administrator.
-         * 
-         * <param name="fullPath">Full path to the folder to which the permissions should be set.</param>
-         **/
+        /// <summary>
+        /// Extract ZIP archive to a specified destination folder.
+        /// </summary>
+        /// <param name="zipFile">Full path to the ZIP archive to extract.</param>
+        /// <param name="destFolder">Full path to the destination folder.</param>
+        /// <returns>True if the ZIP file could be extracted successfully, false otherwise.</returns>
+        public static bool ExtractZIPFileToFolder(string zipFile, string destFolder)
+        {
+            try
+            {
+                ZipFile.ExtractToDirectory(zipFile, destFolder);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Could not extract ZIP file " + zipFile + ": the error was " + e.Message);
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Grant full access to Everyone on the specified folder.
+        /// </summary>
+        /// <param name="fullPath">Full path to the folder to which the permissions should be set.</param>
         public static void GrantFullAccessToEveryone(string fullPath)
         {
             // Is the function being run by an administrator?
@@ -36,7 +56,8 @@ namespace obit_manager_api
                 new System.Security.Principal.SecurityIdentifier(
                     System.Security.Principal.WellKnownSidType.WorldSid, null),
                 System.Security.AccessControl.FileSystemRights.FullControl,
-                System.Security.AccessControl.InheritanceFlags.ObjectInherit | System.Security.AccessControl.InheritanceFlags.ContainerInherit,
+                System.Security.AccessControl.InheritanceFlags.ObjectInherit |
+                    System.Security.AccessControl.InheritanceFlags.ContainerInherit,
                 System.Security.AccessControl.PropagationFlags.NoPropagateInherit,
                 System.Security.AccessControl.AccessControlType.Allow));
             dInfo.SetAccessControl(dSecurity);
@@ -49,12 +70,11 @@ namespace obit_manager_api
             }
         }
 
-        /**
-         * <summary>Grant full access to a given user on the specified folder.</summary>
-         * 
-         * <param name="fullPath">Full path to the folder to which the permissions should be set.</param>
-         * <param name="username">Name of the user that gets full access on the folder. It must exist already.</param>
-         **/
+        /// <summary>
+        /// Grant full access to a given user on the specified folder.
+        /// </summary>
+        /// <param name="fullPath">Full path to the folder to which the permissions should be set.</param>
+        /// <param name="username">Name of the user that gets full access on the folder. It must exist already.</param>
         public static void GrantFullAccessToUser(string fullPath, string username)
         {
             // Is the function being run by an administrator?
@@ -77,7 +97,8 @@ namespace obit_manager_api
             dSecurity.AddAccessRule(new System.Security.AccessControl.FileSystemAccessRule(
                 username,
                 System.Security.AccessControl.FileSystemRights.FullControl,
-                System.Security.AccessControl.InheritanceFlags.ObjectInherit | System.Security.AccessControl.InheritanceFlags.ContainerInherit,
+                System.Security.AccessControl.InheritanceFlags.ObjectInherit |
+                    System.Security.AccessControl.InheritanceFlags.ContainerInherit,
                 System.Security.AccessControl.PropagationFlags.NoPropagateInherit,
                 System.Security.AccessControl.AccessControlType.Allow));
             dInfo.SetAccessControl(dSecurity);
@@ -90,11 +111,11 @@ namespace obit_manager_api
             }
         }
 
-        /**
-         * <summary>Remove inherited permission from the specified folder.</summary>
-         * 
-         * <param name="fullPath">Full path to the folder to which inherited permissions should be removed.</param>
-         **/
+        ///<summary>
+        ///Remove inherited permission from the specified folder.
+        ///</summary>
+        ///<param name="fullPath">Full path to the folder to which inherited
+        ///    permissions should be removed.</param>
         public static void RemoveInheritedPermissionsForFolder(string fullPath)
         {
             // Is the function being run by an administrator?
@@ -104,21 +125,21 @@ namespace obit_manager_api
             }
 
             bool keepPermissions = false;
-            System.Security.AccessControl.DirectorySecurity directorySecurity = System.IO.Directory.GetAccessControl(fullPath);
+            System.Security.AccessControl.DirectorySecurity directorySecurity =
+                System.IO.Directory.GetAccessControl(fullPath);
             directorySecurity.SetAccessRuleProtection(true, keepPermissions);
             System.IO.Directory.SetAccessControl(fullPath, directorySecurity);
         }
 
         /// <summary>
-        ///     Remove all user permissions from folder.</summary>
-        ///     
+        /// Remove all user permissions from folder.
+        /// </summary>
         /// If the user with name `username` exists, it will be preserved.
-        /// 
-        /// <param name="fullPath">
-        ///     Full path to the folder on which to remove all user permissions.</param>
-        /// <param name="username">
-        ///     Name of the user that will keep the permissions.</param>
-        public static void removePermissionsForAllUsersButOne(string fullPath, string username)
+        /// <param name="fullPath">Full path to the folder on which to remove
+        ///     all user permissions.</param>
+        /// <param name="username">Name of the user that will keep the
+        ///     permissions.</param>
+        public static void RemovePermissionsForAllUsersButOne(string fullPath, string username)
         {
             // Is the function being run by an administrator?
             if (!LocalUserManager.IsAdministrator())
@@ -127,25 +148,27 @@ namespace obit_manager_api
             }
 
             System.IO.DirectoryInfo dirinfo = new System.IO.DirectoryInfo(fullPath);
-            System.Security.AccessControl.DirectorySecurity dsec = dirinfo.GetAccessControl(System.Security.AccessControl.AccessControlSections.All);
+            System.Security.AccessControl.DirectorySecurity dsec = 
+                dirinfo.GetAccessControl(System.Security.AccessControl.AccessControlSections.All);
 
-            AuthorizationRuleCollection rules = dsec.GetAccessRules(true, true, typeof(System.Security.Principal.NTAccount));
+            AuthorizationRuleCollection rules =
+                dsec.GetAccessRules(true, true, typeof(System.Security.Principal.NTAccount));
             foreach (AccessRule rule in rules)
             {
                 if (rule.IdentityReference.Value != username)
                 {
-                    bool value;
                     dsec.PurgeAccessRules(rule.IdentityReference);
-                    dsec.ModifyAccessRule(AccessControlModification.RemoveAll, rule, out value);
+                    dsec.ModifyAccessRule(AccessControlModification.RemoveAll, rule, out bool value);
                     System.Console.WriteLine("Removed permission from " + fullPath + " for " + username);
                 }
             }
         }
 
         /// <summary>
-        ///     Return a list of all users who have any permissions on the folder.</summary>
-        /// <param name="fullPath">
-        ///     Full path to the folder to query form users with permissions.</param>
+        /// Return a list of all users who have any permissions on the folder.
+        /// </summary>
+        /// <param name="fullPath">Full path to the folder to query form users
+        ///     with permissions.</param>
         /// <returns>List of user names.</returns>
         public static List<string> GetUsersWithPermissions(string fullPath)
         {
@@ -160,7 +183,8 @@ namespace obit_manager_api
 
             // Get directory security
             System.IO.DirectoryInfo dirinfo = new System.IO.DirectoryInfo(fullPath);
-            System.Security.AccessControl.DirectorySecurity dsec = dirinfo.GetAccessControl(System.Security.AccessControl.AccessControlSections.All);
+            System.Security.AccessControl.DirectorySecurity dsec =
+                dirinfo.GetAccessControl(System.Security.AccessControl.AccessControlSections.All);
 
             // Extract user names
             AuthorizationRuleCollection rules = dsec.GetAccessRules(true, true, typeof(System.Security.Principal.NTAccount));
@@ -174,11 +198,11 @@ namespace obit_manager_api
         }
 
         /// <summary>
-        ///     Get the ownership of a folder or file.</summary>
-        /// <param name="fullPath">
-        ///     Full path to the folder or file for which to query the ownership.</param>
-        /// <returns>
-        ///     Owner's username.</returns>
+        /// Get the ownership of a folder or file.
+        /// </summary>
+        /// <param name="fullPath">Full path to the folder or file for which to
+        ///     query the ownership.</param>
+        /// <returns>Owner's username.</returns>
         public static string GetOwner(string fullPath)
         {
             // Is the function being run by an administrator?
@@ -207,11 +231,12 @@ namespace obit_manager_api
         }
 
         /// <summary>
-        ///     Set the ownership on a folder to the specified user.</summary>
-        /// <param name="fullPath">
-        ///     Full path to the folder on which to set the ownership.</param>
-        /// <param name="username">
-        ///     Name of the user that will take ownership. It must exist.</param>
+        /// Set the ownership on a folder to the specified user.
+        /// </summary>
+        /// <param name="fullPath">Full path to the folder on which to set the
+        ///     ownership.</param>
+        /// <param name="username">Name of the user that will take ownership. It
+        ///     must exist.</param>
         public static void SetOwnership(string fullPath, string username)
         {
             // Is the function being run by an administrator?
@@ -234,11 +259,12 @@ namespace obit_manager_api
         }
 
         /// <summary>
-        ///     Set the ownership on a folder to the specified user.</summary>
-        /// <param name="fullPath">
-        ///     Full path to the folder on which to set the ownership.</param>
-        /// <param name="username">
-        ///     Name of the user that will take ownership. It must exist.</param>
+        /// Set the ownership on a folder to the specified user.
+        /// </summary>
+        /// <param name="fullPath">Full path to the folder on which to set the
+        ///     ownership.</param>
+        /// <param name="username">Name of the user that will take ownership. It
+        ///     must exist.</param>
         private static void SetOwnershipRecursively(System.IO.DirectoryInfo root, string username)
         {
             // Is the function being run by an administrator?
@@ -297,11 +323,12 @@ namespace obit_manager_api
         }
 
         /// <summary>
-        ///     Set the ownership on an item to the specified user.</summary>
-        /// <param name="item">
-        ///     A FileInfo object on which to set the ownership.</param>
-        /// <param name="username">
-        ///     Name of the user that will take ownership. It must exist.</param>
+        /// Set the ownership on an item to the specified user.
+        /// </summary>
+        /// <param name="item">A FileInfo object on which to set the ownership.
+        ///     </param>
+        /// <param name="username">Name of the user that will take ownership. It
+        ///     must exist.</param>
         private static void SetOwnershipOnFile(System.IO.FileInfo item, string username)
         {
             // Is the function being run by an administrator?
@@ -323,11 +350,12 @@ namespace obit_manager_api
         }
 
         /// <summary>
-        ///     Set the ownership on an item to the specified user.</summary>
-        /// <param name="item">
-        ///     A FileInfo object on which to set the ownership.</param>
-        /// <param name="username">
-        ///     Name of the user that will take ownership. It must exist.</param>
+        /// Set the ownership on an item to the specified user.
+        /// </summary>
+        /// <param name="item">A FileInfo object on which to set the ownership.
+        ///     </param>
+        /// <param name="username">Name of the user that will take ownership. It
+        ///     must exist.</param>
         private static void SetOwnershipOnDirectory(System.IO.DirectoryInfo item, string username)
         {
             // Is the function being run by an administrator?
@@ -349,39 +377,45 @@ namespace obit_manager_api
         }
 
         /// <summary>
-        ///     From https://stackoverflow.com/questions/37992462/how-to-set-the-owner-of-a-file-to-system.
+        /// From
+        /// https://stackoverflow.com/questions/37992462/how-to-set-the-owner-of-a-file-to-system.
         /// </summary>
         private static class WinAPI
         {
             /// <summary>
-            ///     Enables or disables the specified privilege on the primary access token of the current process.</summary>
-            /// <param name="privilege">
-            ///     Privilege to enable or disable.</param>
-            /// <param name="enable">
-            ///     True to enable the privilege, false to disable it.</param>
-            /// <returns>
-            ///     True if the privilege was enabled prior to the change, false if it was disabled.</returns>
+            /// Enables or disables the specified privilege on the primary
+            /// access token of the current process.
+            /// </summary>
+            /// <param name="privilege">Privilege to enable or disable.</param>
+            /// <param name="enable">True to enable the privilege, false to
+            ///     disable it.</param>
+            /// <returns>True if the privilege was enabled prior to the change,
+            ///     false if it was disabled.</returns>
             public static bool ModifyPrivilege(PrivilegeName privilege, bool enable)
             {
-                LUID luid;
-                if (!LookupPrivilegeValue(null, privilege.ToString(), out luid))
+                if (!LookupPrivilegeValue(null, privilege.ToString(), out LUID luid))
                     throw new System.ComponentModel.Win32Exception();
 
-                using (var identity = System.Security.Principal.WindowsIdentity.GetCurrent(System.Security.Principal.TokenAccessLevels.AdjustPrivileges |
+                using (var identity = System.Security.Principal.WindowsIdentity.GetCurrent(
+                    System.Security.Principal.TokenAccessLevels.AdjustPrivileges |
                     System.Security.Principal.TokenAccessLevels.Query))
                 {
-                    var newPriv = new TOKEN_PRIVILEGES();
-                    newPriv.Privileges = new LUID_AND_ATTRIBUTES[1];
-                    newPriv.PrivilegeCount = 1;
+                    var newPriv = new TOKEN_PRIVILEGES
+                    {
+                        Privileges = new LUID_AND_ATTRIBUTES[1],
+                        PrivilegeCount = 1
+                    };
                     newPriv.Privileges[0].Luid = luid;
                     newPriv.Privileges[0].Attributes = enable ? SE_PRIVILEGE_ENABLED : 0;
 
-                    var prevPriv = new TOKEN_PRIVILEGES();
-                    prevPriv.Privileges = new LUID_AND_ATTRIBUTES[1];
-                    prevPriv.PrivilegeCount = 1;
-                    uint returnedBytes;
+                    var prevPriv = new TOKEN_PRIVILEGES
+                    {
+                        Privileges = new LUID_AND_ATTRIBUTES[1],
+                        PrivilegeCount = 1
+                    };
 
-                    if (!AdjustTokenPrivileges(identity.Token, false, ref newPriv, (uint)System.Runtime.InteropServices.Marshal.SizeOf(prevPriv), ref prevPriv, out returnedBytes))
+                    if (!AdjustTokenPrivileges(identity.Token, false, ref newPriv,
+                        (uint)System.Runtime.InteropServices.Marshal.SizeOf(prevPriv), ref prevPriv, out uint returnedBytes))
                         throw new System.ComponentModel.Win32Exception();
 
                     return prevPriv.PrivilegeCount == 0 ? enable /* didn't make a change */ : ((prevPriv.Privileges[0].Attributes & SE_PRIVILEGE_ENABLED) != 0);

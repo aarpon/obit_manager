@@ -45,7 +45,7 @@ namespace obit_manager_test
             List<string> updatedUserNames = FileSystem.GetUsersWithPermissions(fullRootPath);
 
             // Remove all users' permissions
-            FileSystem.removePermissionsForAllUsersButOne(fullRootPath, username);
+            FileSystem.RemovePermissionsForAllUsersButOne(fullRootPath, username);
 
             // Get the new list of users with permissions
             List<string> maxOneExpectedUserName = FileSystem.GetUsersWithPermissions(fullRootPath);

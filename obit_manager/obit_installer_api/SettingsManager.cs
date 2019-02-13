@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 
 namespace obit_manager_api
 {
-    public class SettingsManager
+    public abstract class SettingsManager
     {
         /// <summary>
         /// Settings file name.
         /// </summary>
-        private static string settingsFileName = @"C:\ProgramData\obit\AnnotationTool\settings.xml";
+        private static readonly string settingsFileName = 
+            Environment.SpecialFolder.CommonApplicationData + "obit\\AnnotationTool\\manager_settings.xml";
 
         /// <summary>
         /// LINQ XElement object (points to the root of the settings XML tree.
