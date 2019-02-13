@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO.Compression;
+using System.Runtime.InteropServices;
 using System.Security.AccessControl;
 
 
@@ -338,10 +339,10 @@ namespace obit_manager_api
             }
 
             // Allow this process to circumvent ACL restrictions
-            WinAPI.ModifyPrivilege(PrivilegeName.SeRestorePrivilege, true);
+            NativeMethods.ModifyPrivilege(PrivilegeName.SeRestorePrivilege, true);
 
             // Sometimes this is required and other times it works without it. Not sure when.
-            WinAPI.ModifyPrivilege(PrivilegeName.SeTakeOwnershipPrivilege, true);
+            NativeMethods.ModifyPrivilege(PrivilegeName.SeTakeOwnershipPrivilege, true);
 
             // Set owner to `username`
             var fs = System.IO.File.GetAccessControl(item.FullName);
@@ -365,10 +366,10 @@ namespace obit_manager_api
             }
 
             // Allow this process to circumvent ACL restrictions
-            WinAPI.ModifyPrivilege(PrivilegeName.SeRestorePrivilege, true);
+            NativeMethods.ModifyPrivilege(PrivilegeName.SeRestorePrivilege, true);
 
             // Sometimes this is required and other times it works without it. Not sure when.
-            WinAPI.ModifyPrivilege(PrivilegeName.SeTakeOwnershipPrivilege, true);
+            NativeMethods.ModifyPrivilege(PrivilegeName.SeTakeOwnershipPrivilege, true);
 
             // Set owner to SYSTEM
             var fs = System.IO.File.GetAccessControl(item.FullName);
@@ -380,7 +381,7 @@ namespace obit_manager_api
         /// From
         /// https://stackoverflow.com/questions/37992462/how-to-set-the-owner-of-a-file-to-system.
         /// </summary>
-        private static class WinAPI
+        private static class NativeMethods
         {
             /// <summary>
             /// Enables or disables the specified privilege on the primary
@@ -424,15 +425,14 @@ namespace obit_manager_api
 
             const uint SE_PRIVILEGE_ENABLED = 2;
 
-            [System.Runtime.InteropServices.DllImport("advapi32.dll", SetLastError = true)]
+            [System.Runtime.InteropServices.DllImport("advapi32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
             [return: System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.Bool)]
             static extern bool AdjustTokenPrivileges(IntPtr TokenHandle, 
                 [System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.Bool)] bool DisableAllPrivileges, 
                 ref TOKEN_PRIVILEGES NewState,
                UInt32 BufferLengthInBytes, ref TOKEN_PRIVILEGES PreviousState, out UInt32 ReturnLengthInBytes);
 
-            [System.Runtime.InteropServices.DllImport("advapi32.dll", SetLastError = true,
-                CharSet = System.Runtime.InteropServices.CharSet.Auto)]
+            [System.Runtime.InteropServices.DllImport("advapi32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
             [return: System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.Bool)]
             static extern bool LookupPrivilegeValue(string lpSystemName, string lpName, out LUID lpLuid);
 

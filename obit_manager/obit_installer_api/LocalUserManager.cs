@@ -8,9 +8,6 @@ namespace obit_manager_api
 {
     public static class LocalUserManager
     {
-        // Import DeleteProfile from userenv.dll
-        [DllImport("userenv.dll", CharSet = CharSet.Unicode, ExactSpelling = false, SetLastError = true)]
-        public static extern bool DeleteProfile(string sidString, string profilePath, string computerName);
 
         /// <summary>
         /// Check whether the current user is an administrator.
@@ -135,7 +132,7 @@ namespace obit_manager_api
                         up.Delete();
 
                         // Delete the info from the registry
-                        DeleteProfile(upSid, null, null);
+                        NativeMethods.DeleteProfile(upSid, null, null);
 
                         // Done
                         return true;
@@ -146,5 +143,12 @@ namespace obit_manager_api
                 }
             }
         }
+    }
+
+    class NativeMethods
+    {
+        // Import DeleteProfile from userenv.dll
+        [DllImport("userenv.dll", CharSet = CharSet.Unicode, ExactSpelling = false, SetLastError = true)]
+        internal static extern bool DeleteProfile(string sidString, string profilePath, string computerName);
     }
 }
