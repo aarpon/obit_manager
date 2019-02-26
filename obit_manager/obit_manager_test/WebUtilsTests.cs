@@ -12,50 +12,76 @@ namespace obit_manager_test
         [TestMethod]
         public async Task TestDownloadJDK64Async()
         {
-            // Parameters
-            string url = Constants.jdk64bitURL;
-            string fileName = @"C:\temp\jdk8_64.zip";
-            string dirName = @"C:\temp\jdk8_64";
+            string installationFolder = @"C:\temp";
+            
+            String downloadURL = Constants.Jdk64bitURL;
+            String targetFileName = Path.Combine(installationFolder, Constants.Jdk64bitFileName);
+            String jdkExtractPath = Path.Combine(installationFolder, Constants.Jdk64bitExtractDirName);
+            String jdkFinalPath = Path.Combine(installationFolder, Constants.Jdk64bitPath);
 
-            // Download the archive
-            await WebUtils.DownloadAsync(url, fileName);
-            Assert.IsTrue(File.Exists(fileName));
+            // Download the file
+            await WebUtils.DownloadAsync(downloadURL, targetFileName);
+            Assert.IsTrue(File.Exists(targetFileName));
 
             // Decompress the file
-            FileSystem.ExtractZIPFileToFolder(fileName, dirName);
-            Assert.IsTrue(Directory.Exists(dirName));
+            FileSystem.ExtractZIPFileToFolder(targetFileName, installationFolder);
 
-            // Clean up
-            File.Delete(fileName);
-            Directory.Delete(dirName, recursive: true);
+            // Check that the extract folder exists
+            Assert.IsTrue(Directory.Exists(jdkExtractPath));
+
+            // Move the JRE subfolder in the final location
+            Directory.Move(Path.Combine(jdkExtractPath, "jre"), jdkFinalPath);
+
+            // Delete temporary files and folders
+            File.Delete(targetFileName);
+            Directory.Delete(jdkExtractPath, recursive: true);
+
+            // Finally, check if the jre folder is in the final location
+            Assert.IsTrue(Directory.Exists(jdkFinalPath));
+
+            // Now it can be deleted
+            Directory.Delete(jdkFinalPath, recursive: true);
         }
 
         [TestMethod]
         public async Task TestDownloadJDK32Async()
         {
-            // Parameters
-            string url = Constants.jdk32bitURL;
-            string fileName = @"C:\temp\jdk8_32.zip";
-            string dirName = @"C:\temp\jdk8_32";
+            string installationFolder = @"C:\temp";
 
-            // Download the archive
-            await WebUtils.DownloadAsync(url, fileName);
-            Assert.IsTrue(File.Exists(fileName));
+            String downloadURL = Constants.Jdk32bitURL;
+            String targetFileName = Path.Combine(installationFolder, Constants.Jdk32bitFileName);
+            String jdkExtractPath = Path.Combine(installationFolder, Constants.Jdk32bitExtractDirName);
+            String jdkFinalPath = Path.Combine(installationFolder, Constants.Jdk32bitPath);
+
+            // Download the file
+            await WebUtils.DownloadAsync(downloadURL, targetFileName);
+            Assert.IsTrue(File.Exists(targetFileName));
 
             // Decompress the file
-            FileSystem.ExtractZIPFileToFolder(fileName, dirName);
-            Assert.IsTrue(Directory.Exists(dirName));
+            FileSystem.ExtractZIPFileToFolder(targetFileName, installationFolder);
 
-            // Clean up
-            File.Delete(fileName);
-            Directory.Delete(dirName, recursive: true);
+            // Check that the extract folder exists
+            Assert.IsTrue(Directory.Exists(jdkExtractPath));
+
+            // Move the JRE subfolder in the final location
+            Directory.Move(Path.Combine(jdkExtractPath, "jre"), jdkFinalPath);
+
+            // Delete temporary files and folders
+            File.Delete(targetFileName);
+            Directory.Delete(jdkExtractPath, recursive: true);
+
+            // Finally, check if the jre folder is in the final location
+            Assert.IsTrue(Directory.Exists(jdkFinalPath));
+
+            // Now it can be deleted
+            Directory.Delete(jdkFinalPath, recursive: true);
         }
 
         [TestMethod]
         public async Task TestDownloadDatamoverJSL()
         {
             // Parameters
-            string url = Constants.datamoverJslURL;
+            string url = Constants.DatamoverJslURL;
             string fileName = @"C:\temp\datamoverJsl.zip";
             string dirName = @"C:\temp\datamoverJsl";
 
@@ -76,7 +102,7 @@ namespace obit_manager_test
         public async Task TestDownloadDatamover()
         {
             // Parameters
-            string url = Constants.datamoverJslURL;
+            string url = Constants.DatamoverJslURL;
             string fileName = @"C:\temp\datamover.zip";
             string dirName = @"C:\temp\datamover";
 
@@ -97,7 +123,7 @@ namespace obit_manager_test
         public async Task TestDownloadAnnotationTool64bit()
         {
             // Parameters
-            string url = Constants.annotationTool64bitURL;
+            string url = Constants.AnnotationTool64bitURL;
             string fileName = @"C:\temp\annotationTool64bit.zip";
             string dirName = @"C:\temp\annotationTool64bit";
 
@@ -118,7 +144,7 @@ namespace obit_manager_test
         public async Task TestDownloadAnnotationTool32bit()
         {
             // Parameters
-            string url = Constants.annotationTool32bitURL;
+            string url = Constants.AnnotationTool32bitURL;
             string fileName = @"C:\temp\annotationTool32bit.zip";
             string dirName = @"C:\temp\annotationTool32bit";
 
