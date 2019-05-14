@@ -23,6 +23,9 @@ namespace obit_manager_test
             await WebUtils.DownloadAsync(downloadURL, targetFileName);
             Assert.IsTrue(File.Exists(targetFileName));
 
+            // Calculate and compare MD5 checksum
+            Assert.IsTrue(FileSystem.CalculateMD5Checksum(targetFileName).Equals(Constants.Jdk64bitMD5Checksum));
+
             // Decompress the file
             FileSystem.ExtractZIPFileToFolder(targetFileName, installationFolder);
 
@@ -56,6 +59,9 @@ namespace obit_manager_test
             // Download the file
             await WebUtils.DownloadAsync(downloadURL, targetFileName);
             Assert.IsTrue(File.Exists(targetFileName));
+
+            // Calculate and compare MD5 checksum
+            Assert.IsTrue(FileSystem.CalculateMD5Checksum(targetFileName).Equals(Constants.Jdk32bitMD5Checksum));
 
             // Decompress the file
             FileSystem.ExtractZIPFileToFolder(targetFileName, installationFolder);

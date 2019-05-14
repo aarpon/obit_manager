@@ -18,8 +18,10 @@ namespace obit_manager_api
          */
 
         // OpenJDK 8 from Zulu: the last to support 32 bit machines
-        private const string jdk64bitURL = "https://cdn.azul.com/zulu/bin/zulu8.36.0.1-ca-jdk8.0.202-win_x64.zip";
-        private const string jdk32bitURL = "https://cdn.azul.com/zulu/bin/zulu8.36.0.5-ca-jdk8.0.202-win_i686.zip";
+        private const string jdk64bitURL = "https://d3pxv6yz143wms.cloudfront.net/8.212.04.2/amazon-corretto-8.212.04.2-windows-x64-jdk.zip";
+        private const string jdk32bitURL = "https://d3pxv6yz143wms.cloudfront.net/8.212.04.2/amazon-corretto-8.212.04.2-windows-x86-jdk.zip";
+        private const string jdk64bitMD5Checksum = "b84eece357bbab8597baa3a415664fc3";
+        private const string jdk32bitMD5Checksum = "0e69cdded96c99c65485ba75b569a4d6";
 
         // Datamover_JSL
         private const string datamoverJslURL = "https://github.com/aarpon/obit_datamover_jsl/archive/0.2.0.zip";
@@ -66,10 +68,12 @@ namespace obit_manager_api
         public static string Jdk32bitURL => jdk32bitURL;
         public static string Jdk64bitPath => jdk64bitPath;
         public static string Jdk32bitPath => jdk32bitPath;
+        public static string Jdk64bitMD5Checksum => jdk64bitMD5Checksum;
+        public static string Jdk32bitMD5Checksum => jdk32bitMD5Checksum;
         public static string Jdk64bitFileName => Path.GetFileName((new Uri(Jdk64bitURL)).LocalPath);
         public static string Jdk32bitFileName => Path.GetFileName((new Uri(Jdk32bitURL)).LocalPath);
-        public static string Jdk64bitExtractDirName => Path.GetFileNameWithoutExtension(Jdk64bitFileName);
-        public static string Jdk32bitExtractDirName => Path.GetFileNameWithoutExtension(Jdk32bitFileName);
+        public static string Jdk64bitExtractDirName => "jdk1.8.0_212";
+        public static string Jdk32bitExtractDirName => "jdk1.8.0_212";
 
         // Datamover
         public static string DatamoverJslURL => datamoverJslURL;

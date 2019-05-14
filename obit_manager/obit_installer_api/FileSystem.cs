@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.IO.Compression;
 using System.Runtime.InteropServices;
 using System.Security.AccessControl;
-
+using System.Security.Cryptography;
 
 namespace obit_manager_api
 {
@@ -28,6 +29,23 @@ namespace obit_manager_api
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Calculate the MD5 checksum of a file and returns it as string.
+        /// </summary>
+        /// <param name="filename">Full path of the path for which to calculate the MD5 checksum.</param>
+        /// <returns>The MD5 checksum as string.</returns>
+        public static string CalculateMD5Checksum(string filename)
+        {
+            using (var md5 = MD5.Create())
+            {
+                using (var stream = File.OpenRead(filename))
+                {
+                    var hash = md5.ComputeHash(stream);
+                    return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
+                }
+            }
         }
 
         /// <summary>
