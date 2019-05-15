@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Drawing;
 using System.IO;
@@ -17,6 +18,8 @@ namespace obit_manager
     public partial class obit_manager : Form
     {
         // Private settings
+        private Settings appSettings;
+
         private string oBITInstallationFolder = "";
 
         // Threads and locks
@@ -26,6 +29,10 @@ namespace obit_manager
 
         public obit_manager()
         {
+            // Initialize the Settings Manager
+            appSettings = new Settings();
+
+            // Initialize components
             InitializeComponent();
 
             // Set defaults
@@ -74,6 +81,8 @@ namespace obit_manager
                 {
                     oBITInstallationFolder = dialog.SelectedPath;
                     buttonOBITInstallationDirectory.Text = oBITInstallationFolder;
+
+                    // Update the application settings
                 }
                 else
                 {
@@ -167,6 +176,20 @@ namespace obit_manager
 
         private void setUIDefaults()
         {
+            // Get the installation directory from the application settings
+            string installationDir = (string)appSettings.Get("Paths", "InstallationDir");
+            if (installationDir.Equals(""))
+            {
+                buttonOBITInstallationDirectory.Text = "Pick oBIT installation dir...";
+                oBITInstallationFolder = "";
+            }
+            else
+            {
+                buttonOBITInstallationDirectory.Text = installationDir;
+                oBITInstallationFolder = installationDir;
+            }
+
+            // Set the platform bits
             if (Environment.Is64BitOperatingSystem)
             {
                 radioButtonPlatform32bit.Checked = false;
