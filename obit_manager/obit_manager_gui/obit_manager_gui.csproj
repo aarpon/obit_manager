@@ -128,6 +128,10 @@
       <Project>{9cce9a17-179a-44fb-937a-e97d6a2a4529}</Project>
       <Name>obit_manager_api</Name>
     </ProjectReference>
+    <ProjectReference Include="..\obit_manager_settings\obit_manager_settings.csproj">
+      <Project>{1814c8b5-e237-43b5-a4a9-c6033ff84c4c}</Project>
+      <Name>obit_manager_settings</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

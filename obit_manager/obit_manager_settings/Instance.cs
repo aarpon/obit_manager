@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace obit_manager_api
+namespace obit_manager_settings
 {
     public class Instance
     {

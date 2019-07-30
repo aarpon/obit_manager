@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using IniParser;
+﻿using IniParser;
 using IniParser.Model;
+using System;
 
-namespace obit_manager_api
+namespace obit_manager_settings
 {
-    public class Settings
+    public class INISettings
     {
         ///
         /// 
@@ -40,7 +36,7 @@ namespace obit_manager_api
         /// <summary>
         /// Constructor.
         /// </summary>
-        public Settings()
+        public INISettings()
         {
             // Initialize the parser
             parser = new FileIniDataParser();

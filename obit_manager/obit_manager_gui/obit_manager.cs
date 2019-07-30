@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using obit_manager_api;
+using obit_manager_settings;
 
 namespace obit_manager
 {
@@ -18,7 +19,7 @@ namespace obit_manager
     public partial class obit_manager : Form
     {
         // Private settings
-        private Settings appSettings;
+        private INISettings appSettings;
 
         private string oBITInstallationFolder = "";
 
@@ -30,7 +31,7 @@ namespace obit_manager
         public obit_manager()
         {
             // Initialize the Settings Manager
-            appSettings = new Settings();
+            appSettings = new INISettings();
 
             // Initialize components
             InitializeComponent();

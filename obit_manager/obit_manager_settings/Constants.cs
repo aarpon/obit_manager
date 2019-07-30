@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace obit_manager_api
+namespace obit_manager_settings
 {
     public static class Constants
     {
