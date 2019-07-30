@@ -1,10 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29123.88
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "obit_manager_api", "obit_manager\obit_installer_api\obit_manager_api.csproj", "{9CCE9A17-179A-44FB-937A-E97D6A2A4529}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "obit_manager_gui", "obit_manager\obit_manager_gui\obit_manager_gui.csproj", "{4BDFB69B-BB4C-4FF6-BB12-16407BEA29BA}"
 	ProjectSection(ProjectDependencies) = postProject
 		{9CCE9A17-179A-44FB-937A-E97D6A2A4529} = {9CCE9A17-179A-44FB-937A-E97D6A2A4529}
@@ -12,16 +10,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "obit_manager_gui", "obit_ma
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "obit_manager_test", "obit_manager\obit_manager_test\obit_manager_test.csproj", "{B26D7FC2-A5DA-47EA-A4A8-9A8875C3F900}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "obit_manager_api", "obit_manager\obit_manager_api\obit_manager_api.csproj", "{9CCE9A17-179A-44FB-937A-E97D6A2A4529}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "obit_manager_services", "obit_manager\obit_manager_services\obit_manager_services.csproj", "{44C3E1EA-8D13-4379-8833-F8F54B5A5FC5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{9CCE9A17-179A-44FB-937A-E97D6A2A4529}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9CCE9A17-179A-44FB-937A-E97D6A2A4529}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9CCE9A17-179A-44FB-937A-E97D6A2A4529}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9CCE9A17-179A-44FB-937A-E97D6A2A4529}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4BDFB69B-BB4C-4FF6-BB12-16407BEA29BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4BDFB69B-BB4C-4FF6-BB12-16407BEA29BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4BDFB69B-BB4C-4FF6-BB12-16407BEA29BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -30,6 +28,14 @@ Global
 		{B26D7FC2-A5DA-47EA-A4A8-9A8875C3F900}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B26D7FC2-A5DA-47EA-A4A8-9A8875C3F900}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B26D7FC2-A5DA-47EA-A4A8-9A8875C3F900}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9CCE9A17-179A-44FB-937A-E97D6A2A4529}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9CCE9A17-179A-44FB-937A-E97D6A2A4529}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9CCE9A17-179A-44FB-937A-E97D6A2A4529}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9CCE9A17-179A-44FB-937A-E97D6A2A4529}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44C3E1EA-8D13-4379-8833-F8F54B5A5FC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44C3E1EA-8D13-4379-8833-F8F54B5A5FC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44C3E1EA-8D13-4379-8833-F8F54B5A5FC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44C3E1EA-8D13-4379-8833-F8F54B5A5FC5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
