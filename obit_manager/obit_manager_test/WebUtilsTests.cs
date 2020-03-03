@@ -10,15 +10,31 @@ namespace obit_manager_test
     [TestClass]
     public class WebUtilsTests
     {
+        private readonly string InstallationFolder = @"C:\temp";
+
+        [TestInitialize]
+        public void Initialize() 
+        {
+            // Create the installation folder
+            Directory.CreateDirectory(this.InstallationFolder);
+        }
+
+        [TestCleanup()]
+        public void Cleanup()
+        {
+            // Delete the installation folder
+            Directory.Delete(this.InstallationFolder, recursive: true);
+        }
+
         [TestMethod]
         public async Task TestDownloadJDK64Async()
         {
-            string installationFolder = @"C:\temp";
-            
+           
             String downloadURL = Constants.Jdk64bitURL;
-            String targetFileName = Path.Combine(installationFolder, Constants.Jdk64bitFileName);
-            String jdkExtractPath = Path.Combine(installationFolder, Constants.Jdk64bitExtractDirName);
-            String jdkFinalPath = Path.Combine(installationFolder, Constants.Jdk64bitPath);
+            String targetFileName = Path.Combine(this.InstallationFolder, Constants.Jdk64bitFileName);
+            String jdkExtractPath = Path.Combine(this.InstallationFolder, Constants.Jdk64bitExtractDirName);
+            String jdkFinalPath = Path.Combine(this.InstallationFolder, Constants.Jdk64bitPath);
+            String jvmDllPath = Path.Combine(jdkFinalPath, @"bin\server\jvm.dll");
 
             // Download the file
             await WebUtils.DownloadAsync(downloadURL, targetFileName);
@@ -28,20 +44,19 @@ namespace obit_manager_test
             Assert.IsTrue(FileSystem.CalculateMD5Checksum(targetFileName).Equals(Constants.Jdk64bitMD5Checksum));
 
             // Decompress the file
-            FileSystem.ExtractZIPFileToFolder(targetFileName, installationFolder);
+            FileSystem.ExtractZIPFileToFolder(targetFileName, this.InstallationFolder);
 
             // Check that the extract folder exists
             Assert.IsTrue(Directory.Exists(jdkExtractPath));
 
-            // Move the JRE subfolder in the final location
-            Directory.Move(Path.Combine(jdkExtractPath, "jre"), jdkFinalPath);
-
-            // Delete temporary files and folders
-            File.Delete(targetFileName);
-            Directory.Delete(jdkExtractPath, recursive: true);
+            // Rename the JRE folder
+            Directory.Move(jdkExtractPath, jdkFinalPath);
 
             // Finally, check if the jre folder is in the final location
             Assert.IsTrue(Directory.Exists(jdkFinalPath));
+
+            // Check that the jvm.dll file is in the expected place
+            Assert.IsTrue(File.Exists(jvmDllPath));
 
             // Now it can be deleted
             Directory.Delete(jdkFinalPath, recursive: true);
@@ -50,35 +65,34 @@ namespace obit_manager_test
         [TestMethod]
         public async Task TestDownloadJDK32Async()
         {
-            string installationFolder = @"C:\temp";
-
             String downloadURL = Constants.Jdk32bitURL;
-            String targetFileName = Path.Combine(installationFolder, Constants.Jdk32bitFileName);
-            String jdkExtractPath = Path.Combine(installationFolder, Constants.Jdk32bitExtractDirName);
-            String jdkFinalPath = Path.Combine(installationFolder, Constants.Jdk32bitPath);
+            String targetFileName = Path.Combine(InstallationFolder, Constants.Jdk32bitFileName);
+            String jdkExtractPath = Path.Combine(InstallationFolder, Constants.Jdk32bitExtractDirName);
+            String jdkFinalPath = Path.Combine(InstallationFolder, Constants.Jdk32bitPath);
+            String jvmDllPath = Path.Combine(jdkFinalPath, @"bin\server\jvm.dll");
 
             // Download the file
             await WebUtils.DownloadAsync(downloadURL, targetFileName);
             Assert.IsTrue(File.Exists(targetFileName));
 
             // Calculate and compare MD5 checksum
+            string md5 = FileSystem.CalculateMD5Checksum(targetFileName);
             Assert.IsTrue(FileSystem.CalculateMD5Checksum(targetFileName).Equals(Constants.Jdk32bitMD5Checksum));
 
             // Decompress the file
-            FileSystem.ExtractZIPFileToFolder(targetFileName, installationFolder);
+            FileSystem.ExtractZIPFileToFolder(targetFileName, this.InstallationFolder);
 
             // Check that the extract folder exists
             Assert.IsTrue(Directory.Exists(jdkExtractPath));
 
-            // Move the JRE subfolder in the final location
-            Directory.Move(Path.Combine(jdkExtractPath, "jre"), jdkFinalPath);
-
-            // Delete temporary files and folders
-            File.Delete(targetFileName);
-            Directory.Delete(jdkExtractPath, recursive: true);
+            // Rename the JRE folder
+            Directory.Move(jdkExtractPath, jdkFinalPath);
 
             // Finally, check if the jre folder is in the final location
             Assert.IsTrue(Directory.Exists(jdkFinalPath));
+
+            // Check that the jvm.dll file is in the expected place
+            Assert.IsTrue(File.Exists(jvmDllPath));
 
             // Now it can be deleted
             Directory.Delete(jdkFinalPath, recursive: true);
@@ -89,8 +103,8 @@ namespace obit_manager_test
         {
             // Parameters
             string url = Constants.DatamoverJslURL;
-            string fileName = @"C:\temp\datamoverJsl.zip";
-            string dirName = @"C:\temp\datamoverJsl";
+            string fileName = Path.Combine(this.InstallationFolder, "datamoverJsl.zip");
+            string dirName = Path.Combine(this.InstallationFolder, Constants.DatamoverJslPath);
 
             // Download the archive
             await WebUtils.DownloadAsync(url, fileName);
@@ -109,16 +123,20 @@ namespace obit_manager_test
         public async Task TestDownloadDatamover()
         {
             // Parameters
-            string url = Constants.DatamoverJslURL;
-            string fileName = @"C:\temp\datamover.zip";
-            string dirName = @"C:\temp\datamover";
+            string url = Constants.DatamoverURL;
+            string jslDirName = Path.Combine(this.InstallationFolder, Constants.DatamoverJslPath);
+            string fileName = Path.Combine(jslDirName, "datamover.zip");
+            string dirName = Path.Combine(this.InstallationFolder, Constants.DatamoverPath);
+
+            // Make sure that the JSL directory exists
+            Directory.CreateDirectory(jslDirName);
 
             // Download the archive
             await WebUtils.DownloadAsync(url, fileName);
             Assert.IsTrue(File.Exists(fileName));
 
             // Decompress the file
-            FileSystem.ExtractZIPFileToFolder(fileName, dirName);
+            FileSystem.ExtractZIPFileToFolder(fileName, jslDirName);
             Assert.IsTrue(Directory.Exists(dirName));
 
             // Clean up
@@ -131,8 +149,8 @@ namespace obit_manager_test
         {
             // Parameters
             string url = Constants.AnnotationTool64bitURL;
-            string fileName = @"C:\temp\annotationTool64bit.zip";
-            string dirName = @"C:\temp\annotationTool64bit";
+            string fileName = Path.Combine(this.InstallationFolder, "annotationTool64bit.zip");
+            string dirName = Path.Combine(this.InstallationFolder, Constants.AnnotationTool64bitPath);
 
             // Download the archive
             await WebUtils.DownloadAsync(url, fileName);
@@ -152,8 +170,8 @@ namespace obit_manager_test
         {
             // Parameters
             string url = Constants.AnnotationTool32bitURL;
-            string fileName = @"C:\temp\annotationTool32bit.zip";
-            string dirName = @"C:\temp\annotationTool32bit";
+            string fileName = Path.Combine(this.InstallationFolder, "annotationTool32bit.zip");
+            string dirName = Path.Combine(this.InstallationFolder, Constants.AnnotationTool32bitPath);
 
             // Download the archive
             await WebUtils.DownloadAsync(url, fileName);
