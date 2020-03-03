@@ -1,4 +1,6 @@
 ﻿
+using System.IO;
+
 namespace obit_manager_api
 {
     public class Shell
@@ -8,9 +10,13 @@ namespace obit_manager_api
         /// </summary>
         /// <param name="command">Command to be executed.</param>
         /// <param name="arguments">Arguments for the command.</param>
+        /// <param name="workingDir">Shell working directory (defaults to C:\temp). It will be created if it does not exist.</param>
         /// <returns>Output of the command.</returns>
-        public static string Run(string command, string arguments)
+        public static string Run(string command, string arguments, string workingDir = @"C:\temp")
         {
+            // Make sure the working directory exists
+            Directory.CreateDirectory(workingDir);
+
             // Set up the parameters of the process
             System.Diagnostics.ProcessStartInfo info = new System.Diagnostics.ProcessStartInfo(command)
             {
@@ -19,7 +25,7 @@ namespace obit_manager_api
                 RedirectStandardError = true,
                 RedirectStandardOutput = true,
                 Domain = System.Environment.MachineName,
-                WorkingDirectory = @"C:\temp",
+                WorkingDirectory = workingDir,
                 Arguments = arguments,
             };
 
@@ -43,10 +49,15 @@ namespace obit_manager_api
         /// <param name="username">Name of the user that runs the command.</param>
         /// <param name="password">Password of the user that runs the command.</param>
         /// <param name="domain">Domain of the user (set to "" to fall back to current machine (i.e. local user).</param>
+        /// <param name="workingDir">Shell working directory (defaults to C:\temp). It will be created if it does not exist.</param>
         /// <returns>Output of the command.</returns>
         public static string RunAs(string command, string arguments, 
-            string username, System.Security.SecureString password, string domain = "")
+            string username, System.Security.SecureString password, string domain = "",
+            string workingDir = @"C:\temp")
         {
+            // Make sure the working directory exists
+            Directory.CreateDirectory(workingDir);
+
             // Do we have a domain?
             if (domain == "")
             {
@@ -62,7 +73,7 @@ namespace obit_manager_api
                 RedirectStandardError = true,
                 RedirectStandardOutput = true,
                 LoadUserProfile = true,
-                WorkingDirectory = @"C:\temp",
+                WorkingDirectory = workingDir,
                 Domain = domain,
                 Arguments = arguments,
                 UserName = username,

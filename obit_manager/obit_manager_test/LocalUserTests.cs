@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using obit_manager_api;
-
+using System.IO;
 
 namespace obit_manager_test
 {
@@ -10,6 +10,22 @@ namespace obit_manager_test
     [TestClass]
     public class LocalUserTests
     {
+        private readonly string InstallationFolder = @"C:\temp";
+
+        [TestInitialize]
+        public void Initialize()
+        {
+            // Create the installation folder
+            Directory.CreateDirectory(this.InstallationFolder);
+        }
+
+        [TestCleanup()]
+        public void Cleanup()
+        {
+            // Delete the installation folder
+            Directory.Delete(this.InstallationFolder, recursive: true);
+        }
+
         [TestMethod]
         public void TestUserOperations()
         {
