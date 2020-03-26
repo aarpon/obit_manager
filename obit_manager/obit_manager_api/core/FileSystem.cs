@@ -13,6 +13,48 @@ namespace obit_manager_api
         public static class FileSystem
         {
             /// <summary>
+            /// Copy folder recursively.
+            /// </summary>
+            /// <param name="sourceFolder">Source folder.</param>
+            /// <param name="destFolder">Destination folder.</param>
+            static public void CopyFolderRecursively(string sourceFolder, string destFolder)
+            {
+                // Does the source folder exist?
+                if (!Directory.Exists(sourceFolder))
+                {
+                    throw new FileNotFoundException("Folder " + sourceFolder + " does not exist!");
+                }
+
+                // Does the destination folder exist?
+                if (!Directory.Exists(destFolder))
+                {
+                    Directory.CreateDirectory(destFolder);
+                }
+
+                // Get files in sourceFolder
+                string[] files = Directory.GetFiles(sourceFolder);
+
+                // Copy them
+                foreach (string file in files)
+                {
+                    string name = Path.GetFileName(file);
+                    string dest = Path.Combine(destFolder, name);
+                    File.Copy(file, dest);
+                }
+
+                // Get folders in sourceFolder
+                string[] folders = Directory.GetDirectories(sourceFolder);
+
+                // Copy them (recursively)
+                foreach (string folder in folders)
+                {
+                    string name = Path.GetFileName(folder);
+                    string dest = Path.Combine(destFolder, name);
+                    CopyFolderRecursively(folder, dest);
+                }
+            }
+
+            /// <summary>
             /// Extract ZIP archive to a specified destination folder.
             /// </summary>
             /// <param name="zipFile">Full path to the ZIP archive to extract.</param>

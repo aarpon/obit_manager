@@ -48,6 +48,7 @@ namespace obit_manager_settings
         private const string jdk32bitPath = "jre";
 
         // Datamover_JSL
+        private const string datamoverJslVersion = "0.2.0";
         private const string datamoverJslPath = "obit_datamover_jsl";
 
         // Datamover (relative to datamoverJSLPath)
@@ -79,6 +80,7 @@ namespace obit_manager_settings
         // Datamover
         public static string DatamoverJslURL => datamoverJslURL;
         public static string DatamoverURL => datamoverURL;
+        public static string DatamoverJslVersion => datamoverJslVersion;
         public static string DatamoverJslPath => datamoverJslPath;
         public static string DatamoverPath => Path.Combine(datamoverJslPath, datamoverPath);
 
