@@ -82,6 +82,12 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServerConfigurationDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ServerConfigurationDialog.Designer.cs">
+      <DependentUpon>ServerConfigurationDialog.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="obit_manager.resx">
       <DependentUpon>obit_manager.cs</DependentUpon>
     </EmbeddedResource>
@@ -95,6 +101,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="ServerConfigurationDialog.resx">
+      <DependentUpon>ServerConfigurationDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

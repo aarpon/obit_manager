@@ -37,7 +37,13 @@
             this.checkBoxPlatformThisMachine = new System.Windows.Forms.CheckBox();
             this.radioButtonPlatform64bit = new System.Windows.Forms.RadioButton();
             this.radioButtonPlatform32bit = new System.Windows.Forms.RadioButton();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.downloadOnlyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.download32bitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.download64bitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxTargetPlatform.SuspendLayout();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // obitManagerNotifyIcon
@@ -47,7 +53,7 @@
             // 
             // buttonOBITInstallationDirectory
             // 
-            this.buttonOBITInstallationDirectory.Location = new System.Drawing.Point(12, 12);
+            this.buttonOBITInstallationDirectory.Location = new System.Drawing.Point(12, 27);
             this.buttonOBITInstallationDirectory.Name = "buttonOBITInstallationDirectory";
             this.buttonOBITInstallationDirectory.Size = new System.Drawing.Size(396, 34);
             this.buttonOBITInstallationDirectory.TabIndex = 0;
@@ -70,7 +76,7 @@
             this.groupBoxTargetPlatform.Controls.Add(this.checkBoxPlatformThisMachine);
             this.groupBoxTargetPlatform.Controls.Add(this.radioButtonPlatform64bit);
             this.groupBoxTargetPlatform.Controls.Add(this.radioButtonPlatform32bit);
-            this.groupBoxTargetPlatform.Location = new System.Drawing.Point(12, 52);
+            this.groupBoxTargetPlatform.Location = new System.Drawing.Point(12, 92);
             this.groupBoxTargetPlatform.Name = "groupBoxTargetPlatform";
             this.groupBoxTargetPlatform.Size = new System.Drawing.Size(396, 48);
             this.groupBoxTargetPlatform.TabIndex = 2;
@@ -111,6 +117,47 @@
             this.radioButtonPlatform32bit.Text = "32 bit";
             this.radioButtonPlatform32bit.UseVisualStyleBackColor = true;
             // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(420, 24);
+            this.menuStrip1.TabIndex = 3;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // fileToolStripMenuItem
+            // 
+            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.downloadOnlyToolStripMenuItem});
+            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Text = "File";
+            // 
+            // downloadOnlyToolStripMenuItem
+            // 
+            this.downloadOnlyToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.download32bitToolStripMenuItem,
+            this.download64bitToolStripMenuItem});
+            this.downloadOnlyToolStripMenuItem.Name = "downloadOnlyToolStripMenuItem";
+            this.downloadOnlyToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.downloadOnlyToolStripMenuItem.Text = "Download only";
+            // 
+            // download32bitToolStripMenuItem
+            // 
+            this.download32bitToolStripMenuItem.Name = "download32bitToolStripMenuItem";
+            this.download32bitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.download32bitToolStripMenuItem.Text = "32 bit";
+            this.download32bitToolStripMenuItem.Click += new System.EventHandler(this.download32bitToolStripMenuItem_Click);
+            // 
+            // download64bitToolStripMenuItem
+            // 
+            this.download64bitToolStripMenuItem.Name = "download64bitToolStripMenuItem";
+            this.download64bitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.download64bitToolStripMenuItem.Text = "64 bit";
+            this.download64bitToolStripMenuItem.Click += new System.EventHandler(this.download64bitToolStripMenuItem_Click);
+            // 
             // obit_manager
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -119,12 +166,17 @@
             this.Controls.Add(this.groupBoxTargetPlatform);
             this.Controls.Add(this.buttonFreshInstall);
             this.Controls.Add(this.buttonOBITInstallationDirectory);
+            this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MainMenuStrip = this.menuStrip1;
             this.Name = "obit_manager";
             this.Text = "oBIT manager";
             this.groupBoxTargetPlatform.ResumeLayout(false);
             this.groupBoxTargetPlatform.PerformLayout();
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -137,6 +189,11 @@
         private System.Windows.Forms.RadioButton radioButtonPlatform32bit;
         private System.Windows.Forms.RadioButton radioButtonPlatform64bit;
         private System.Windows.Forms.CheckBox checkBoxPlatformThisMachine;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem downloadOnlyToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem download32bitToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem download64bitToolStripMenuItem;
     }
 }
 

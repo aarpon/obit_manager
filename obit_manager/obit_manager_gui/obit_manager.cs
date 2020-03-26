@@ -202,5 +202,101 @@ namespace obit_manager
                 radioButtonPlatform64bit.Checked = false;
             }
         }
+
+        private void download32bitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DownloadOnly(is64bit: false);
+        }
+
+        private void download64bitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DownloadOnly(is64bit: true);
+        }
+
+        /// <summary>
+        /// Download all packages to the requested folder, either 64 or 32 bit.
+        /// </summary>
+        /// <param name="downloadFolder">Folder in which to saved the download archives.</param>
+        /// <param name="is64bit">True if the 64-bit version of packages should be downloaded, false otherwise.</param>
+        /// 
+        private async void DownloadOnly(bool is64bit = true)
+        {
+            string downloadFolder;
+
+            using (var dialog = new FolderBrowserDialog())
+            {
+                DialogResult result = dialog.ShowDialog();
+
+                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(dialog.SelectedPath))
+                {
+                    downloadFolder = dialog.SelectedPath;
+                }
+                else
+                {
+                    // Stop here
+                    return;
+                }
+            }
+
+            // Make sure the folder exists
+            Directory.CreateDirectory(downloadFolder);
+
+            string jdkURL;
+            string annotationToolURL;
+            string datamoverURL = Constants.DatamoverURL;
+            string datamoverJslURL = Constants.DatamoverJslURL;
+            string jdkMD5URL;
+            string jdkArchiveFileName;
+            string jdkMD5FileName;
+            string annotationToolArchiveFileName;
+            string datamoverArchiveFileName = Path.Combine(downloadFolder, Constants.DatamoverArchiveFileName);
+            string datamoverJslArchiveFileName = Path.Combine(downloadFolder, Constants.DatamoverJslArchiveFileName);
+
+            if (is64bit)
+            {
+                jdkURL = Constants.Jdk64bitURL;
+                annotationToolURL = Constants.AnnotationTool64bitURL;
+                jdkMD5URL = Constants.Jdk64bitMD5URL;
+                jdkArchiveFileName = Path.Combine(downloadFolder, Constants.Jdk64bitArchiveFileName);
+                annotationToolArchiveFileName = Path.Combine(downloadFolder, Constants.AnnotationTool64bitArchiveFileName);
+                jdkMD5FileName = Path.Combine(downloadFolder, Constants.Jdk64bitMD5FileName);
+            }
+            else
+            {
+                jdkURL = Constants.Jdk32bitURL;
+                annotationToolURL = Constants.AnnotationTool32bitURL;
+                jdkMD5URL = Constants.Jdk32bitMD5URL;
+                jdkArchiveFileName = Path.Combine(downloadFolder, Constants.Jdk32bitArchiveFileName);
+                annotationToolArchiveFileName = Path.Combine(downloadFolder, Constants.AnnotationTool32bitArchiveFileName);
+                jdkMD5FileName = Path.Combine(downloadFolder, Constants.Jdk32bitMD5FileName);
+            }
+
+            // Download all archives in parallel to the selected folder
+            var taskJDK = WebUtils.DownloadAsync(jdkURL, jdkArchiveFileName);
+            var taskAT = WebUtils.DownloadAsync(annotationToolURL, annotationToolArchiveFileName);
+            var taskDM = WebUtils.DownloadAsync(datamoverURL, datamoverArchiveFileName);
+            var taskDMJSL = WebUtils.DownloadAsync(datamoverJslURL, datamoverJslArchiveFileName);
+
+            await Task.WhenAll(taskJDK, taskAT, taskDM, taskDMJSL);
+
+            // Check the checksum of the JDK
+            await WebUtils.DownloadAsync(jdkMD5URL, jdkMD5FileName);
+            string JdkMD5Checksum = FileSystem.CalculateMD5Checksum(jdkArchiveFileName);
+
+            // Read  the checksum
+            string JdkMD5ChecksumFromFile = FileSystem.ReadMD5ChecksumFromFile(jdkMD5FileName);
+            File.Delete(jdkMD5FileName);
+
+            // Calculate and compare MD5 checksum
+            if (!JdkMD5Checksum.Equals(JdkMD5ChecksumFromFile))
+            {
+                MessageBox.Show("The MD5 checksum of the JDK does not match the expected string!",
+                    "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            MessageBox.Show("All packages were downloaded to " + downloadFolder + ".",
+                "All done!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
     }
 }
