@@ -32,9 +32,9 @@ namespace obit_manager_test
 
             // Java 64 bit JRE
             String downloadURL = Constants.Jdk64bitURL;
-            String targetFileName = Path.Combine(this.InstallationFolder, Constants.Jdk64bitFileName);
+            String targetFileName = Path.Combine(this.InstallationFolder, Constants.Jdk64bitArchiveFileName);
             String jdkExtractPath = Path.Combine(this.InstallationFolder, Constants.Jdk64bitExtractDirName);
-            String jdkFinalPath = Path.Combine(this.InstallationFolder, Constants.Jdk64bitPath);
+            String jdkFinalPath = Path.Combine(this.InstallationFolder, Constants.Jdk64bitFinalPath);
             String jvmDllPath = Path.Combine(jdkFinalPath, @"bin\server\jvm.dll");
 
             // Jave 64 bit JRE MD5 checksum
@@ -79,9 +79,9 @@ namespace obit_manager_test
         {
             // Java 32 bit JRE
             String downloadURL = Constants.Jdk32bitURL;
-            String targetFileName = Path.Combine(InstallationFolder, Constants.Jdk32bitFileName);
+            String targetFileName = Path.Combine(InstallationFolder, Constants.Jdk32bitArchiveFileName);
             String jdkExtractPath = Path.Combine(InstallationFolder, Constants.Jdk32bitExtractDirName);
-            String jdkFinalPath = Path.Combine(InstallationFolder, Constants.Jdk32bitPath);
+            String jdkFinalPath = Path.Combine(InstallationFolder, Constants.Jdk32bitFinalPath);
             String jvmDllPath = Path.Combine(jdkFinalPath, @"bin\server\jvm.dll");
 
             // Jave 32 bit JRE MD5 checksum
@@ -126,8 +126,8 @@ namespace obit_manager_test
         {
             // Parameters
             string url = Constants.DatamoverJslURL;
-            string fileName = Path.Combine(this.InstallationFolder, "datamoverJsl.zip");
-            string dirName = Path.Combine(this.InstallationFolder, Constants.DatamoverJslPath);
+            string fileName = Path.Combine(this.InstallationFolder, Constants.DatamoverJslArchiveFileName);
+            string dirName = Path.Combine(this.InstallationFolder, Constants.DatamoverJslFinalPath);
 
             // Download the archive
             await WebUtils.DownloadAsync(url, fileName);
@@ -147,9 +147,9 @@ namespace obit_manager_test
         {
             // Parameters
             string url = Constants.DatamoverURL;
-            string jslDirName = Path.Combine(this.InstallationFolder, Constants.DatamoverJslPath);
-            string fileName = Path.Combine(jslDirName, "datamover.zip");
-            string dirName = Path.Combine(this.InstallationFolder, Constants.DatamoverPath);
+            string jslDirName = Path.Combine(this.InstallationFolder, Constants.DatamoverJslFinalPath);
+            string fileName = Path.Combine(this.InstallationFolder, Constants.DatamoverArchiveFileName);
+            string dirName = Path.Combine(this.InstallationFolder, Constants.DatamoverFinalPath);
 
             // Make sure that the JSL directory exists
             Directory.CreateDirectory(jslDirName);
@@ -173,7 +173,7 @@ namespace obit_manager_test
             // Parameters
             string url = Constants.AnnotationTool64bitURL;
             string fileName = Path.Combine(this.InstallationFolder, "annotationTool64bit.zip");
-            string dirName = Path.Combine(this.InstallationFolder, Constants.AnnotationTool64bitPath);
+            string dirName = Path.Combine(this.InstallationFolder, Constants.AnnotationTool64bitFinalPath);
 
             // Download the archive
             await WebUtils.DownloadAsync(url, fileName);
@@ -194,7 +194,7 @@ namespace obit_manager_test
             // Parameters
             string url = Constants.AnnotationTool32bitURL;
             string fileName = Path.Combine(this.InstallationFolder, "annotationTool32bit.zip");
-            string dirName = Path.Combine(this.InstallationFolder, Constants.AnnotationTool32bitPath);
+            string dirName = Path.Combine(this.InstallationFolder, Constants.AnnotationTool32bitFinalPath);
 
             // Download the archive
             await WebUtils.DownloadAsync(url, fileName);

@@ -130,16 +130,16 @@ namespace obit_manager
             if (is64bit)
             {
                 downloadURL = Constants.Jdk64bitURL;
-                targetFileName = Path.Combine(InstallationFolder, Constants.Jdk64bitFileName);
+                targetFileName = Path.Combine(InstallationFolder, Constants.Jdk64bitArchiveFileName);
                 jdkExtractPath = Path.Combine(InstallationFolder, Constants.Jdk64bitExtractDirName);
-                jdkFinalPath = Path.Combine(InstallationFolder, Constants.Jdk64bitPath);
+                jdkFinalPath = Path.Combine(InstallationFolder, Constants.Jdk64bitFinalPath);
             }
             else
             {
                 downloadURL = Constants.Jdk32bitURL;
-                targetFileName = Path.Combine(InstallationFolder, Constants.Jdk32bitFileName);
+                targetFileName = Path.Combine(InstallationFolder, Constants.Jdk32bitArchiveFileName);
                 jdkExtractPath = Path.Combine(InstallationFolder, Constants.Jdk32bitExtractDirName);
-                jdkFinalPath = Path.Combine(InstallationFolder, Constants.Jdk32bitPath);
+                jdkFinalPath = Path.Combine(InstallationFolder, Constants.Jdk32bitFinalPath);
             }
 
             // Does the destination folder already exist?

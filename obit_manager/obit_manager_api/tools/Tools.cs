@@ -16,6 +16,49 @@ namespace obit_manager_api
             #region public
 
             /// <summary>
+            /// Delete downloaded archives from the installation directory.
+            /// </summary>
+            /// <param name="is64bit">True for a 64-bit JRE, false for a 32-bit JRE.</param>
+            /// <param name="installationFolder">Installation folder.</param>
+            /// <returns></returns>
+            public static void DeleteDownloadedArchives(bool is64bit, string installationFolder)
+            {
+                // File names
+                string datamoverJSLFileName = Path.Combine(installationFolder, Constants.DatamoverJslArchiveFileName);
+                string datamoverFileName = Path.Combine(installationFolder, Constants.DatamoverArchiveFileName);
+                string jdkFileName;
+                string annotationToolFileName;
+
+                if (is64bit)
+                {
+                    jdkFileName = Path.Combine(installationFolder, Constants.Jdk64bitArchiveFileName);
+                    annotationToolFileName = Path.Combine(installationFolder, Constants.AnnotationTool64bitArchiveFileName);
+                }
+                else
+                {
+                    jdkFileName = Path.Combine(installationFolder, Constants.Jdk32bitArchiveFileName);
+                    annotationToolFileName = Path.Combine(installationFolder, Constants.AnnotationTool32bitArchiveFileName);
+                }
+
+                if (File.Exists(datamoverJSLFileName))
+                {
+                    File.Delete(datamoverJSLFileName);
+                }
+                if (File.Exists(datamoverFileName))
+                {
+                    File.Delete(datamoverFileName);
+                }
+                if (File.Exists(jdkFileName))
+                {
+                    File.Delete(jdkFileName);
+                }
+                if (File.Exists(annotationToolFileName))
+                {
+                    File.Delete(annotationToolFileName);
+                }
+            }
+
+            /// <summary>
             /// Download, check and extract the requested Java JDK.
             /// </summary>
             /// <param name="is64bit">True for a 64-bit JRE, false for a 32-bit JRE.</param>
@@ -36,9 +79,9 @@ namespace obit_manager_api
                 {
                     // Java 64 bit JRE
                     downloadURL = Constants.Jdk64bitURL;
-                    targetFileName = Path.Combine(installationFolder, Constants.Jdk64bitFileName);
+                    targetFileName = Path.Combine(installationFolder, Constants.Jdk64bitArchiveFileName);
                     jdkExtractPath = Path.Combine(installationFolder, Constants.Jdk64bitExtractDirName);
-                    jdkFinalPath = Path.Combine(installationFolder, Constants.Jdk64bitPath);
+                    jdkFinalPath = Path.Combine(installationFolder, Constants.Jdk64bitFinalPath);
 
                     // Jave 64 bit JRE MD5 checksum
                     downloadMD5URL = Constants.Jdk64bitMD5URL;
@@ -48,9 +91,9 @@ namespace obit_manager_api
                 {
                     // Java 32 bit JRE
                     downloadURL = Constants.Jdk32bitURL;
-                    targetFileName = Path.Combine(installationFolder, Constants.Jdk32bitFileName);
+                    targetFileName = Path.Combine(installationFolder, Constants.Jdk32bitArchiveFileName);
                     jdkExtractPath = Path.Combine(installationFolder, Constants.Jdk32bitExtractDirName);
-                    jdkFinalPath = Path.Combine(installationFolder, Constants.Jdk32bitPath);
+                    jdkFinalPath = Path.Combine(installationFolder, Constants.Jdk32bitFinalPath);
 
                     // Jave 32 bit JRE MD5 checksum
                     downloadMD5URL = Constants.Jdk32bitMD5URL;
@@ -79,6 +122,9 @@ namespace obit_manager_api
                 {
                     throw new Exception("The Java JRE's checksum does not match!");
                 }
+
+                // Delete the checksum file
+                File.Delete(targetMD5FileName);
 
                 // Decompress the file
                 FileSystem.ExtractZIPFileToFolder(targetFileName, installationFolder);
@@ -122,13 +168,13 @@ namespace obit_manager_api
                 {
                     url = Constants.AnnotationTool64bitURL;
                     fileName = Path.Combine(installationFolder, "annotationTool64bit.zip");
-                    dirName = Path.Combine(installationFolder, Constants.AnnotationTool64bitPath);
+                    dirName = Path.Combine(installationFolder, Constants.AnnotationTool64bitFinalPath);
                 }
                 else
                 {
                     url = Constants.AnnotationTool32bitURL;
                     fileName = Path.Combine(installationFolder, "annotationTool32bit.zip");
-                    dirName = Path.Combine(installationFolder, Constants.AnnotationTool32bitPath);
+                    dirName = Path.Combine(installationFolder, Constants.AnnotationTool32bitFinalPath);
                 }
 
                 // Download the archive
@@ -157,15 +203,14 @@ namespace obit_manager_api
                 // Parameters
                 string url = Constants.DatamoverURL;
                 string jslUrl = Constants.DatamoverJslURL;
-                string jslExtracterDirName = Path.Combine(installationFolder, 
-                    Constants.DatamoverJslPath + "-" + Constants.DatamoverJslVersion);
-                string jslDirName = Path.Combine(installationFolder, Constants.DatamoverJslPath);
+                string jslExtractDirName = Path.Combine(installationFolder, Constants.DatamoverJslExtractDirName);
+                string jslDirName = Path.Combine(installationFolder, Constants.DatamoverJslFinalPath);
 
-                string fileName = Path.Combine(jslDirName, "datamover.zip");
-                string jslFileName = Path.Combine(installationFolder, "datamoverJsl.zip");
-                string dirName = Path.Combine(installationFolder, Constants.DatamoverPath);
+                string fileName = Path.Combine(installationFolder, "datamover.zip");
+                string jslFileName = Path.Combine(installationFolder, Constants.DatamoverJslArchiveFileName);
+                string dirName = Path.Combine(installationFolder, Constants.DatamoverFinalPath);
 
-                //// Make sure that the installaion directory exists
+                // Make sure that the installaion directory exists
                 Directory.CreateDirectory(installationFolder);
 
                 // Download the DatamoverJSL archive
@@ -177,13 +222,13 @@ namespace obit_manager_api
 
                 // Decompress the file
                 FileSystem.ExtractZIPFileToFolder(jslFileName, installationFolder);
-                if (!Directory.Exists(jslExtracterDirName))
+                if (!Directory.Exists(jslExtractDirName))
                 {
                     throw new FileNotFoundException("Could not extract Datamover JSL archive!");
                 }
 
                 // Rename the extracted JSL folder
-                Directory.Move(jslExtracterDirName, jslDirName);
+                Directory.Move(jslExtractDirName, jslDirName);
 
                 // Download the Datamover archive
                 await WebUtils.DownloadAsync(url, fileName);

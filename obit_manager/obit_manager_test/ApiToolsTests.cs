@@ -60,5 +60,17 @@ namespace obit_manager_test
         {
             await Tools.DownloadCheckAndInstallDatamoverJSL(is64bit: false, this.InstallationFolder);
         }
+
+        [TestMethod]
+        public void TestDeleteDownloadedArchives64bit()
+        {
+            Tools.DeleteDownloadedArchives(is64bit: true, this.InstallationFolder);
+        }
+
+        [TestMethod]
+        public void TestDeleteDownloadedArchives32bit()
+        {
+            Tools.DeleteDownloadedArchives(is64bit: false, this.InstallationFolder);
+        }
     }
 }
