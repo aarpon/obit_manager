@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using obit_manager_api;
+using obit_manager_api.core;
 
 namespace obit_manager_test
 {

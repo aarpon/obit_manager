@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using obit_manager_api;
+using obit_manager_api.core;
 using System.IO;
 
 namespace obit_manager_test

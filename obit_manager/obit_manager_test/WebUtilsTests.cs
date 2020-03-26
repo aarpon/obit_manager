@@ -2,7 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using obit_manager_api;
+using obit_manager_api.core;
 using obit_manager_settings;
 
 namespace obit_manager_test
