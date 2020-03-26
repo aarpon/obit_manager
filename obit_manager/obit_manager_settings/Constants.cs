@@ -18,10 +18,10 @@ namespace obit_manager_settings
          */
 
         // OpenJDK 8 from Amazon
-        private const string jdk64bitURL = "https://corretto.aws/downloads/resources/8.242.08.1/amazon-corretto-8.242.08.1-windows-x86-jre.zip";
-        private const string jdk32bitURL = "https://corretto.aws/downloads/resources/8.242.08.1/amazon-corretto-8.242.08.1-windows-x64-jre.zip";
-        private const string jdk64bitMD5Checksum = "f7512093358cc3c5bd96d30c9cd339b2";
-        private const string jdk32bitMD5Checksum = "b9aded040819457d04a36b726100e3f6";
+        private const string jdk64bitURL = "https://corretto.aws/downloads/latest/amazon-corretto-8-x64-windows-jre.zip";
+        private const string jdk32bitURL = "https://corretto.aws/downloads/latest/amazon-corretto-8-x86-windows-jre.zip";
+        private const string jdk64bitMD5URL = "https://corretto.aws/downloads/latest_checksum/amazon-corretto-8-x64-windows-jre.zip";
+        private const string jdk32bitMD5URL = "https://corretto.aws/downloads/latest_checksum/amazon-corretto-8-x86-windows-jre.zip";
 
         // Datamover_JSL
         private const string datamoverJslURL = "https://github.com/aarpon/obit_datamover_jsl/archive/0.2.0.zip";
@@ -65,12 +65,14 @@ namespace obit_manager_settings
         // Java
         public static string Jdk64bitURL => jdk64bitURL;
         public static string Jdk32bitURL => jdk32bitURL;
+        public static string Jdk64bitMD5URL => jdk64bitMD5URL;
+        public static string Jdk32bitMD5URL => jdk32bitMD5URL;
         public static string Jdk64bitPath => jdk64bitPath;
         public static string Jdk32bitPath => jdk32bitPath;
-        public static string Jdk64bitMD5Checksum => jdk64bitMD5Checksum;
-        public static string Jdk32bitMD5Checksum => jdk32bitMD5Checksum;
         public static string Jdk64bitFileName => Path.GetFileName((new Uri(Jdk64bitURL)).LocalPath);
         public static string Jdk32bitFileName => Path.GetFileName((new Uri(Jdk32bitURL)).LocalPath);
+        public static string Jdk64bitMD5FileName => Path.GetFileName((new Uri(Jdk64bitMD5URL)).LocalPath + ".md5");
+        public static string Jdk32bitMD5FileName => Path.GetFileName((new Uri(Jdk32bitMD5URL)).LocalPath + ".md5");
         public static string Jdk64bitExtractDirName => "jre8";
         public static string Jdk32bitExtractDirName => "jre8";
 

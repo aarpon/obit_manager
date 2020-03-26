@@ -10,7 +10,7 @@ namespace obit_manager_test
     [TestClass]
     public class WebUtilsTests
     {
-        private readonly string InstallationFolder = @"C:\temp";
+        private readonly string InstallationFolder = @"C:\temp_" + DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString();
 
         [TestInitialize]
         public void Initialize() 
@@ -29,19 +29,31 @@ namespace obit_manager_test
         [TestMethod]
         public async Task TestDownloadJDK64Async()
         {
-           
+
+            // Java 64 bit JRE
             String downloadURL = Constants.Jdk64bitURL;
             String targetFileName = Path.Combine(this.InstallationFolder, Constants.Jdk64bitFileName);
             String jdkExtractPath = Path.Combine(this.InstallationFolder, Constants.Jdk64bitExtractDirName);
             String jdkFinalPath = Path.Combine(this.InstallationFolder, Constants.Jdk64bitPath);
             String jvmDllPath = Path.Combine(jdkFinalPath, @"bin\server\jvm.dll");
 
+            // Jave 64 bit JRE MD5 checksum
+            String downloadMD5URL = Constants.Jdk64bitMD5URL;
+            String targetMD5FileName = Path.Combine(this.InstallationFolder, Constants.Jdk64bitMD5FileName);
+
             // Download the file
             await WebUtils.DownloadAsync(downloadURL, targetFileName);
             Assert.IsTrue(File.Exists(targetFileName));
 
+            // Download the checksum
+            await WebUtils.DownloadAsync(downloadMD5URL, targetMD5FileName);
+            Assert.IsTrue(File.Exists(targetMD5FileName));
+
+            // Read  the checksum
+            String Jdk64bitMD5Checksum = FileSystem.ReadMD5ChecksumFromFile(targetMD5FileName);
+
             // Calculate and compare MD5 checksum
-            Assert.IsTrue(FileSystem.CalculateMD5Checksum(targetFileName).Equals(Constants.Jdk64bitMD5Checksum));
+            Assert.IsTrue(FileSystem.CalculateMD5Checksum(targetFileName).Equals(Jdk64bitMD5Checksum));
 
             // Decompress the file
             FileSystem.ExtractZIPFileToFolder(targetFileName, this.InstallationFolder);
@@ -65,19 +77,30 @@ namespace obit_manager_test
         [TestMethod]
         public async Task TestDownloadJDK32Async()
         {
+            // Java 32 bit JRE
             String downloadURL = Constants.Jdk32bitURL;
             String targetFileName = Path.Combine(InstallationFolder, Constants.Jdk32bitFileName);
             String jdkExtractPath = Path.Combine(InstallationFolder, Constants.Jdk32bitExtractDirName);
             String jdkFinalPath = Path.Combine(InstallationFolder, Constants.Jdk32bitPath);
             String jvmDllPath = Path.Combine(jdkFinalPath, @"bin\server\jvm.dll");
 
+            // Jave 32 bit JRE MD5 checksum
+            String downloadMD5URL = Constants.Jdk32bitMD5URL;
+            String targetMD5FileName = Path.Combine(this.InstallationFolder, Constants.Jdk32bitMD5FileName);
+
             // Download the file
             await WebUtils.DownloadAsync(downloadURL, targetFileName);
             Assert.IsTrue(File.Exists(targetFileName));
 
+            // Download the checksum
+            await WebUtils.DownloadAsync(downloadMD5URL, targetMD5FileName);
+            Assert.IsTrue(File.Exists(targetMD5FileName));
+
+            // Read  the checksum
+            String Jdk32bitMD5Checksum = FileSystem.ReadMD5ChecksumFromFile(targetMD5FileName);
+            
             // Calculate and compare MD5 checksum
-            string md5 = FileSystem.CalculateMD5Checksum(targetFileName);
-            Assert.IsTrue(FileSystem.CalculateMD5Checksum(targetFileName).Equals(Constants.Jdk32bitMD5Checksum));
+            Assert.IsTrue(FileSystem.CalculateMD5Checksum(targetFileName).Equals(Jdk32bitMD5Checksum));
 
             // Decompress the file
             FileSystem.ExtractZIPFileToFolder(targetFileName, this.InstallationFolder);

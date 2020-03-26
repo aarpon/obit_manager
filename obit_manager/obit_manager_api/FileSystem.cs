@@ -34,7 +34,7 @@ namespace obit_manager_api
         /// <summary>
         /// Calculate the MD5 checksum of a file and returns it as string.
         /// </summary>
-        /// <param name="filename">Full path of the path for which to calculate the MD5 checksum.</param>
+        /// <param name="filename">Full path of the file for which to calculate the MD5 checksum.</param>
         /// <returns>The MD5 checksum as string.</returns>
         public static string CalculateMD5Checksum(string filename)
         {
@@ -46,6 +46,38 @@ namespace obit_manager_api
                     return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
                 }
             }
+        }
+
+        /// <summary>
+        /// Read the MD5 checksum from the specified file and returns it as string.
+        /// </summary>
+        /// <param name="filename">Full path of the file from which to read the MD5 checksum.</param>
+        /// <returns>The MD5 checksum as string or an empty string if it could not be read from the file.</returns>
+        public static string ReadMD5ChecksumFromFile(string filename)
+        {
+            StreamReader file = new StreamReader(filename);
+
+            // Read the first line only
+            string line = file.ReadLine();
+
+            // Close the file
+            file.Close();
+
+            // Did we get a line at least?
+            if (line == null)
+            {
+                return "";
+            }
+
+            // Prepare the checksum string
+            string checksum = line.TrimEnd('\r', '\n');
+            if (checksum.Length != 32)
+            {
+                return "";
+            }
+
+            // Return the checksum
+            return checksum;
         }
 
         /// <summary>
