@@ -80,7 +80,7 @@ namespace obit_manager_settings
         public static string DatamoverJslURL => datamoverJslURL;
         public static string DatamoverURL => datamoverURL;
         public static string DatamoverJslPath => datamoverJslPath;
-        public static string DatamoverPath { get => Path.Combine(datamoverJslPath, datamoverPath); }
+        public static string DatamoverPath => Path.Combine(datamoverJslPath, datamoverPath);
 
         // Annotation Tool
         public static string AnnotationTool64bitURL => annotationTool64bitURL;
