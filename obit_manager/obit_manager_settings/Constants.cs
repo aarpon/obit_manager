@@ -5,7 +5,6 @@ namespace obit_manager_settings
 {
     public static class Constants
     {
-
         /**
          * 
          * oBIT Components Download URLs
@@ -76,5 +75,8 @@ namespace obit_manager_settings
         public static string AnnotationTool32bitArchiveFileName => Path.GetFileName((new Uri(AnnotationTool32bitURL)).LocalPath);
         public static string AnnotationTool64bitFinalPath = "obit_annotation_tool";
         public static string AnnotationTool32bitFinalPath = "obit_annotation_tool";
+
+        // Other constants
+        public enum AcquisitionStationType { FLOW_CYTOMETRY, MICROSCOPY };
     }
 }

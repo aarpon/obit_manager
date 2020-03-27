@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace obit_manager_settings
 {
-    internal abstract class XMLSettingsWriter
+    namespace components
     {
+        internal abstract class XMLSettingsWriter
+        {
+        }
     }
 }

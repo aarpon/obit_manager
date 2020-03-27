@@ -1,21 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Configuration;
-using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using obit_manager_api.core;
 using obit_manager_settings;
+using obit_manager_settings.io;
 
 namespace obit_manager
 {
-
     public partial class obit_manager : Form
     {
         // Private settings
