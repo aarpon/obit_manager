@@ -1,0 +1,30 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="obit_manager_settings.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="Jdk64bitURL" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">https://corretto.aws/downloads/latest/amazon-corretto-8-x64-windows-jre.zip</Value>
+    </Setting>
+    <Setting Name="Jdk32bitURL" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">https://corretto.aws/downloads/latest/amazon-corretto-8-x86-windows-jre.zip</Value>
+    </Setting>
+    <Setting Name="Jdk64bitMD5URL" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">https://corretto.aws/downloads/latest_checksum/amazon-corretto-8-x64-windows-jre.zip</Value>
+    </Setting>
+    <Setting Name="Jdk32bitMD5URL" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">https://corretto.aws/downloads/latest_checksum/amazon-corretto-8-x86-windows-jre.zip</Value>
+    </Setting>
+    <Setting Name="DatamoverJslURL" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">https://github.com/aarpon/obit_datamover_jsl/archive/0.2.0.zip</Value>
+    </Setting>
+    <Setting Name="DatamoverURL" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">https://wiki-bsse.ethz.ch/download/attachments/21567716/datamover-15.06.0-r34542.zip</Value>
+    </Setting>
+    <Setting Name="AnnotationTool64bitURL" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">https://github.com/aarpon/obit_annotation_tool/releases/download/2.1.0/obit_annotation_tool_2.1.0_64bit.zip</Value>
+    </Setting>
+    <Setting Name="AnnotationTool32bitURL" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">https://github.com/aarpon/obit_annotation_tool/releases/download/2.1.0/obit_annotation_tool_2.1.0_32bit.zip</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

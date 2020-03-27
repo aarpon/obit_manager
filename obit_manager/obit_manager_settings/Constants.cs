@@ -17,20 +17,20 @@ namespace obit_manager_settings
          */
 
         // OpenJDK 8 from Amazon
-        public static string Jdk64bitURL => "https://corretto.aws/downloads/latest/amazon-corretto-8-x64-windows-jre.zip";
-        public static string Jdk32bitURL = "https://corretto.aws/downloads/latest/amazon-corretto-8-x86-windows-jre.zip";
-        public static string Jdk64bitMD5URL = "https://corretto.aws/downloads/latest_checksum/amazon-corretto-8-x64-windows-jre.zip";
-        public static string Jdk32bitMD5URL = "https://corretto.aws/downloads/latest_checksum/amazon-corretto-8-x86-windows-jre.zip";
+        public static string Jdk64bitURL => Properties.Settings.Default.Jdk64bitURL;
+        public static string Jdk32bitURL => Properties.Settings.Default.Jdk32bitURL;
+        public static string Jdk64bitMD5URL => Properties.Settings.Default.Jdk64bitMD5URL;
+        public static string Jdk32bitMD5URL => Properties.Settings.Default.Jdk32bitMD5URL;
 
         // Datamover_JSL
-        public static string DatamoverJslURL = "https://github.com/aarpon/obit_datamover_jsl/archive/0.2.0.zip";
+        public static string DatamoverJslURL => Properties.Settings.Default.DatamoverJslURL;
 
         // Datamover
-        public static string DatamoverURL = "https://wiki-bsse.ethz.ch/download/attachments/21567716/datamover-15.06.0-r34542.zip";
+        public static string DatamoverURL = Properties.Settings.Default.DatamoverURL;
 
         // Annotation Tool
-        public static string AnnotationTool64bitURL = "https://github.com/aarpon/obit_annotation_tool/releases/download/2.1.0/obit_annotation_tool_2.1.0_64bit.zip";
-        public static string AnnotationTool32bitURL = "https://github.com/aarpon/obit_annotation_tool/releases/download/2.1.0/obit_annotation_tool_2.1.0_32bit.zip";
+        public static string AnnotationTool64bitURL = Properties.Settings.Default.AnnotationTool64bitURL;
+        public static string AnnotationTool32bitURL = Properties.Settings.Default.AnnotationTool32bitURL;
 
         /**
          * 
