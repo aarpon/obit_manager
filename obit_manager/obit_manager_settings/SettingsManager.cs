@@ -8,23 +8,17 @@ namespace obit_manager_settings
     /// </summary>
     class SettingsManager
     {
+
+        // Application settings
+        private AppSettings mAppSettings;
+
         // List of instances
-        private List<Instance> mInstances = new List<Instance>();
+        private List<Instance> mInstances;
 
-        // openBIS Importer Toolset installation dir
-        public string InstallationDir { get; set; } = @"C:\oBIT";
-
-        // Minimum accepted Java Runtime version
-        public int MinJavaMajorVersion { get; } = 8;
-
-        // Is the platform 64 bits? Otherwise, it is 32 bits
-        public bool IsPlatform64Bits { get; set; } = true;
-
-        // Use already installed Java Runtime?
-        public bool UseExistingJavaRuntime { get; set; } = false;
-
-        // Path to local Java Runtime folder
-        public string JavaRuntimePath { get; set; } = @"C:\oBIT\jre";
-
+        public SettingsManager()
+        {
+            this.mAppSettings = new AppSettings();
+            this.mInstances = new List<Instance>();
+        }
     }
 }

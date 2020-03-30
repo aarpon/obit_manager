@@ -155,7 +155,7 @@ namespace obit_manager_api
             /// <summary>
             /// Download, check and extract the Annotation Tool.
             /// </summary>
-            /// <param name="is64bit">True for the 64-bit version, false for the 32-bit one.</param>
+            /// <param name="is64bit">True for the 64-bit vMersion, false for the 32-bit one.</param>
             /// <param name="installationFolder">Installation folder.</param>
             /// <returns></returns>
             public static async Task DownloadCheckAndInstallAnnotationToolAsync(bool is64bit, string installationFolder)
@@ -195,7 +195,7 @@ namespace obit_manager_api
             /// <summary>
             /// Download, check and extract Datamover JSL.
             /// </summary>
-            /// <param name="is64bit">True for the 64-bit version, false for the 32-bit one.</param>
+            /// <param name="is64bit">True for the 64-bit vMersion, false for the 32-bit one.</param>
             /// <param name="installationFolder">Installation folder.</param>
             /// <returns></returns>
             public static async Task DownloadCheckAndInstallDatamoverJSL(bool is64bit, string installationFolder)

@@ -6,42 +6,42 @@ namespace obit_manager_settings
 {
     namespace io
     {
-        public class INISettings
+        internal class INISettings
         {
             ///
             /// 
             /// 
-            private readonly static string settingsDirectory =
+            private readonly static string sSettingsDirectory =
                 Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) +
                 @"\obit\obit_manager";
 
             /// <summary>
             /// Settings file name.
             /// </summary>
-            private readonly static string settingsFileName = settingsDirectory + @"\obit_manager_settings.ini";
+            private readonly static string sSettingsFileName = sSettingsDirectory + @"\obit_manager_settings.ini";
 
             /// <summary>
             /// File parser.
             /// </summary>
-            private FileIniDataParser parser;
+            private FileIniDataParser mParser;
 
             /// <summary>
             /// Settings.
             /// </summary>
-            IniData data;
+            IniData mData;
 
             /// <summary>
             /// Settings version number.
             /// </summary>
-            public readonly int version = 1;
+            public readonly int mVersion = 1;
 
             /// <summary>
             /// Constructor.
             /// </summary>
             public INISettings()
             {
-                // Initialize the parser
-                parser = new FileIniDataParser();
+                // Initialize the mParser
+                this.mParser = new FileIniDataParser();
 
                 // Load or create the settings file
                 Load();
@@ -53,8 +53,8 @@ namespace obit_manager_settings
             public void Save()
             {
                 // Make sure the path is valid
-                System.IO.Directory.CreateDirectory(settingsDirectory);
-                parser.WriteFile(settingsFileName, data);
+                System.IO.Directory.CreateDirectory(sSettingsDirectory);
+                mParser.WriteFile(sSettingsFileName, mData);
 
             }
             /// <summary>
@@ -67,7 +67,7 @@ namespace obit_manager_settings
                 string value;
                 try
                 {
-                    value = data[section][key];
+                    value = mData[section][key];
                 }
                 catch (Exception)
                 {
@@ -83,19 +83,21 @@ namespace obit_manager_settings
             /// <param name="value">Property value.</param>
             public void Set(String section, String key, string value)
             {
-
+                KeyData data = new KeyData(key);
+                data.Value = value;
+                this.mData[section].SetKeyData(data);
             }
 
             /// <summary>
             /// Loads settings from disk
             /// </summary>
-            private void Load()
+            public void Load()
             {
                 // Does the settings file exist?
-                if (System.IO.File.Exists(settingsFileName))
+                if (System.IO.File.Exists(sSettingsFileName))
                 {
                     // Load the file
-                    data = parser.ReadFile(settingsFileName);
+                    mData = mParser.ReadFile(sSettingsFileName);
 
                     // Update if needed
                     UpdateIfNeeded();
@@ -117,25 +119,59 @@ namespace obit_manager_settings
             private void CreateDefault()
             {
                 // Create a new data object
-                data = new IniData();
+                mData = new IniData();
 
                 // Versions
-                data.Sections.AddSection("Versions");
-                data["Versions"].AddKey("Settings", version.ToString());
+                mData.Sections.AddSection("Versions");
 
-                // Path
-                data.Sections.AddSection("Paths");
-                data["Paths"].AddKey("InstallationDir", @"C:\oBIT");
+                // oBIT_Manager settings file version
+                mData["Versions"].AddKey("SettingsVersion", mVersion.ToString());
+
+                // Minimum accepted Java Runtime vMersion
+                mData["Versions"].AddKey("MinJavaMajorVersion", "8");
+
+                // Application
+                mData.Sections.AddSection("Application");
+
+                // openBIS Importer Toolset installation dir
+                mData["Application"].AddKey("InstallationDir", @"C:\oBIT");
+
+                // Path to local Java Runtime folder
+                mData["Application"].AddKey("JavaRuntimePath", @"C:\oBIT\jre");
+
+                // Use already installed Java Runtime?
+                mData["Application"].AddKey("UseExistingJavaRuntime", false.ToString());
+
+                // Is the platform 64 bits? Otherwise, it is 32 bits
+                mData["Application"].AddKey("IsPlatform64Bits", true.ToString());
+
             }
 
             /// <summary>
-            /// Check if the loaded settings file is up to date; otherwise
-            /// update it.
+            /// Check if the loaded settings file is up to date; otherwise update it.
             /// </summary>
             /// <returns>True if the file needed an update; false otherwise.</returns>
-            private bool UpdateIfNeeded()
+            private void UpdateIfNeeded()
             {
-                return false;
+                int versionFromFile;
+                if (! Int32.TryParse(this.mData["Versions"]["SettingsVersion"], out versionFromFile))
+                {
+                    CreateDefault();
+                    Save();
+                    Load();
+                }
+                else
+                {
+                    if (this.mVersion == versionFromFile)
+                    {
+                        // Nothing to do.
+                    }
+                    else
+                    {
+                        // @TODO
+                        throw new NotImplementedException("Implement Application Settings update!");
+                    }
+                }
             }
         }
     }

@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="components\AppSettings.cs" />
     <Compile Include="components\Datamover.cs" />
     <Compile Include="components\Server.cs" />
     <Compile Include="Properties\Settings.Designer.cs">

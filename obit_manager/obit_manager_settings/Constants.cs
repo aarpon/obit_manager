@@ -61,7 +61,7 @@ namespace obit_manager_settings
             get
             {
                 int index = DatamoverJslArchiveFileName.IndexOf(".zip");
-                return DatamoverJslFinalPath + DatamoverJslArchiveFileName.Substring(0, index);
+                return DatamoverJslFinalPath + "-" + DatamoverJslArchiveFileName.Substring(0, index);
             }
         }
 

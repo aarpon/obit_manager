@@ -5,26 +5,23 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using obit_manager_api.core;
 using obit_manager_settings;
+using obit_manager_settings.components;
 using obit_manager_settings.io;
 
 namespace obit_manager
 {
     public partial class obit_manager : Form
     {
-        // Private settings
-        private INISettings appSettings;
+        // Private application settings
+        private AppSettings mAppSettings;
 
-        private string oBITInstallationFolder = "";
-
-        // Threads and locks
+       // Threads and locks
         private Thread freshInstallThread = null;
-
-        public string InstallationFolder { get => oBITInstallationFolder; }
 
         public obit_manager()
         {
             // Initialize the Settings Manager
-            appSettings = new INISettings();
+            this.mAppSettings = new AppSettings();
 
             // Initialize components
             InitializeComponent();
@@ -50,7 +47,7 @@ namespace obit_manager
 
         private void buttonFreshInstall_Click(object sender, EventArgs e)
         {
-            if (InstallationFolder.Equals(""))
+            if (this.mAppSettings.InstallationDir.Equals(""))
             {
                 MessageBox.Show(
                     "Please pick an installation directory!",
@@ -73,14 +70,14 @@ namespace obit_manager
 
                 if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(dialog.SelectedPath))
                 {
-                    oBITInstallationFolder = dialog.SelectedPath;
-                    buttonOBITInstallationDirectory.Text = oBITInstallationFolder;
+                    this.mAppSettings.InstallationDir = dialog.SelectedPath;
+                    buttonOBITInstallationDirectory.Text = this.mAppSettings.InstallationDir;
 
                     // Update the application settings
                 }
                 else
                 {
-                    oBITInstallationFolder = dialog.SelectedPath;
+                    this.mAppSettings.InstallationDir = dialog.SelectedPath;
                     buttonOBITInstallationDirectory.Text = "Pick oBIT installation dir...";
                 }
             }
@@ -94,106 +91,106 @@ namespace obit_manager
         /// </summary>
         private void ThreadFreshInstall()
         {
-            // Launch several asynchronous tasks
-            Task[] installationTasks = new Task[1];
-            installationTasks[0] = Task.Factory.StartNew(async () =>
-            {
-                bool is64bit = radioButtonPlatform64bit.Checked;
-                await downloadAndExtractJavaAsync(is64bit);
-            });
-            Task.WaitAll(installationTasks);
+            //// Launch several asynchronous tasks
+            //Task[] installationTasks = new Task[1];
+            //installationTasks[0] = Task.Factory.StartNew(async () =>
+            //{
+            //    bool is64bit = radioButtonPlatform64bit.Checked;
+            //    await downloadAndExtractJavaAsync(is64bit);
+            //});
+            //Task.WaitAll(installationTasks);
         }
 
 
-        private async Task<bool> downloadAndExtractJavaAsync(bool is64bit = true)
-        {
-            // Check that we have an installation folder 
-            if (InstallationFolder.Equals(""))
-            {
-                return false;
-            }
+        //private async Task<bool> downloadAndExtractJavaAsync(bool is64bit = true)
+        //{
+            //// Check that we have an installation folder 
+            //if (this.mAppSettings.InstallationDir.Equals(""))
+            //{
+            //    return false;
+            //}
 
-            // Prepare relevant variables
-            String downloadURL = "";
-            String targetFileName = "";
-            String jdkExtractPath = "";
-            String jdkFinalPath = "";
+            //// Prepare relevant variables
+            //String downloadURL = "";
+            //String targetFileName = "";
+            //String jdkExtractPath = "";
+            //String jdkFinalPath = "";
 
-            // Assign the correct values depending on the choice of the platform
-            if (is64bit)
-            {
-                downloadURL = Constants.Jdk64bitURL;
-                targetFileName = Path.Combine(InstallationFolder, Constants.Jdk64bitArchiveFileName);
-                jdkExtractPath = Path.Combine(InstallationFolder, Constants.Jdk64bitExtractDirName);
-                jdkFinalPath = Path.Combine(InstallationFolder, Constants.Jdk64bitFinalPath);
-            }
-            else
-            {
-                downloadURL = Constants.Jdk32bitURL;
-                targetFileName = Path.Combine(InstallationFolder, Constants.Jdk32bitArchiveFileName);
-                jdkExtractPath = Path.Combine(InstallationFolder, Constants.Jdk32bitExtractDirName);
-                jdkFinalPath = Path.Combine(InstallationFolder, Constants.Jdk32bitFinalPath);
-            }
+            //// Assign the correct values depending on the choice of the platform
+            //if (is64bit)
+            //{
+            //    downloadURL = Constants.Jdk64bitURL;
+            //    targetFileName = Path.Combine(InstallationFolder, Constants.Jdk64bitArchiveFileName);
+            //    jdkExtractPath = Path.Combine(InstallationFolder, Constants.Jdk64bitExtractDirName);
+            //    jdkFinalPath = Path.Combine(InstallationFolder, Constants.Jdk64bitFinalPath);
+            //}
+            //else
+            //{
+            //    downloadURL = Constants.Jdk32bitURL;
+            //    targetFileName = Path.Combine(InstallationFolder, Constants.Jdk32bitArchiveFileName);
+            //    jdkExtractPath = Path.Combine(InstallationFolder, Constants.Jdk32bitExtractDirName);
+            //    jdkFinalPath = Path.Combine(InstallationFolder, Constants.Jdk32bitFinalPath);
+            //}
 
-            // Does the destination folder already exist?
-            if (Directory.Exists(jdkFinalPath))
-            {
-                return false;
-            }
+            //// Does the destination folder already exist?
+            //if (Directory.Exists(jdkFinalPath))
+            //{
+            //    return false;
+            //}
 
-            // Download the file
-            await WebUtils.DownloadAsync(downloadURL, targetFileName);
-            if (!File.Exists(targetFileName))
-            {
-                return false;
-            }
+            //// Download the file
+            //await WebUtils.DownloadAsync(downloadURL, targetFileName);
+            //if (!File.Exists(targetFileName))
+            //{
+            //    return false;
+            //}
 
-            // Decompress the file
-            FileSystem.ExtractZIPFileToFolder(targetFileName, InstallationFolder);
+            //// Decompress the file
+            //FileSystem.ExtractZIPFileToFolder(targetFileName, InstallationFolder);
 
-            // Check that the extract folder exists
-            if (!Directory.Exists(jdkExtractPath))
-            {
-                return false;
-            }
+            //// Check that the extract folder exists
+            //if (!Directory.Exists(jdkExtractPath))
+            //{
+            //    return false;
+            //}
 
-            // Move the JRE subfolder in the final location
-            Directory.Move(Path.Combine(jdkExtractPath, "jre"), jdkFinalPath);
+            //// Move the JRE subfolder in the final location
+            //Directory.Move(Path.Combine(jdkExtractPath, "jre"), jdkFinalPath);
 
-            // Delete temporary files and folders
-            File.Delete(targetFileName);
-            Directory.Delete(jdkExtractPath, recursive: true);
+            //// Delete temporary files and folders
+            //File.Delete(targetFileName);
+            //Directory.Delete(jdkExtractPath, recursive: true);
 
-            // Finally, return true if the jre folder is in the final location
-            return Directory.Exists(jdkFinalPath);
-        }
+            //// Finally, return true if the jre folder is in the final location
+            //return Directory.Exists(jdkFinalPath);
+        //}
 
         private void setUIDefaults()
         {
             // Get the installation directory from the application settings
-            string installationDir = (string)appSettings.Get("Paths", "InstallationDir");
+            string installationDir = this.mAppSettings.InstallationDir;
             if (installationDir.Equals(""))
             {
                 buttonOBITInstallationDirectory.Text = "Pick oBIT installation dir...";
-                oBITInstallationFolder = "";
+                this.mAppSettings.InstallationDir = "";
             }
             else
             {
                 buttonOBITInstallationDirectory.Text = installationDir;
-                oBITInstallationFolder = installationDir;
+                this.mAppSettings.InstallationDir = installationDir;
             }
 
-            // Set the platform bits
-            if (Environment.Is64BitOperatingSystem)
-            {
-                radioButtonPlatform32bit.Checked = false;
-                radioButtonPlatform64bit.Checked = true;
-            }
-            else
-            {
-                radioButtonPlatform32bit.Checked = true;
-                radioButtonPlatform64bit.Checked = false;
-            }
+            //// Set the platform bits
+            //if (Environment.Is64BitOperatingSystem)
+            //{
+            //    radioButtonPlatform32bit.Checked = false;
+            //    radioButtonPlatform64bit.Checked = true;
+            //}
+            //else
+            //{
+            //    radioButtonPlatform32bit.Checked = true;
+            //    radioButtonPlatform64bit.Checked = false;
+            //}
         }
 
         private void download32bitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -210,7 +207,7 @@ namespace obit_manager
         /// Download all packages to the requested folder, either 64 or 32 bit.
         /// </summary>
         /// <param name="downloadFolder">Folder in which to saved the download archives.</param>
-        /// <param name="is64bit">True if the 64-bit version of packages should be downloaded, false otherwise.</param>
+        /// <param name="is64bit">True if the 64-bit vMersion of packages should be downloaded, false otherwise.</param>
         /// 
         private async void DownloadOnly(bool is64bit = true)
         {
@@ -290,6 +287,17 @@ namespace obit_manager
 
             MessageBox.Show("All packages were downloaded to " + downloadFolder + ".",
                 "All done!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void loadToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.mAppSettings.Reload();
+
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.mAppSettings.Save();
         }
     }
 }
