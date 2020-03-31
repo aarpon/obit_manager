@@ -13,7 +13,7 @@ namespace obit_manager
     public partial class obit_manager : Form
     {
         // Private application settings
-        private AppSettings mAppSettings;
+        private SettingsManager mSettingsManager;
 
        // Threads and locks
         private Thread freshInstallThread = null;
@@ -21,7 +21,7 @@ namespace obit_manager
         public obit_manager()
         {
             // Initialize the Settings Manager
-            this.mAppSettings = new AppSettings();
+            this.mSettingsManager = new SettingsManager();
 
             // Initialize components
             InitializeComponent();
@@ -47,7 +47,7 @@ namespace obit_manager
 
         private void buttonFreshInstall_Click(object sender, EventArgs e)
         {
-            if (this.mAppSettings.InstallationDir.Equals(""))
+            if (this.mSettingsManager.InstallationDir.Equals(""))
             {
                 MessageBox.Show(
                     "Please pick an installation directory!",
@@ -70,14 +70,14 @@ namespace obit_manager
 
                 if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(dialog.SelectedPath))
                 {
-                    this.mAppSettings.InstallationDir = dialog.SelectedPath;
-                    buttonOBITInstallationDirectory.Text = this.mAppSettings.InstallationDir;
+                    this.mSettingsManager.InstallationDir = dialog.SelectedPath;
+                    buttonOBITInstallationDirectory.Text = this.mSettingsManager.InstallationDir;
 
                     // Update the application settings
                 }
                 else
                 {
-                    this.mAppSettings.InstallationDir = dialog.SelectedPath;
+                    this.mSettingsManager.InstallationDir = dialog.SelectedPath;
                     buttonOBITInstallationDirectory.Text = "Pick oBIT installation dir...";
                 }
             }
@@ -168,16 +168,16 @@ namespace obit_manager
         private void setUIDefaults()
         {
             // Get the installation directory from the application settings
-            string installationDir = this.mAppSettings.InstallationDir;
+            string installationDir = this.mSettingsManager.InstallationDir;
             if (installationDir.Equals(""))
             {
                 buttonOBITInstallationDirectory.Text = "Pick oBIT installation dir...";
-                this.mAppSettings.InstallationDir = "";
+                this.mSettingsManager.InstallationDir = "";
             }
             else
             {
                 buttonOBITInstallationDirectory.Text = installationDir;
-                this.mAppSettings.InstallationDir = installationDir;
+                this.mSettingsManager.InstallationDir = installationDir;
             }
 
             //// Set the platform bits
@@ -291,13 +291,13 @@ namespace obit_manager
 
         private void loadToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.mAppSettings.Reload();
+            this.mSettingsManager.Reload();
 
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.mAppSettings.Save();
+            this.mSettingsManager.Save();
         }
     }
 }

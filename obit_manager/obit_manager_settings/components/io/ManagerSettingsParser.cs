@@ -6,11 +6,11 @@ namespace obit_manager_settings
 {
     namespace io
     {
-        internal class INISettings
+        internal class ManagerSettingsParser
         {
-            ///
-            /// 
-            /// 
+            /// <summary>
+            /// Settings directory.
+            /// </summary>
             private readonly static string sSettingsDirectory =
                 Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) +
                 @"\obit\obit_manager";
@@ -28,17 +28,17 @@ namespace obit_manager_settings
             /// <summary>
             /// Settings.
             /// </summary>
-            IniData mData;
+            private IniData mData;
 
             /// <summary>
             /// Settings version number.
             /// </summary>
-            public readonly int mVersion = 1;
+            private readonly int mVersion = 1;
 
             /// <summary>
             /// Constructor.
             /// </summary>
-            public INISettings()
+            public ManagerSettingsParser()
             {
                 // Initialize the mParser
                 this.mParser = new FileIniDataParser();
@@ -57,12 +57,13 @@ namespace obit_manager_settings
                 mParser.WriteFile(sSettingsFileName, mData);
 
             }
+
             /// <summary>
             /// Get the settings with given name.
             /// </summary>
             /// <param name="key">Settings name.</param>
             /// <returns>Settings with given name.</returns>
-            public string Get(String section, String key)
+            private string Get(String section, String key)
             {
                 string value;
                 try
@@ -81,7 +82,7 @@ namespace obit_manager_settings
             /// </summary>
             /// <param name="key">Property name.</param>
             /// <param name="value">Property value.</param>
-            public void Set(String section, String key, string value)
+            private void Set(String section, String key, string value)
             {
                 KeyData data = new KeyData(key);
                 data.Value = value;
@@ -110,7 +111,6 @@ namespace obit_manager_settings
                     // Save it
                     Save();
                 }
-
             }
 
             /// <summary>
@@ -135,6 +135,9 @@ namespace obit_manager_settings
 
                 // openBIS Importer Toolset installation dir
                 mData["Application"].AddKey("InstallationDir", @"C:\oBIT");
+
+                // List of relative paths to (multiple) Datamover installations (;-separated)
+                mData["Application"].AddKey("DatamoverRelativeDirList", @"obit_datamover_jsl");
 
                 // Path to local Java Runtime folder
                 mData["Application"].AddKey("JavaRuntimePath", @"C:\oBIT\jre");
@@ -173,6 +176,148 @@ namespace obit_manager_settings
                     }
                 }
             }
+
+            #region properties
+
+            // Minimum accepted Java Runtime vMersion
+            public int SettingsVersion
+            {
+                get
+                {
+                    int value;
+                    if (Int32.TryParse(this.Get("Versions", "SettingsVersion"), out value))
+                    {
+                        return value;
+                    }
+                    else
+                    {
+                        return -1;
+                    }
+
+                }
+                set
+                {
+                    this.Set("Application", "InstallationDir", value.ToString());
+                }
+            }
+
+            // openBIS Importer Toolset installation dir
+            public string InstallationDir
+            {
+                get
+                {
+                    return this.Get("Application", "InstallationDir");
+                }
+                set
+                {
+                    this.Set("Application", "InstallationDir", value);
+                }
+            }
+
+            // Minimum accepted Java Runtime version
+            public int MinJavaMajorVersion
+            {
+                get
+                {
+                    int value;
+                    if (Int32.TryParse(this.Get("Versions", "MinJavaMajorVersion"), out value))
+                    {
+                        return value;
+                    }
+                    else
+                    {
+                        return -1;
+                    }
+
+                }
+                set
+                {
+                    this.Set("Application", "InstallationDir", value.ToString());
+                }
+            }
+
+            // Is the platform 64 bits? Otherwise, it is 32 bits
+            public bool IsPlatform64Bits
+            {
+                get
+                {
+                    bool value;
+                    if (Boolean.TryParse(this.Get("Application", "IsPlatform64Bits"), out value))
+                    {
+                        return value;
+                    }
+                    else
+                    {
+                        return true;
+                    }
+
+                }
+                set
+                {
+                    this.Set("Application", "IsPlatform64Bits", value.ToString());
+                }
+            }
+
+            // Use already installed Java Runtime?
+            public bool UseExistingJavaRuntime
+            {
+                get
+                {
+                    bool value;
+                    if (Boolean.TryParse(this.Get("Application", "UseExistingJavaRuntime"), out value))
+                    {
+                        return value;
+                    }
+                    else
+                    {
+                        return true;
+                    }
+
+                }
+                set
+                {
+                    this.Set("Application", "UseExistingJavaRuntime", value.ToString());
+                }
+            }
+
+            // Path to local Java Runtime folder
+            public string JavaRuntimePath
+            {
+                get
+                {
+                    return this.Get("Application", "JavaRuntimePath");
+                }
+                set
+                {
+                    this.Set("Application", "JavaRuntimePath", value);
+                }
+            }
+
+            // List of relative paths to (multiple) Datamover installations (;-separated)
+            public string[] DatamoverRelativeDirList
+            {
+                get
+                {
+                    string dirs = this.Get("Application", "DatamoverRelativeDirList");
+                    string[] dirList = dirs.Split(';');
+                    for (int i = 0; i < dirList.Length; i++)
+                    {
+                        dirList[i] = dirList[i].Trim();
+                    }
+                    return dirList;
+                }
+                set
+                {
+                    for (int i = 0; i < value.Length; i++)
+                    {
+                        value[i] = value[i].Trim();
+                    }
+                    string dirs = string.Join(";", value);
+                    this.Set("Application", "DatamoverRelativeDirList", dirs);
+                }
+            }
+
+            #endregion properties
         }
     }
 }

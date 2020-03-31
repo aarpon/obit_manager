@@ -44,22 +44,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="components\AppSettings.cs" />
     <Compile Include="components\Datamover.cs" />
     <Compile Include="components\Server.cs" />
+    <Compile Include="components\io\DatamoverSettingsParser.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="components\SettingAttribute.cs" />
     <Compile Include="SettingsManager.cs" />
     <Compile Include="components\Client.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="components\Instance.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="io\INISettings.cs" />
-    <Compile Include="io\XMLSettingsReader.cs" />
-    <Compile Include="io\XMLSettingsWriter.cs" />
+    <Compile Include="components\io\ManagerSettingsParser.cs" />
+    <Compile Include="components\io\AnnotationToolSettingsParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -69,8 +69,6 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="mappers\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
