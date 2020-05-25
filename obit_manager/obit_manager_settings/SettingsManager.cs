@@ -12,7 +12,8 @@ namespace obit_manager_settings
     {
         // Settings parsers
         private ManagerSettingsParser mManagerParser;
-        private AnnotationToolSettingsParser mATParser;
+        private AnnotationToolSettingsParser mAnnotationToolParser;
+        private DatamoverJSLSettingsParser mDatamoverJSLParser;
         private DatamoverSettingsParser mDatamoverParser;
 
         // List of instances
@@ -28,32 +29,50 @@ namespace obit_manager_settings
 
             // Load (if possible, otherwise instantiate with default values)
             // the AnnotationTool Settings
-            this.mATParser = new AnnotationToolSettingsParser();
+            this.mAnnotationToolParser = new AnnotationToolSettingsParser();
+
+            // Load (if possible, otherwise instantiate with default values)
+            // the Datamover JSL Settings
+            this.mDatamoverJSLParser = new DatamoverJSLSettingsParser(
+                this.mManagerParser.InstallationDir,
+                this.mManagerParser.DatamoverRelativeDirList
+            );
 
             // Load (if possible, otherwise instantiate with default values)
             // the Datamover Settings
-            // @TODO Adapt for the case there is more than one configuration!
             this.mDatamoverParser = new DatamoverSettingsParser(
-                Path.Combine(
-                    this.mManagerParser.InstallationDir,
-                    this.mManagerParser.DatamoverRelativeDirList[0])
-                );
+                this.mManagerParser.InstallationDir,
+                this.mManagerParser.DatamoverRelativeDirList
+            );
+
+            // Populate the instances
+            this.PopulateInstances();
         }
 
         public void Reload()
         {
             // @Todo Implement!
             this.mManagerParser.Load();
-            this.mATParser.Load();
+            this.mAnnotationToolParser.Load();
+            this.mDatamoverJSLParser.Load();
             this.mDatamoverParser.Load();
+
+            // Populate the instances
+            this.PopulateInstances();
         }
 
         public void Save()
         {
             // @Todo Implement!
             this.mManagerParser.Save();
-            this.mATParser.Save();
+            this.mAnnotationToolParser.Save();
+            this.mDatamoverJSLParser.Save();
             this.mDatamoverParser.Save();
+        }
+
+        private void PopulateInstances()
+        {
+
         }
 
         #region properties

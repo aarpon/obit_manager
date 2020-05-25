@@ -58,13 +58,13 @@
     <Compile Include="tools\Tools.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\obit_manager_settings\obit_manager_settings.csproj">
       <Project>{1814C8B5-E237-43B5-A4A9-C6033FF84C4C}</Project>
       <Name>obit_manager_settings</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

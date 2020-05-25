@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
+using NLog;
+
 
 namespace obit_manager_settings
 {
@@ -12,6 +11,8 @@ namespace obit_manager_settings
     {
         internal class AnnotationToolSettingsParser
         {
+            // Logger
+            private static Logger sLogger = LogManager.GetCurrentClassLogger();
 
             List<Dictionary<string, string>> mConfigurations;
 
@@ -50,6 +51,11 @@ namespace obit_manager_settings
             {
                 if (!File.Exists(AnnotationToolSettingsParser.sSettingsFileName))
                 {
+                    // Log
+                    sLogger.Info("Annotation Tool configuration file " + 
+                        AnnotationToolSettingsParser.sSettingsFileName + 
+                        " does not exist.");
+
                     return false;
                 }
 
@@ -62,16 +68,30 @@ namespace obit_manager_settings
                 // Check the version
                 if (rootNode.Name != "AnnotationTool_App_Settings")
                 {
+                    // Log
+                    sLogger.Error("Annotation Tool configuration file " +
+                        AnnotationToolSettingsParser.sSettingsFileName +
+                        " does not seem to be valid.");
+
                     return false;
                 }
 
                 if (!Int32.TryParse(rootNode.GetAttribute("version"), out int version))
                 {
+
+                    // Log
+                    sLogger.Error("Annotation Tool configuration file " +
+                        AnnotationToolSettingsParser.sSettingsFileName +
+                        " does not seem to be valid.");
+
                     return false;
                 }
 
                 if (version < AnnotationToolSettingsParser.sAnnotationToolSettingsVersion)
                 {
+                    // Log
+                    sLogger.Warn("Implement upgrade of Annotation Tool configuration files!");
+
                     // @TODO Implement update!
                     return false;
                 }
@@ -93,7 +113,14 @@ namespace obit_manager_settings
                     conf["ConfigurationName"] = node.Attributes["ConfigurationName"].Value;
 
                     this.mConfigurations.Add(conf);
+
+                    // Log
+                    sLogger.Info("Processed Annotation Tool configuration '" + conf["ConfigurationName"] + "'");
                 }
+
+                // Log
+                sLogger.Info("Successfully parsed Annotation Tool settings file '" + 
+                    AnnotationToolSettingsParser.sSettingsFileName + "'.");
 
                 return true;
             }

@@ -11,6 +11,9 @@ namespace obit_manager_settings
     {
         public class Instance
         {
+            // Configuration name
+            private string mName = "Default";
+
             // A Client
             private Client mClient = new Client();
 

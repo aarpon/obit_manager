@@ -12,6 +12,9 @@ namespace obit_manager
 {
     public partial class obit_manager : Form
     {
+        // Logger
+        private static readonly NLog.Logger sLogger = NLog.LogManager.GetCurrentClassLogger();
+
         // Private application settings
         private SettingsManager mSettingsManager;
 
@@ -20,6 +23,8 @@ namespace obit_manager
 
         public obit_manager()
         {
+            sLogger.Info("oBIT Manager started.");
+
             // Initialize the Settings Manager
             this.mSettingsManager = new SettingsManager();
 
@@ -28,6 +33,9 @@ namespace obit_manager
 
             // Set defaults
             setUIDefaults();
+
+            // Log some information
+            this.textBoxLogWindow.AppendText("Completed initialization.");
         }
 
         private void obit_manager_Resize(object sender, EventArgs e)

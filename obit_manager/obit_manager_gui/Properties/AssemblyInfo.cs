@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("ETH Zurich")]
 [assembly: AssemblyProduct("obit_manager")]
-[assembly: AssemblyCopyright("Copyright © ETH Zurich 2019")]
+[assembly: AssemblyCopyright("Copyright © ETH Zurich 2019, 2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

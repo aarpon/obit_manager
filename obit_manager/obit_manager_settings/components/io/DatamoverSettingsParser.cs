@@ -1,9 +1,9 @@
-﻿using System;
+﻿using NLog;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace obit_manager_settings
 {
@@ -11,45 +11,89 @@ namespace obit_manager_settings
     {
         class DatamoverSettingsParser
         {
-            private string mSettingsFileName;
-            private Dictionary<string, string> mMap;
+            // Logger
+            private static Logger sLogger = LogManager.GetCurrentClassLogger();
 
-            public DatamoverSettingsParser(string datamoverJSLdir)
+            private Dictionary<string, Dictionary<string, string>> mMap;
+
+            public DatamoverSettingsParser(string installationDir, string[] relativeDatamoverJSLdirs)
             {
-                this.mSettingsFileName = Path.Combine(datamoverJSLdir, @"datamover\etc\service.properties");
+                // Clear all configurations
+                this.mMap = new Dictionary<string, Dictionary<string, string>>();
 
-                this.mMap = new Dictionary<string, string>();
+                for (int i = 0; i < relativeDatamoverJSLdirs.Length; i++)
+                {
+                    // Store the datamoverJSL parent directory as key
+                    string path = Path.Combine(installationDir, relativeDatamoverJSLdirs[i]);
 
-                Load();
+                    // Store the key with no valid value yet
+                    this.mMap[path] = null;
+                }
+
+                this.Load();
             }
 
             public bool Load()
             {
-                // Read all lines
-                string[] lines;
-                
-                try
+                // Since we will update the dictionary, we cannot iterate 
+                // directly over it.
+                List<string> keys = new List<string>(this.mMap.Keys);
+
+                // Process all file names
+                foreach (string key in keys)
                 {
-                    lines = File.ReadAllLines(this.mSettingsFileName);
-                }
-                catch (Exception e)
-                {
-                    return false;
-                }
-                
-                // Fill the map
-                foreach(string line in lines)
-                {
-                    string[] parts = line.Split('=');
-                    if (parts.Length != 2)
+                    // Build the file name
+                    string fileName = Path.Combine(key, @"datamover\etc\service.properties");
+
+                    // Does the settings file exist?
+                    if (File.Exists(fileName))
                     {
-                        return false;
+                        Dictionary<string, string> map = new Dictionary<string, string>();
+
+                        // Read all lines
+                        string[] lines;
+
+                        try
+                        {
+                            lines = File.ReadAllLines(fileName);
+                        }
+                        catch (Exception e)
+                        {
+                            // Log
+                            sLogger.Error("Could not read Datamover settings file '" + fileName + "'.");
+
+                            continue;
+                        }
+
+                        // Fill the map
+                        foreach (string line in lines)
+                        {
+                            string[] parts = line.Split('=');
+                            if (parts.Length != 2)
+                            {
+                                continue;
+                            }
+
+                            string l_key = parts[0].Trim();
+                            string l_value = parts[1].Trim();
+
+                            map.Add(l_key, l_value);
+                        }
+
+                        // Append to the list of maps
+                        this.mMap[key] = map;
+
+                        // Log
+                        sLogger.Info("Successfully parsed Datamover settings file '" + fileName + "'.");
                     }
+                }
 
-                    string key = parts[0].Trim();
-                    string value = parts[1].Trim();
+                if (this.mMap.Count == 0)
+                {
+                    // Log
+                    sLogger.Info("No Datamover settings files found!");
 
-                    this.mMap.Add(key, value);
+                    return false;
                 }
 
                 return true;

@@ -41,6 +41,8 @@
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.textBoxLogWindow = new System.Windows.Forms.TextBox();
+            this.checkForUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -61,7 +63,7 @@
             // 
             // buttonFreshInstall
             // 
-            this.buttonFreshInstall.Location = new System.Drawing.Point(12, 404);
+            this.buttonFreshInstall.Location = new System.Drawing.Point(12, 216);
             this.buttonFreshInstall.Name = "buttonFreshInstall";
             this.buttonFreshInstall.Size = new System.Drawing.Size(396, 34);
             this.buttonFreshInstall.TabIndex = 1;
@@ -83,6 +85,7 @@
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.downloadOnlyToolStripMenuItem,
+            this.checkForUpdatesToolStripMenuItem,
             this.settingsToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
@@ -100,14 +103,14 @@
             // download32bitToolStripMenuItem
             // 
             this.download32bitToolStripMenuItem.Name = "download32bitToolStripMenuItem";
-            this.download32bitToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.download32bitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.download32bitToolStripMenuItem.Text = "32 bit";
             this.download32bitToolStripMenuItem.Click += new System.EventHandler(this.download32bitToolStripMenuItem_Click);
             // 
             // download64bitToolStripMenuItem
             // 
             this.download64bitToolStripMenuItem.Name = "download64bitToolStripMenuItem";
-            this.download64bitToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.download64bitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.download64bitToolStripMenuItem.Text = "64 bit";
             this.download64bitToolStripMenuItem.Click += new System.EventHandler(this.download64bitToolStripMenuItem_Click);
             // 
@@ -134,11 +137,26 @@
             this.saveToolStripMenuItem.Text = "Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
+            // textBoxLogWindow
+            // 
+            this.textBoxLogWindow.Location = new System.Drawing.Point(12, 257);
+            this.textBoxLogWindow.Multiline = true;
+            this.textBoxLogWindow.Name = "textBoxLogWindow";
+            this.textBoxLogWindow.Size = new System.Drawing.Size(396, 181);
+            this.textBoxLogWindow.TabIndex = 4;
+            // 
+            // checkForUpdatesToolStripMenuItem
+            // 
+            this.checkForUpdatesToolStripMenuItem.Name = "checkForUpdatesToolStripMenuItem";
+            this.checkForUpdatesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.checkForUpdatesToolStripMenuItem.Text = "Check for updates";
+            // 
             // obit_manager
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(420, 450);
+            this.Controls.Add(this.textBoxLogWindow);
             this.Controls.Add(this.buttonFreshInstall);
             this.Controls.Add(this.buttonOBITInstallationDirectory);
             this.Controls.Add(this.menuStrip1);
@@ -166,6 +184,8 @@
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem loadToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
+        private System.Windows.Forms.TextBox textBoxLogWindow;
+        private System.Windows.Forms.ToolStripMenuItem checkForUpdatesToolStripMenuItem;
     }
 }
 

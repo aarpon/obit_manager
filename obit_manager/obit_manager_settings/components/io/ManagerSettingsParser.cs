@@ -1,6 +1,8 @@
 ﻿using IniParser;
 using IniParser.Model;
 using System;
+using NLog;
+
 
 namespace obit_manager_settings
 {
@@ -8,6 +10,11 @@ namespace obit_manager_settings
     {
         internal class ManagerSettingsParser
         {
+            /// <summary>
+            /// Logger
+            /// </summary>
+            private static Logger sLogger = LogManager.GetCurrentClassLogger();
+
             /// <summary>
             /// Settings directory.
             /// </summary>
@@ -56,6 +63,8 @@ namespace obit_manager_settings
                 System.IO.Directory.CreateDirectory(sSettingsDirectory);
                 mParser.WriteFile(sSettingsFileName, mData);
 
+                // Log
+                sLogger.Info("Successfully saved settings to '" + sSettingsFileName + "'.");
             }
 
             /// <summary>
@@ -72,7 +81,12 @@ namespace obit_manager_settings
                 }
                 catch (Exception)
                 {
+                    // Set to empty string
                     value = "";
+
+                    // Log
+                    sLogger.Error("Could not retrieve configuration setting '" + key + "' from section '" + section + "'.");
+
                 }
                 return value;
             }
@@ -87,6 +101,10 @@ namespace obit_manager_settings
                 KeyData data = new KeyData(key);
                 data.Value = value;
                 this.mData[section].SetKeyData(data);
+
+                // Log
+                sLogger.Info("Added configuration setting '" + key + "' with value '" +
+                    value + "' to section '" + section + "'.");
             }
 
             /// <summary>
@@ -99,6 +117,9 @@ namespace obit_manager_settings
                 {
                     // Load the file
                     mData = mParser.ReadFile(sSettingsFileName);
+
+                    // Log
+                    sLogger.Info("Successfully parsed settings file '" + sSettingsFileName + "'.");
 
                     // Update if needed
                     UpdateIfNeeded();
@@ -148,6 +169,8 @@ namespace obit_manager_settings
                 // Is the platform 64 bits? Otherwise, it is 32 bits
                 mData["Application"].AddKey("IsPlatform64Bits", true.ToString());
 
+                // Log
+                sLogger.Info("Created default settings file.");
             }
 
             /// <summary>
