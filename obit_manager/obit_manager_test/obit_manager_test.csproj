@@ -62,12 +62,19 @@
       <Project>{9cce9a17-179a-44fb-937a-e97d6a2a4529}</Project>
       <Name>obit_manager_api</Name>
     </ProjectReference>
+    <ProjectReference Include="..\obit_manager_gui\obit_manager_gui.csproj">
+      <Project>{4BDFB69B-BB4C-4FF6-BB12-16407BEA29BA}</Project>
+      <Name>obit_manager_gui</Name>
+    </ProjectReference>
     <ProjectReference Include="..\obit_manager_settings\obit_manager_settings.csproj">
       <Project>{1814c8b5-e237-43b5-a4a9-c6033ff84c4c}</Project>
       <Name>obit_manager_settings</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="NLog.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />

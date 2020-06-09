@@ -5,10 +5,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using obit_manager_api.core;
 using obit_manager_settings;
-using obit_manager_settings.components;
-using obit_manager_settings.io;
 
-namespace obit_manager
+namespace obit_manager_gui
 {
     public partial class obit_manager : Form
     {
@@ -306,6 +304,11 @@ namespace obit_manager
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.mSettingsManager.Save();
+        }
+
+        private void viewLogToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start(@"C:/ProgramData/obit/AnnotationTool/obit_manager.log");
         }
     }
 }

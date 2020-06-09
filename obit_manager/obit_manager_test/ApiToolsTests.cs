@@ -2,7 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using obit_manager_api.tools;
+using obit_manager_gui.tools;
 
 namespace obit_manager_test
 {
@@ -56,9 +56,21 @@ namespace obit_manager_test
         }
 
         [TestMethod]
+        public async Task TestToolsDownloadsAndSetupDatamoverWithDifferentName64bit()
+        {
+            await Tools.DownloadCheckAndInstallDatamoverJSL(is64bit: true, this.InstallationFolder, "obit_datamover_jsl_alt");
+        }
+
+        [TestMethod]
         public async Task TestToolsDownloadsAndSetupDatamover32bit()
         {
             await Tools.DownloadCheckAndInstallDatamoverJSL(is64bit: false, this.InstallationFolder);
+        }
+
+        [TestMethod]
+        public async Task TestToolsDownloadsAndSetupDatamoverWithDifferentName32bit()
+        {
+            await Tools.DownloadCheckAndInstallDatamoverJSL(is64bit: false, this.InstallationFolder, @"obit_datamover_jsl_alt");
         }
 
         [TestMethod]

@@ -51,7 +51,7 @@
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup>
-    <StartupObject>obit_manager.Program</StartupObject>
+    <StartupObject>obit_manager_gui.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -81,12 +81,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Configurator.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Configurator.Designer.cs">
-      <DependentUpon>Configurator.cs</DependentUpon>
-    </Compile>
+    <Compile Include="fs\AnnotationToolFileSystemTools.cs" />
     <Compile Include="obit_manager.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -101,9 +96,7 @@
     <Compile Include="dialogs\ServerConfigurationDialog.Designer.cs">
       <DependentUpon>ServerConfigurationDialog.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Configurator.resx">
-      <DependentUpon>Configurator.cs</DependentUpon>
-    </EmbeddedResource>
+    <Compile Include="tools\Tools.cs" />
     <EmbeddedResource Include="obit_manager.resx">
       <DependentUpon>obit_manager.cs</DependentUpon>
     </EmbeddedResource>
@@ -157,10 +150,15 @@
       <Project>{9cce9a17-179a-44fb-937a-e97d6a2a4529}</Project>
       <Name>obit_manager_api</Name>
     </ProjectReference>
+    <ProjectReference Include="..\obit_manager_services\obit_manager_services.csproj">
+      <Project>{44c3e1ea-8d13-4379-8833-f8f54b5a5fc5}</Project>
+      <Name>obit_manager_services</Name>
+    </ProjectReference>
     <ProjectReference Include="..\obit_manager_settings\obit_manager_settings.csproj">
       <Project>{1814c8b5-e237-43b5-a4a9-c6033ff84c4c}</Project>
       <Name>obit_manager_settings</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -75,6 +75,7 @@ namespace obit_manager_test
                     break;
                 }
             }
+
             Assert.AreEqual(userNameFound, true);
 
             // Set ownership to current user
@@ -90,7 +91,30 @@ namespace obit_manager_test
 
             // Remove the test folder
             System.IO.Directory.Delete(fullRootPath, true);
+        }
 
+        [TestMethod]
+        public void TestPathOperations()
+        {
+            string path = "C:\\\\Test\\\\file.txt";
+            string processedPath = FileSystem.ChangeBackwardToForwardSlashesInPath(path);
+            string expectedPath = "C:/Test/file.txt";
+            Assert.AreEqual(processedPath, expectedPath);
+
+            path = "C:\\Test\\file.txt";
+            processedPath = FileSystem.ChangeBackwardToForwardSlashesInPath(path);
+            expectedPath = "C:/Test/file.txt";
+            Assert.AreEqual(processedPath, expectedPath);
+
+            path = "C:\\Test\\\\file.txt";
+            processedPath = FileSystem.ChangeBackwardToForwardSlashesInPath(path);
+            expectedPath = "C:/Test/file.txt";
+            Assert.AreEqual(processedPath, expectedPath);
+
+            path = "C:/Test/file.txt";
+            processedPath = FileSystem.ChangeBackwardToForwardSlashesInPath(path);
+            expectedPath = "C:/Test/file.txt";
+            Assert.AreEqual(processedPath, expectedPath);
         }
     }
 }

@@ -1,35 +1,33 @@
-﻿namespace obit_manager_gui
+﻿namespace obit_manager_gui.dialogs
 {
-    namespace dialogs
+    partial class ServerConfigurationDialog
     {
-        partial class ServerConfigurationDialog
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
         {
-            /// <summary>
-            /// Required designer variable.
-            /// </summary>
-            private System.ComponentModel.IContainer components = null;
-
-            /// <summary>
-            /// Clean up any resources being used.
-            /// </summary>
-            /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-            protected override void Dispose(bool disposing)
+            if (disposing && (components != null))
             {
-                if (disposing && (components != null))
-                {
-                    components.Dispose();
-                }
-                base.Dispose(disposing);
+                components.Dispose();
             }
+            base.Dispose(disposing);
+        }
 
-            #region Windows Form Designer generated code
+        #region Windows Form Designer generated code
 
-            /// <summary>
-            /// Required method for Designer support - do not modify
-            /// the contents of this method with the code editor.
-            /// </summary>
-            private void InitializeComponent()
-            {
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
             this.labelOpenBISServerURL = new System.Windows.Forms.Label();
             this.textBoxOpenBISServerURL = new System.Windows.Forms.TextBox();
             this.labelOpenBISServerPort = new System.Windows.Forms.Label();
@@ -248,29 +246,28 @@
             this.ResumeLayout(false);
             this.PerformLayout();
 
-            }
-
-            #endregion
-
-            private System.Windows.Forms.Label labelOpenBISServerURL;
-            private System.Windows.Forms.TextBox textBoxOpenBISServerURL;
-            private System.Windows.Forms.Label labelOpenBISServerPort;
-            private System.Windows.Forms.TextBox textBoxOpenBISServerPort;
-            private System.Windows.Forms.CheckBox checkBoxOpenBISSErverAcceptSelfSignedCert;
-            private System.Windows.Forms.TextBox textBoxDSSHostName;
-            private System.Windows.Forms.Label labelDSSHostName;
-            private System.Windows.Forms.Label labelUnixDSSUser;
-            private System.Windows.Forms.TextBox textBoxUnixDSSUser;
-            private System.Windows.Forms.Button buttonUseCryptoKey;
-            private System.Windows.Forms.Button buttonGenerateCryptoKey;
-            private System.Windows.Forms.GroupBox groupBoxOpenBISServer;
-            private System.Windows.Forms.GroupBox groupBoxDSS;
-            private System.Windows.Forms.TextBox textBox1;
-            private System.Windows.Forms.Label labelLPathLastChanged;
-            private System.Windows.Forms.Label labelDropboxPath;
-            private System.Windows.Forms.TextBox textBox2;
-            private System.Windows.Forms.Label labelServerFriendlyName;
-            private System.Windows.Forms.TextBox textBoxServerFriendlyName;
         }
+
+        #endregion
+
+        private System.Windows.Forms.Label labelOpenBISServerURL;
+        private System.Windows.Forms.TextBox textBoxOpenBISServerURL;
+        private System.Windows.Forms.Label labelOpenBISServerPort;
+        private System.Windows.Forms.TextBox textBoxOpenBISServerPort;
+        private System.Windows.Forms.CheckBox checkBoxOpenBISSErverAcceptSelfSignedCert;
+        private System.Windows.Forms.TextBox textBoxDSSHostName;
+        private System.Windows.Forms.Label labelDSSHostName;
+        private System.Windows.Forms.Label labelUnixDSSUser;
+        private System.Windows.Forms.TextBox textBoxUnixDSSUser;
+        private System.Windows.Forms.Button buttonUseCryptoKey;
+        private System.Windows.Forms.Button buttonGenerateCryptoKey;
+        private System.Windows.Forms.GroupBox groupBoxOpenBISServer;
+        private System.Windows.Forms.GroupBox groupBoxDSS;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Label labelLPathLastChanged;
+        private System.Windows.Forms.Label labelDropboxPath;
+        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.Label labelServerFriendlyName;
+        private System.Windows.Forms.TextBox textBoxServerFriendlyName;
     }
 }

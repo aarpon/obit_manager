@@ -36,12 +36,20 @@
     <Reference Include="INIFileParser, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Genbox.ini-parser.3.0.0\lib\netstandard2.0\INIFileParser.dll</HintPath>
     </Reference>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\NLog.4.7.2\lib\net45\NLog.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.DirectoryServices" />
     <Reference Include="System.DirectoryServices.AccountManagement" />
+    <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -55,16 +63,12 @@
     <Compile Include="core\LocalUserManager.cs" />
     <Compile Include="core\Shell.cs" />
     <Compile Include="core\WebUtils.cs" />
-    <Compile Include="tools\Tools.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\obit_manager_settings\obit_manager_settings.csproj">
-      <Project>{1814C8B5-E237-43B5-A4A9-C6033FF84C4C}</Project>
-      <Name>obit_manager_settings</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="tools\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

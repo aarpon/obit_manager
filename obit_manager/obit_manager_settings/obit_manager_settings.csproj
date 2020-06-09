@@ -74,5 +74,11 @@
       <Version>4.7.2</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\obit_manager_api\obit_manager_api.csproj">
+      <Project>{9cce9a17-179a-44fb-937a-e97d6a2a4529}</Project>
+      <Name>obit_manager_api</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

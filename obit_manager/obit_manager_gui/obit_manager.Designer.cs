@@ -1,4 +1,4 @@
-﻿namespace obit_manager
+﻿namespace obit_manager_gui
 {
     partial class obit_manager
     {
@@ -38,11 +38,13 @@
             this.downloadOnlyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.download32bitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.download64bitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.checkForUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.textBoxLogWindow = new System.Windows.Forms.TextBox();
-            this.checkForUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewLogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -63,7 +65,7 @@
             // 
             // buttonFreshInstall
             // 
-            this.buttonFreshInstall.Location = new System.Drawing.Point(12, 216);
+            this.buttonFreshInstall.Location = new System.Drawing.Point(12, 347);
             this.buttonFreshInstall.Name = "buttonFreshInstall";
             this.buttonFreshInstall.Size = new System.Drawing.Size(396, 34);
             this.buttonFreshInstall.TabIndex = 1;
@@ -74,7 +76,8 @@
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem});
+            this.fileToolStripMenuItem,
+            this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(420, 24);
@@ -103,16 +106,22 @@
             // download32bitToolStripMenuItem
             // 
             this.download32bitToolStripMenuItem.Name = "download32bitToolStripMenuItem";
-            this.download32bitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.download32bitToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
             this.download32bitToolStripMenuItem.Text = "32 bit";
             this.download32bitToolStripMenuItem.Click += new System.EventHandler(this.download32bitToolStripMenuItem_Click);
             // 
             // download64bitToolStripMenuItem
             // 
             this.download64bitToolStripMenuItem.Name = "download64bitToolStripMenuItem";
-            this.download64bitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.download64bitToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
             this.download64bitToolStripMenuItem.Text = "64 bit";
             this.download64bitToolStripMenuItem.Click += new System.EventHandler(this.download64bitToolStripMenuItem_Click);
+            // 
+            // checkForUpdatesToolStripMenuItem
+            // 
+            this.checkForUpdatesToolStripMenuItem.Name = "checkForUpdatesToolStripMenuItem";
+            this.checkForUpdatesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.checkForUpdatesToolStripMenuItem.Text = "Check for updates";
             // 
             // settingsToolStripMenuItem
             // 
@@ -126,30 +135,39 @@
             // loadToolStripMenuItem
             // 
             this.loadToolStripMenuItem.Name = "loadToolStripMenuItem";
-            this.loadToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.loadToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
             this.loadToolStripMenuItem.Text = "Load";
             this.loadToolStripMenuItem.Click += new System.EventHandler(this.loadToolStripMenuItem_Click);
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
             this.saveToolStripMenuItem.Text = "Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // textBoxLogWindow
             // 
-            this.textBoxLogWindow.Location = new System.Drawing.Point(12, 257);
+            this.textBoxLogWindow.Location = new System.Drawing.Point(12, 387);
             this.textBoxLogWindow.Multiline = true;
             this.textBoxLogWindow.Name = "textBoxLogWindow";
-            this.textBoxLogWindow.Size = new System.Drawing.Size(396, 181);
+            this.textBoxLogWindow.Size = new System.Drawing.Size(396, 51);
             this.textBoxLogWindow.TabIndex = 4;
             // 
-            // checkForUpdatesToolStripMenuItem
+            // helpToolStripMenuItem
             // 
-            this.checkForUpdatesToolStripMenuItem.Name = "checkForUpdatesToolStripMenuItem";
-            this.checkForUpdatesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.checkForUpdatesToolStripMenuItem.Text = "Check for updates";
+            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.viewLogToolStripMenuItem});
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.helpToolStripMenuItem.Text = "Help";
+            // 
+            // viewLogToolStripMenuItem
+            // 
+            this.viewLogToolStripMenuItem.Name = "viewLogToolStripMenuItem";
+            this.viewLogToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.viewLogToolStripMenuItem.Text = "View Log";
+            this.viewLogToolStripMenuItem.Click += new System.EventHandler(this.viewLogToolStripMenuItem_Click);
             // 
             // obit_manager
             // 
@@ -186,6 +204,8 @@
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
         private System.Windows.Forms.TextBox textBoxLogWindow;
         private System.Windows.Forms.ToolStripMenuItem checkForUpdatesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem viewLogToolStripMenuItem;
     }
 }
 

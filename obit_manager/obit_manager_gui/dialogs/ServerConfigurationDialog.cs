@@ -1,33 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace obit_manager_gui
+namespace obit_manager_gui.dialogs
 {
-    namespace dialogs
+    public partial class ServerConfigurationDialog : Form
     {
-        public partial class ServerConfigurationDialog : Form
+        public ServerConfigurationDialog()
         {
-            public ServerConfigurationDialog()
-            {
-                InitializeComponent();
-            }
+            InitializeComponent();
+        }
 
-            private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
-            {
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
 
-            }
+        }
 
-            private void buttonGenerateCryptoKey_Click(object sender, EventArgs e)
-            {
+        private void buttonGenerateCryptoKey_Click(object sender, EventArgs e)
+        {
 
-            }
         }
     }
 }

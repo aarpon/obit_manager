@@ -1,53 +1,96 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.Remoting.Messaging;
+using NLog.Config;
+using obit_manager_api.core;
+using obit_manager_settings.components.io;
 
-namespace obit_manager_settings
+namespace obit_manager_settings.components
 {
-    namespace components
+    /// <summary>
+    /// Server data class.
+    /// </summary>
+    public class Server
     {
+        // Application Server host name
+        [Setting(Configuration = "AnnotationTool", Component = "Server")]
+        public string ApplicationServerHostname { get; set; } = string.Empty;
+
+        // Application Server port number (it can be null)
+        [Setting(Configuration = "AnnotationTool", Component = "Server")]
+        public int? ApplicationServerPort { get; set; } = null;
+
+        // Does the Application Server accept self-signed certificates?
+        [Setting(Configuration = "AnnotationTool", Component = "Server")]
+        public bool ApplicationServerAcceptSelfSignedCert { get; set; } = false;
+
+        // DataStore Server host name
+        [Setting(Configuration = "Datamover", Component = "Server")]
+        public string DataStoreServerHostname { get; set; } = "localhost";
+
+        // Unix account on the DataStore Server
+        [Setting(Configuration = "Datamover", Component = "Server")]
+        public string DataStoreServerUserName { get; set; } = "openbis";
+
+        // Full path to the dropbox root folder on the DataStore Server
+        [Setting(Configuration = "Datamover", Component = "Server")]
+        public string DataStoreServerPathToRootDropboxFolder { get; set; } = "/home/openbis/data";
+
+        // (Optional) Full path to the lastchanged executable on the DataStore Server
+        [Setting(Configuration = "Datamover", Component = "Server")]
+        public string DataStoreServerPathToLastChangedExecutable { get; set; } = string.Empty;
+
         /// <summary>
-        /// Server data class.
+        /// Default constructor.
         /// </summary>
-        public class Server
+        public Server()
         {
-            // Application Server host name
-            [Setting(Owner = "AnnotationTool")]
-            public string ApplicationServerHostname { get; set; } = string.Empty;
+            // Keep the default values.
+        }
 
-            // Application Server port number (it can be null)
-            [Setting(Owner = "AnnotationTool")]
-            public int? ApplicationServerPort { get; set; } = null;
-
-            // Does the Application Server accept self-signed certificates?
-            [Setting(Owner = "AnnotationTool")]
-            public bool ApplicationServerAcceptSelfSignedCert { get; set; } = false;
-
-            // DataStore Server host name
-            [Setting(Owner = "Datamover")]
-            public string DataStoreServerHostname { get; set; } = "localhost";
-
-            // Unix account on the DataStore Server
-            [Setting(Owner = "Datamover")]
-            public string DataStoreServerUserName { get; set; } = "openbis";
-
-            // Full path to the dropbox root folder on the DataStore Server
-            [Setting(Owner = "Datamover")]
-            public string DataStoreServerPathToRootDropboxFolder { get; set; } = "/home/openbis/data";
-
-            // (Optional) Full path to the lastchanged executable on the DataStore Server
-            [Setting(Owner = "Datamover")]
-            public string DataStoreServerPathToLastChangedExecutable { get; set; } = string.Empty;
-
-            /// <summary>
-            /// Constructor.
-            /// </summary>
-            public Server()
+        /// <summary>
+        /// Alternative constructor.
+        /// </summary>
+        public Server(string datamoverIncomingDir, DatamoverSettingsParser datamoverSettingsParser)
+        {
+            // First, find the Datamover configuration that fits the client
+            string datamoverJSLPath = "";
+            foreach (string key in datamoverSettingsParser.Configurations)
             {
+                string path1 = datamoverSettingsParser.Get(key, "incoming-target");
+                if (path1 != null)
+                {
+                    string path2 = datamoverIncomingDir;
 
+                    if (FileSystem.ComparePaths(path1, path2))
+                    {
+                        // Found the correct setting; fill the values
+                        Fill(key, datamoverSettingsParser);
+
+                        break;
+                    }
+                }
             }
         }
+
+        /// <summary>
+        /// Set the relevant settings from the DatamoverSettingsParser object.
+        /// </summary>
+        /// <param name="key">Key of the DatamoverSettingsParser map.</param>
+        /// <param name="datamoverSettingsParser">DatamoverSettingsParser object.</param>
+        private void Fill(string key, DatamoverSettingsParser datamoverSettingsParser)
+        {
+            // @Todo Implement me!
+
+            /*
+            this.ApplicationServerHostname = "";
+            this.ApplicationServerPort = 0;
+            this.ApplicationServerAcceptSelfSignedCert = false;
+            this.DataStoreServerHostname = "localhost";
+            this.DataStoreServerUserName = "openbis";
+            this.DataStoreServerPathToRootDropboxFolder = "/home/openbis/data";
+            this.DataStoreServerPathToLastChangedExecutable = string.Empty;
+            */
+        }
+
     }
 }

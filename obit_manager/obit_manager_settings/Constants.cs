@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.CompilerServices;
 
 namespace obit_manager_settings
 {
@@ -78,5 +79,27 @@ namespace obit_manager_settings
 
         // Other constants
         public enum AcquisitionStationType { FLOW_CYTOMETRY, MICROSCOPY };
+
+        // State of obit_manager and all components
+        [Flags]
+        public enum State
+        {
+            OBIT_NOT_INSTALLED = 0,
+            JRE_NOT_INSTALLED = 1 << 1,
+            JRE_ARCHIVE_PRESENT = 1 << 2,
+            JRE_INSTALLED = 1 << 3,
+            ANNOTATION_TOOL_NOT_INSTALLED = 1 << 4,
+            ANNOTATION_TOOL_ARCHIVE_PRESENT = 1 << 5,
+            ANNOTATION_TOOL_INSTALLED = 1 << 6,
+            DATAMOVER_JSL_NOT_INSTALLED = 1 << 7,
+            DATAMOVER_JSL_ARCHIVE_PRESENT = 1 << 8,
+            DATAMOVER_JSL_INSTALLED = 1 << 9,
+            DATAMOVER_NOT_INSTALLED = 1 << 10,
+            DATAMOVER_ARCHIVE_PRESENT = 1 << 11,
+            DATAMOVER_INSTALLED = 1 << 12,
+            DATAMOVER_NOT_RUNNING = 1 << 14,
+            DATAMOVER_RUNNING = 1 << 15,
+            OBIT_INSTALLED = 1 << 16
+        }
     }
 }

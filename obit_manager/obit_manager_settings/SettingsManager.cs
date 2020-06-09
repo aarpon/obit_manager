@@ -1,7 +1,10 @@
 ﻿using obit_manager_settings.components;
-using obit_manager_settings.io;
 using System.Collections.Generic;
-using System.IO;
+using NLog;
+using NLog.Config;
+using obit_manager_settings.components.io;
+using static obit_manager_settings.Constants;
+
 
 namespace obit_manager_settings
 {
@@ -10,17 +13,24 @@ namespace obit_manager_settings
     /// </summary>
     public class SettingsManager
     {
+        // Logger
+        private static Logger sLogger = LogManager.GetCurrentClassLogger();
+
         // Settings parsers
-        private ManagerSettingsParser mManagerParser;
-        private AnnotationToolSettingsParser mAnnotationToolParser;
-        private DatamoverJSLSettingsParser mDatamoverJSLParser;
-        private DatamoverSettingsParser mDatamoverParser;
+        private readonly ManagerSettingsParser mManagerParser;
+        private readonly AnnotationToolSettingsParser mAnnotationToolParser;
+        private readonly DatamoverJSLSettingsParser mDatamoverJSLParser;
+        private readonly DatamoverSettingsParser mDatamoverParser;
 
         // List of instances
         private List<Instance> mInstances;
 
         public SettingsManager()
         {
+            // Initialize application state
+            this.ApplicationState = State.OBIT_NOT_INSTALLED;
+
+            // Initialize list of instances
             this.mInstances = new List<Instance>();
 
             // Load (if possible, otherwise instantiate with default values)
@@ -45,9 +55,17 @@ namespace obit_manager_settings
                 this.mManagerParser.DatamoverRelativeDirList
             );
 
-            // Populate the instances
-            this.PopulateInstances();
+            // If needed, update the relative DatamoverJSL directories
+            this.mManagerParser.DatamoverRelativeDirList = this.mDatamoverJSLParser.GetRelativeDatamoverJSLDirs();
+
+            // Populate the instances and update the state
+            this.ApplicationState = this.PopulateInstances();
+
+            // Save the (possibily updated) oBIT Manager configuration file
+            this.mManagerParser.Save();
         }
+
+        public State ApplicationState { get; private set; }
 
         public void Reload()
         {
@@ -70,9 +88,34 @@ namespace obit_manager_settings
             this.mDatamoverParser.Save();
         }
 
-        private void PopulateInstances()
+        private State PopulateInstances()
         {
+            // Get the list of instances from the Annotation Tool parser
+            var configurations = this.mAnnotationToolParser.Configurations;
 
+            // Inform
+            foreach (KeyValuePair<string, Dictionary<string, string>> configuration in configurations)
+            {
+                // Create new instance
+                Instance instance = new Instance();
+
+                // Create a new Client from the AnnotationTool settings
+                Client client = new Client(configuration.Value);
+
+                // Create a Datamover object from the Datamover and DatamoverJSL configurations
+                Datamover datamover = new Datamover(client.DatamoverIncomingDir, this.mDatamoverJSLParser, this.mDatamoverParser);
+
+                // Create a Server object
+                Server server = new Server(client.DatamoverIncomingDir, this.mDatamoverParser);
+
+                // Add to the instance list
+                this.mInstances.Add(instance);
+
+                // Inform
+                sLogger.Info("Loaded configuration '" + configuration.Key + "'.");
+            }
+            
+            return State.OBIT_NOT_INSTALLED;
         }
 
         #region properties
@@ -80,17 +123,16 @@ namespace obit_manager_settings
         // openBIS Importer Toolset installation dir
         public string InstallationDir
         {
-            get
-            {
-                return this.mManagerParser.InstallationDir;
-            }
+            get => this.mManagerParser.InstallationDir;
             set
             {
-                this.mManagerParser.InstallationDir = value;
+                if (this.mManagerParser != null)
+                {
+                    this.mManagerParser.InstallationDir = value;
+                }
             }
         }
 
         #endregion properties
-
     }
 }

@@ -15,6 +15,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "obit_manager_services", "obit_manager\obit_manager_services\obit_manager_services.csproj", "{44C3E1EA-8D13-4379-8833-F8F54B5A5FC5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "obit_manager_settings", "obit_manager\obit_manager_settings\obit_manager_settings.csproj", "{1814C8B5-E237-43B5-A4A9-C6033FF84C4C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9CCE9A17-179A-44FB-937A-E97D6A2A4529} = {9CCE9A17-179A-44FB-937A-E97D6A2A4529}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
