@@ -3,7 +3,8 @@ using System.Security.AccessControl;
 using System.Security.Policy;
 using obit_manager_settings.components.io;
 using obit_manager_api.core;
-
+using NLog;
+using System.Configuration;
 
 namespace obit_manager_settings.components
 {
@@ -13,6 +14,11 @@ namespace obit_manager_settings.components
     /// </summary>
     public class Datamover
     {
+        /// <summary>
+        /// Logger
+        /// </summary>
+        private static Logger sLogger = LogManager.GetCurrentClassLogger();
+
         // Application name
         [Setting(Configuration = "Datamover_JSL", Component = "Datamover_JSL")]
         public string AppName { get; set; } = "Datamover";
@@ -119,24 +125,50 @@ namespace obit_manager_settings.components
                         // Store the path
                         datamoverJSLPath = key;
 
+                        // Inform
+                        sLogger.Info("Processed Datamover configuration file from Datamover JSL parent folder '" + datamoverJSLPath + "'.");
+                        
                         break;
                     }
                 }
             }
 
-            // Find the DatamoverJSL configuration that fits the client
-            if (!datamoverJSLPath.Equals(""))
+            // If we could not find the expected DatamoverJSL configuration that fits the client,
+            // something is wrong in the configuration files.
+            if (datamoverJSLPath.Equals(""))
             {
-                foreach (string key in datamoverJslSettingsParser.GetRelativeDatamoverJSLDirs())
-                {
-                    if (FileSystem.ComparePaths(key, datamoverJSLPath))
-                    {
-                        // Found the correct setting; fill the values
-                        Fill(key, datamoverJslSettingsParser);
+                string msg = "No known Datamover JSL configuration uses the incoming folder '" + datamoverIncomingDir + "'.";
+                sLogger.Error(msg);
+                throw new ConfigurationException(msg);
+            }
 
-                        break;
-                    }
+            // Keep track of whether we find the DatamoverJSL configuration
+            bool found = false;
+
+            // Find the DatamoverJSL configuration that fits the client
+            foreach (string key in datamoverJslSettingsParser.GetRelativeDatamoverJSLDirs())
+            {
+                if (FileSystem.ComparePaths(key, datamoverJSLPath))
+                {
+                    // Found the correct setting; fill the values
+                    Fill(key, datamoverJslSettingsParser);
+
+                    // Inform
+                    sLogger.Info("Processed Datamover JSL configuration file from folder '" + key + "'.");
+
+                    // Set found to true
+                    found = true;
+
+                    break;
                 }
+            }
+
+            
+            if (!found)
+            {
+                string msg = "No known Datamover JSL configuration uses the incoming folder '" + datamoverIncomingDir + "'.";
+                sLogger.Error(msg);
+                throw new ConfigurationException(msg);
             }
         }
 

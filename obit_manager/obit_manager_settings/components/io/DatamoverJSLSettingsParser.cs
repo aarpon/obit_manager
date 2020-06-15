@@ -101,7 +101,7 @@ namespace obit_manager_settings.components.io
                     this.mMap[key] = data;
 
                     // Log
-                    sLogger.Info("Processed DatamoverJSL settings file '" + fileName + "'.");
+                    sLogger.Info("Successfully parsed DatamoverJSL settings file '" + fileName + "'.");
                 }
                 else
                 {

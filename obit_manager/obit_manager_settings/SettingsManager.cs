@@ -1,10 +1,11 @@
-﻿using obit_manager_settings.components;
+﻿using System;
+using obit_manager_settings.components;
 using System.Collections.Generic;
 using NLog;
 using NLog.Config;
 using obit_manager_settings.components.io;
 using static obit_manager_settings.Constants;
-
+using System.Configuration;
 
 namespace obit_manager_settings
 {
@@ -60,16 +61,13 @@ namespace obit_manager_settings
 
             // Populate the instances and update the state
             this.ApplicationState = this.PopulateInstances();
-
-            // Save the (possibily updated) oBIT Manager configuration file
-            this.mManagerParser.Save();
         }
 
         public State ApplicationState { get; private set; }
 
         public void Reload()
         {
-            // @Todo Implement!
+            // @Todo Re-implement correctly!
             this.mManagerParser.Load();
             this.mAnnotationToolParser.Load();
             this.mDatamoverJSLParser.Load();
@@ -96,25 +94,54 @@ namespace obit_manager_settings
             // Inform
             foreach (KeyValuePair<string, Dictionary<string, string>> configuration in configurations)
             {
-                // Create new instance
-                Instance instance = new Instance();
+                // Inform
+                sLogger.Info("Processing instance '" + configuration.Key + "'.");
 
                 // Create a new Client from the AnnotationTool settings
                 Client client = new Client(configuration.Value);
 
                 // Create a Datamover object from the Datamover and DatamoverJSL configurations
-                Datamover datamover = new Datamover(client.DatamoverIncomingDir, this.mDatamoverJSLParser, this.mDatamoverParser);
+                Datamover datamover;
+                try
+                {
+                    datamover = new Datamover(client.DatamoverIncomingDir, this.mDatamoverJSLParser,
+                        this.mDatamoverParser);
+                }
+                catch (ConfigurationException)
+                {
+                    // Inform
+                    sLogger.Error("Configuration '" + configuration.Key + "' is invalid and will be skipped.");
+
+                    // Skip this configuration.
+                    continue;
+                }
 
                 // Create a Server object
-                Server server = new Server(client.DatamoverIncomingDir, this.mDatamoverParser);
+                Server server;
+                try
+                {
+                    server = new Server(client.DatamoverIncomingDir, this.mDatamoverParser);
+                }
+                catch (ConfigurationException e)
+                {
+                    // Inform
+                    sLogger.Error("Configuration '" + configuration.Key + "' is invalid and will be skipped.");
+
+                    // Skip this configuration.
+                    continue;
+                }
+
+                // Create new instance
+                Instance instance = new Instance(configuration.Key, client, server, datamover);
 
                 // Add to the instance list
                 this.mInstances.Add(instance);
 
                 // Inform
-                sLogger.Info("Loaded configuration '" + configuration.Key + "'.");
+                sLogger.Info("Created instance '" + configuration.Key + "'.");
             }
-            
+
+            // @TODO Set the proper State
             return State.OBIT_NOT_INSTALLED;
         }
 

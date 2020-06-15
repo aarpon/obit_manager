@@ -2,11 +2,17 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using NLog;
 
 namespace obit_manager_settings.components
 {
     public class Client
     {
+        /// <summary>
+        /// Logger
+        /// </summary>
+        private static Logger sLogger = LogManager.GetCurrentClassLogger();
+
         // Configuration name
         [Setting(Configuration = "AnnotationTool", Component = "Client")]
         public string ConfigurationName { get; set; } = "Default";
@@ -67,6 +73,7 @@ namespace obit_manager_settings.components
 
         public Dictionary<string, string> ToConfiguration()
         {
+            // @ToDo: Implement (if needed!)
             return new Dictionary<string, string>();
         }
 
