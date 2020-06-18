@@ -21,6 +21,10 @@ namespace obit_manager_settings.components
         /// </summary>
         private static Logger sLogger = LogManager.GetCurrentClassLogger();
 
+        // Applicatiion Server protocol (http or https)
+        [Setting(Configuration = "AnnotationTool", Component = "Server")] 
+        public string ApplicationServerProtocol { get; set; } = "https";
+
         // Application Server host name
         [Setting(Configuration = "AnnotationTool", Component = "Server")]
         public string ApplicationServerHostname { get; set; } = string.Empty;
@@ -28,6 +32,9 @@ namespace obit_manager_settings.components
         // Application Server port number (it can be null)
         [Setting(Configuration = "AnnotationTool", Component = "Server")]
         public int? ApplicationServerPort { get; set; } = null;
+
+        [Setting(Configuration = "AnnotationTool", Component = "Server")]
+        public string ApplicationServerPath { get; set; } = "openbis";
 
         // Does the Application Server accept self-signed certificates?
         [Setting(Configuration = "AnnotationTool", Component = "Server")]
@@ -64,7 +71,7 @@ namespace obit_manager_settings.components
         /// <summary>
         /// Alternative constructor.
         /// </summary>
-        public Server(string datamoverIncomingDir, DatamoverSettingsParser datamoverSettingsParser)
+        public Server(Client client, DatamoverSettingsParser datamoverSettingsParser)
         {
             // Keep track of whether the expected configuration is found.
             bool found = false;
@@ -75,12 +82,12 @@ namespace obit_manager_settings.components
                 string path1 = datamoverSettingsParser.Get(key, "incoming-target");
                 if (path1 != null)
                 {
-                    string path2 = datamoverIncomingDir;
+                    string path2 = client.DatamoverIncomingDir;
 
                     if (FileSystem.ComparePaths(path1, path2))
                     {
                         // Found the correct setting; fill the values
-                        Fill(key, datamoverSettingsParser);
+                        Fill(key, client, datamoverSettingsParser);
 
                         // Inform
                         sLogger.Info(
@@ -97,7 +104,7 @@ namespace obit_manager_settings.components
             // Was the expected configuration found!
             if (!found)
             {
-                string msg = "No known Datamover configuration uses the incoming folder '" + datamoverIncomingDir + "'.";
+                string msg = "No known Datamover configuration uses the incoming folder '" + client.DatamoverIncomingDir + "'.";
                 sLogger.Error(msg);
                 throw new ConfigurationException(msg);
             }
@@ -109,20 +116,23 @@ namespace obit_manager_settings.components
         /// </summary>
         /// <param name="key">Key of the DatamoverSettingsParser map.</param>
         /// <param name="datamoverSettingsParser">DatamoverSettingsParser object.</param>
-        private void Fill(string key, DatamoverSettingsParser datamoverSettingsParser)
+        private void Fill(string key, Client client, DatamoverSettingsParser datamoverSettingsParser)
         {
             // @Todo These are not in the Datamover configuration!
             sLogger.Warn("Some Server infomation must be retrieved from the Annotation Tool configuration!");
-            this.ApplicationServerHostname = "";
-            this.ApplicationServerPort = 0;
-            this.ApplicationServerAcceptSelfSignedCert = false;
+            ApplicationServerStringComponents asc = parseOpenBISURL(client.OpenBISURL);
+            this.ApplicationServerProtocol = asc.Protocol;
+            this.ApplicationServerHostname = asc.Server;
+            this.ApplicationServerPort = asc.Port;
+            this.ApplicationServerPath = asc.Path;
+            this.ApplicationServerAcceptSelfSignedCert = Utils.StringToBool(client.AcceptSelfSignedCertificates);
 
             // Get the DSS settings
-            ServerStringComponents s = parseOutgoingTargetString(datamoverSettingsParser.Get(key, "outgoing-target"));
-            this.DataStoreServerHostname = s.Server;
-            this.DataStoreServerUserName = s.UserName;
-            this.DataStoreServerPathToRootDropboxFolder = s.DropboxRoot;
-            this.DataStoreServerHardwareClass = s.Hardware;
+            DataStoreServerStringComponents dssc = parseOutgoingTargetString(datamoverSettingsParser.Get(key, "outgoing-target"));
+            this.DataStoreServerHostname = dssc.Server;
+            this.DataStoreServerUserName = dssc.UserName;
+            this.DataStoreServerPathToRootDropboxFolder = dssc.DropboxRoot;
+            this.DataStoreServerHardwareClass = dssc.Hardware;
 
             // Get the last-changed executable
             this.DataStoreServerPathToLastChangedExecutable = datamoverSettingsParser.Get(key, "outgoing-host-lastchanged-executable");
@@ -134,10 +144,10 @@ namespace obit_manager_settings.components
         /// </summary>
         /// <param name="outgoingTargetString">Value of the 'outgoing-target' setting from the Datamover configuration.</param>
         /// <returns></returns>
-        private ServerStringComponents parseOutgoingTargetString(string outgoingTargetString)
+        private DataStoreServerStringComponents parseOutgoingTargetString(string outgoingTargetString)
         {
-            // Initialize ServerStringComponents object
-            ServerStringComponents s;
+            // Initialize DataStoreServerStringComponents object
+            DataStoreServerStringComponents s;
             s.UserName = "";
             s.Server = "";
             s.Port = -1;
@@ -167,11 +177,68 @@ namespace obit_manager_settings.components
         }
 
         /// <summary>
-        /// Build the 'outgoing-target' Datamover setting from its components (stored in a ServerStringComponents structure).
+        /// Decompose the 'openBISURL' setting into its components.
         /// </summary>
-        /// <param name="outgoingTargetString">Value of the 'outgoing-target' setting from the Datamover configuration.</param>
+        /// <param name="openBISURL">Value of the openBISURL setting from the Annotation Tool configuration.</param>
         /// <returns></returns>
-        private string BuildOutgoingTargetString(ServerStringComponents s)
+        private ApplicationServerStringComponents parseOpenBISURL(string openBISURL)
+        {
+            // Initialize DataStoreServerStringComponents object
+            ApplicationServerStringComponents s;
+            s.Protocol = "";
+            s.Server = "";
+            s.Port = -1;
+            s.Path = "";
+
+            string pattern = @"^(?<protocol>http|https)\:\/\/(?<server>[-.\w]*[0-9a-zA-Z])(\:(?<port>\d{4})*)*\/(?<path>.+)?$";
+            MatchCollection matches = Regex.Matches(openBISURL, pattern);
+
+            if (matches.Count == 0)
+            {
+                return s;
+            }
+
+            // Only one match is expected
+            foreach (Match match in matches)
+            {
+                // Fill in the structure
+                s.Protocol = match.Groups["protocol"].Value;
+                s.Server = match.Groups["server"].Value;
+                s.Port = match.Groups["port"].Value.Equals("") ? -1 : Int32.Parse(match.Groups["port"].Value);
+                s.Path = match.Groups["path"].Value;
+            }
+
+            return s;
+        }
+
+        /// <summary>
+        /// Build the 'outgoing-target' Datamover setting from its components (stored in a DataStoreServerStringComponents structure).
+        /// </summary>
+        /// <param name="s">ApplicationServerStringComponents structure.</param>
+        /// <returns></returns>
+        private string BuildApplicationServerString(ApplicationServerStringComponents s)
+        {
+            StringBuilder builder = new StringBuilder();
+
+            builder.Append(s.Protocol);
+            builder.Append("://");
+            builder.Append(s.Server);
+            if (s.Port != -1)
+            {
+                builder.Append(":");
+                builder.Append(s.Port.ToString());
+            }
+            builder.Append(s.Path);
+
+            return builder.ToString();
+        }
+
+        /// <summary>
+        /// Build the 'outgoing-target' Datamover setting from its components (stored in a DataStoreServerStringComponents structure).
+        /// </summary>
+        /// <param name="s">DataStoreServerStringComponents structure.</param>
+        /// <returns></returns>
+        private string BuildOutgoingTargetString(DataStoreServerStringComponents s)
         {
             StringBuilder builder = new StringBuilder();
 
@@ -194,7 +261,7 @@ namespace obit_manager_settings.components
     /// <summary>
     /// Structure of all components of the 'outgoing-target' string.
     /// </summary>
-    struct ServerStringComponents
+    struct DataStoreServerStringComponents
     {
         public string UserName;
         public string Server;
@@ -202,4 +269,16 @@ namespace obit_manager_settings.components
         public string DropboxRoot;
         public string Hardware;
     };
+
+    /// <summary>
+    /// Structure of all components of the 'outgoing-target' string.
+    /// </summary>
+    struct ApplicationServerStringComponents
+    {
+        public string Protocol;
+        public string Server;
+        public int Port;
+        public string Path;
+    };
+
 }

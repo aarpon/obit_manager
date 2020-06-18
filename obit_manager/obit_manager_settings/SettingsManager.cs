@@ -120,7 +120,7 @@ namespace obit_manager_settings
                 Server server;
                 try
                 {
-                    server = new Server(client.DatamoverIncomingDir, this.mDatamoverParser);
+                    server = new Server(client, this.mDatamoverParser);
                 }
                 catch (ConfigurationException e)
                 {

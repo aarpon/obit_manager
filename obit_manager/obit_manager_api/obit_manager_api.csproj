@@ -59,6 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="core\FileSystem.cs" />
+    <Compile Include="core\Utils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="core\LocalUserManager.cs" />
     <Compile Include="core\Shell.cs" />
@@ -67,8 +68,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="tools\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -181,7 +181,7 @@ namespace obit_manager_settings.components
         {
             this.IncomingTarget =
                 FileSystem.ChangeBackwardToForwardSlashesInPath(datamoverSettingsParser.Get(key, "incoming-target"));
-            this.SkipAccessibilityTestOnIncoming = StringToBool(datamoverSettingsParser.Get(key, "skip-accessibility-test-on-incoming"));
+            this.SkipAccessibilityTestOnIncoming = Utils.StringToBool(datamoverSettingsParser.Get(key, "skip-accessibility-test-on-incoming"));
             this.BufferDir = FileSystem.ChangeBackwardToForwardSlashesInPath(datamoverSettingsParser.Get(key, "buffer-dir"));
             if (Int32.TryParse(datamoverSettingsParser.Get(key, "buffer-dir-highwater-mark"), out int tmpBufferDirHighwaterMark))
             {
@@ -192,7 +192,7 @@ namespace obit_manager_settings.components
             {
                 this.OutgoingTargetHighwaterMark = tmpOutgoingTargetHighwaterMark;
             }
-            this.SkipAccessibilityTestOnOutgoing = StringToBool(datamoverSettingsParser.Get(key, "skip-accessibility-test-on-outgoing"));
+            this.SkipAccessibilityTestOnOutgoing = Utils.StringToBool(datamoverSettingsParser.Get(key, "skip-accessibility-test-on-outgoing"));
             this.DataCompletedScript = FileSystem.ChangeBackwardToForwardSlashesInPath(datamoverSettingsParser.Get(key, "data-completed-script"));
             this.ManualInterventionDir = FileSystem.ChangeBackwardToForwardSlashesInPath(datamoverSettingsParser.Get(key, "manual-intervention-dir"));
             if (Int32.TryParse(datamoverSettingsParser.Get(key, "quiet-period"), out int tmpQuietPeriod))
@@ -219,36 +219,6 @@ namespace obit_manager_settings.components
             this.ServiceDescription = datamoverJSLSettingsParser.Get(key, "service", "servicedescription");
             //this.DataStoreServerLocalPrivateKeyPath = string.Empty;
             this.LocalUserAccout = datamoverJSLSettingsParser.Get(key, "service", "account");
-        }
-
-        /// <summary>
-        /// Boolean to string representation.
-        /// </summary>
-        /// <param name="value">Boolean value.</param>
-        /// <returns>String representation of the boolean.</returns>
-        private string BoolToString(bool value)
-        {
-            if (value == true)
-            {
-                return "true";
-            }
-
-            return "false";
-        }
-
-        /// <summary>
-        /// String to boolean representation.
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        private bool StringToBool(string value)
-        {
-            if (value.ToLowerInvariant() == "true")
-            {
-                return true;
-            }
-
-            return false;
         }
     }
 }
