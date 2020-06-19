@@ -168,6 +168,7 @@
             this.buttonDatamoverIncomingFolderEdit.TabIndex = 5;
             this.buttonDatamoverIncomingFolderEdit.Text = "...";
             this.buttonDatamoverIncomingFolderEdit.UseVisualStyleBackColor = true;
+            this.buttonDatamoverIncomingFolderEdit.Click += new System.EventHandler(this.buttonDatamoverIncomingFolderEdit_Click);
             // 
             // buttonDatamoverIncomingFolderRemove
             // 

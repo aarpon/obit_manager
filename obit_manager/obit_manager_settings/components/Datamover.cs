@@ -41,7 +41,7 @@ namespace obit_manager_settings.components
 
         // Local user account to run Datamover as a Windows service 
         [Setting(Configuration = "Datamover_JSL", Component = "Datamover_JSL")]
-        public string LocalUserAccout { get; set; } = "openbis";
+        public string LocalUserAccount { get; set; } = "openbis";
 
         // Datamover incoming target
         [Setting(Configuration = "Datamover", Component = "Datamover")]
@@ -173,6 +173,32 @@ namespace obit_manager_settings.components
         }
 
         /// <summary>
+        /// Copy constructor.
+        /// </summary>
+        /// <param name="other">Datamover object to copy.</param>
+        public Datamover(Datamover other)
+        {
+            this.AppName = string.Copy(other.AppName);
+            this.ServiceName = string.Copy(other.ServiceName);
+            this.DisplayName = string.Copy(other.DisplayName);
+            this.ServiceDescription = string.Copy(other.ServiceDescription);
+            this.DataStoreServerLocalPrivateKeyPath = string.Copy(other.DataStoreServerLocalPrivateKeyPath);
+            this.LocalUserAccount = string.Copy(other.LocalUserAccount);
+            this.IncomingTarget = string.Copy(other.IncomingTarget);
+            this.SkipAccessibilityTestOnIncoming = other.SkipAccessibilityTestOnIncoming;
+            this.BufferDir = string.Copy(other.BufferDir);
+            this.BufferDirHighwaterMark = other.BufferDirHighwaterMark;
+            this.OutgoingTarget = other.OutgoingTarget;
+            this.OutgoingTargetHighwaterMark = other.OutgoingTargetHighwaterMark;
+            this.SkipAccessibilityTestOnOutgoing = other.SkipAccessibilityTestOnOutgoing;
+            this.DataCompletedScript = string.Copy(other.DataCompletedScript);
+            this.ManualInterventionDir = string.Copy(other.ManualInterventionDir);
+            this.QuietPeriod = other.QuietPeriod;
+            this.CheckInterval = other.CheckInterval;
+            this.OutgoingHostLastchangedExecutable = other.OutgoingHostLastchangedExecutable;
+        }
+
+        /// <summary>
         /// Set the relevant settings from the DatamoverSettingsParser object.
         /// </summary>
         /// <param name="key">Key of the DatamoverSettingsParser map.</param>
@@ -218,7 +244,7 @@ namespace obit_manager_settings.components
             this.DisplayName = datamoverJSLSettingsParser.Get(key, "service", "displayname");
             this.ServiceDescription = datamoverJSLSettingsParser.Get(key, "service", "servicedescription");
             //this.DataStoreServerLocalPrivateKeyPath = string.Empty;
-            this.LocalUserAccout = datamoverJSLSettingsParser.Get(key, "service", "account");
+            this.LocalUserAccount = datamoverJSLSettingsParser.Get(key, "service", "account");
         }
     }
 }

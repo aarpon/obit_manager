@@ -69,5 +69,24 @@ namespace obit_manager_gui.components
                 }
             }
         }
+
+        private void buttonDatamoverIncomingFolderEdit_Click(object sender, EventArgs e)
+        {
+            using (var form = new DatamoverConfigurationDialog(this.mInstance.DatamoverRef))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    // Get the updated Client
+                    Datamover updatedDatamover = form.Result;
+
+                    // Set it
+                    this.mInstance.DatamoverRef = updatedDatamover;
+
+                    // Update the corresponding field
+                    this.comboBoxDatamoverIncomingFolder.Text = this.mInstance.DatamoverRef.IncomingTarget;
+                }
+            }
+        }
     }
 }
