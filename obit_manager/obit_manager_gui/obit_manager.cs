@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using obit_manager_api.core;
+using obit_manager_gui.components;
 using obit_manager_settings;
 
 namespace obit_manager_gui
@@ -33,7 +34,8 @@ namespace obit_manager_gui
             setUIDefaults();
 
             // Log some information
-            this.textBoxLogWindow.AppendText("Completed initialization.");
+            this.textBoxLogWindow.AppendText("Loaded " + this.mSettingsManager.NumInstances + " instance(s).\r\n");
+            this.textBoxLogWindow.AppendText("Completed initialization.\r\n");
         }
 
         private void obit_manager_Resize(object sender, EventArgs e)
@@ -185,6 +187,9 @@ namespace obit_manager_gui
                 buttonOBITInstallationDirectory.Text = installationDir;
                 this.mSettingsManager.InstallationDir = installationDir;
             }
+
+            // Add a new configuration editor
+            this.panelContainerConfigurations.Controls.Add(new InstanceConfigurator(this.mSettingsManager.SelectedInstance));
 
             //// Set the platform bits
             //if (Environment.Is64BitOperatingSystem)

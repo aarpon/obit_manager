@@ -2,6 +2,7 @@
 using System.Configuration;
 using System.Net.Configuration;
 using System.Runtime.Remoting.Messaging;
+using System.Security.Policy;
 using System.Text;
 using System.Text.RegularExpressions;
 using NLog;
@@ -50,7 +51,7 @@ namespace obit_manager_settings.components
 
         // Full path to the dropbox root folder on the DataStore Server
         [Setting(Configuration = "Datamover", Component = "Server")]
-        public string DataStoreServerPathToRootDropboxFolder { get; set; } = "/home/openbis/data";
+        public string DataStoreServerPathToRootDropboxFolder { get; set; } = "/home/openbis/data/";
 
         [Setting(Configuration = "AnnotationTool", Component = "Server")]
         public string DataStoreServerHardwareClass { get; set; } = "";
@@ -59,6 +60,14 @@ namespace obit_manager_settings.components
         [Setting(Configuration = "Datamover", Component = "Server")]
         public string DataStoreServerPathToLastChangedExecutable { get; set; } = string.Empty;
 
+        // This property is not stored: it is built on the fly on request
+        public string DataStoreServerFullTargetString
+        {
+            get => this.BuildOutgoingTargetString();
+        }
+
+        // This property is not stored: it is built on the fly on request
+        public string Label => this.DataStoreServerHostname + " (" + this.DataStoreServerHardwareClass + ")";
 
         /// <summary>
         /// Default constructor.
@@ -110,6 +119,21 @@ namespace obit_manager_settings.components
             }
         }
 
+        // Copy constructor.
+        public Server(Server other)
+        {
+            // Copy all properties
+            this.ApplicationServerProtocol = String.Copy(other.ApplicationServerProtocol);
+            this.ApplicationServerHostname = String.Copy(other.ApplicationServerHostname);
+            this.ApplicationServerPort = other. ApplicationServerPort;
+            this.ApplicationServerPath = String.Copy(other.ApplicationServerPath);
+            this.ApplicationServerAcceptSelfSignedCert = other.ApplicationServerAcceptSelfSignedCert;
+            this.DataStoreServerHostname = String.Copy(other.DataStoreServerHostname);
+            this.DataStoreServerUserName = String.Copy(other.DataStoreServerUserName);
+            this.DataStoreServerPathToRootDropboxFolder = String.Copy(other.DataStoreServerPathToRootDropboxFolder);
+            this.DataStoreServerHardwareClass = String.Copy(other.DataStoreServerHardwareClass);
+            this.DataStoreServerPathToLastChangedExecutable = String.Copy(other.DataStoreServerPathToLastChangedExecutable);
+        }
 
         /// <summary>
         /// Set the relevant settings from the DatamoverSettingsParser object.
@@ -253,6 +277,26 @@ namespace obit_manager_settings.components
             builder.Append(s.DropboxRoot);
             builder.Append("/incoming-");
             builder.Append(s.Hardware);
+
+            return builder.ToString();
+        }
+
+        /// <summary>
+        /// Build the 'outgoing-target' Datamover setting from its components (stored in the Server object itself).
+        /// </summary>
+        /// <returns></returns>
+        private string BuildOutgoingTargetString()
+        {
+            StringBuilder builder = new StringBuilder();
+
+            builder.Append(this.DataStoreServerUserName);
+            builder.Append("@");
+            builder.Append(this.DataStoreServerHostname);
+            builder.Append(":");
+            // @ToDo: fix the DSS URL scanning -- there is no port!
+            builder.Append(this.DataStoreServerPathToRootDropboxFolder);
+            builder.Append("/incoming-");
+            builder.Append(this.DataStoreServerHardwareClass);
 
             return builder.ToString();
         }

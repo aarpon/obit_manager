@@ -42,9 +42,10 @@
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.textBoxLogWindow = new System.Windows.Forms.TextBox();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewLogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.textBoxLogWindow = new System.Windows.Forms.TextBox();
+            this.panelContainerConfigurations = new System.Windows.Forms.Panel();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -57,7 +58,7 @@
             // 
             this.buttonOBITInstallationDirectory.Location = new System.Drawing.Point(12, 27);
             this.buttonOBITInstallationDirectory.Name = "buttonOBITInstallationDirectory";
-            this.buttonOBITInstallationDirectory.Size = new System.Drawing.Size(396, 34);
+            this.buttonOBITInstallationDirectory.Size = new System.Drawing.Size(580, 34);
             this.buttonOBITInstallationDirectory.TabIndex = 0;
             this.buttonOBITInstallationDirectory.Text = "Pick oBIT installation dir...";
             this.buttonOBITInstallationDirectory.UseVisualStyleBackColor = true;
@@ -67,7 +68,7 @@
             // 
             this.buttonFreshInstall.Location = new System.Drawing.Point(12, 347);
             this.buttonFreshInstall.Name = "buttonFreshInstall";
-            this.buttonFreshInstall.Size = new System.Drawing.Size(396, 34);
+            this.buttonFreshInstall.Size = new System.Drawing.Size(580, 34);
             this.buttonFreshInstall.TabIndex = 1;
             this.buttonFreshInstall.Text = "Fresh install";
             this.buttonFreshInstall.UseVisualStyleBackColor = true;
@@ -80,7 +81,7 @@
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(420, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(604, 24);
             this.menuStrip1.TabIndex = 3;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -100,7 +101,7 @@
             this.download32bitToolStripMenuItem,
             this.download64bitToolStripMenuItem});
             this.downloadOnlyToolStripMenuItem.Name = "downloadOnlyToolStripMenuItem";
-            this.downloadOnlyToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.downloadOnlyToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
             this.downloadOnlyToolStripMenuItem.Text = "Download only";
             // 
             // download32bitToolStripMenuItem
@@ -120,7 +121,7 @@
             // checkForUpdatesToolStripMenuItem
             // 
             this.checkForUpdatesToolStripMenuItem.Name = "checkForUpdatesToolStripMenuItem";
-            this.checkForUpdatesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.checkForUpdatesToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
             this.checkForUpdatesToolStripMenuItem.Text = "Check for updates";
             // 
             // settingsToolStripMenuItem
@@ -129,7 +130,7 @@
             this.loadToolStripMenuItem,
             this.saveToolStripMenuItem});
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(170, 22);
             this.settingsToolStripMenuItem.Text = "Settings";
             // 
             // loadToolStripMenuItem
@@ -146,14 +147,6 @@
             this.saveToolStripMenuItem.Text = "Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
-            // textBoxLogWindow
-            // 
-            this.textBoxLogWindow.Location = new System.Drawing.Point(12, 387);
-            this.textBoxLogWindow.Multiline = true;
-            this.textBoxLogWindow.Name = "textBoxLogWindow";
-            this.textBoxLogWindow.Size = new System.Drawing.Size(396, 51);
-            this.textBoxLogWindow.TabIndex = 4;
-            // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -165,15 +158,31 @@
             // viewLogToolStripMenuItem
             // 
             this.viewLogToolStripMenuItem.Name = "viewLogToolStripMenuItem";
-            this.viewLogToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.viewLogToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
             this.viewLogToolStripMenuItem.Text = "View Log";
             this.viewLogToolStripMenuItem.Click += new System.EventHandler(this.viewLogToolStripMenuItem_Click);
+            // 
+            // textBoxLogWindow
+            // 
+            this.textBoxLogWindow.Location = new System.Drawing.Point(12, 387);
+            this.textBoxLogWindow.Multiline = true;
+            this.textBoxLogWindow.Name = "textBoxLogWindow";
+            this.textBoxLogWindow.Size = new System.Drawing.Size(580, 51);
+            this.textBoxLogWindow.TabIndex = 4;
+            // 
+            // panelContainerConfigurations
+            // 
+            this.panelContainerConfigurations.Location = new System.Drawing.Point(8, 68);
+            this.panelContainerConfigurations.Name = "panelContainerConfigurations";
+            this.panelContainerConfigurations.Size = new System.Drawing.Size(594, 273);
+            this.panelContainerConfigurations.TabIndex = 5;
             // 
             // obit_manager
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(420, 450);
+            this.ClientSize = new System.Drawing.Size(604, 450);
+            this.Controls.Add(this.panelContainerConfigurations);
             this.Controls.Add(this.textBoxLogWindow);
             this.Controls.Add(this.buttonFreshInstall);
             this.Controls.Add(this.buttonOBITInstallationDirectory);
@@ -206,6 +215,7 @@
         private System.Windows.Forms.ToolStripMenuItem checkForUpdatesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem viewLogToolStripMenuItem;
+        private System.Windows.Forms.Panel panelContainerConfigurations;
     }
 }
 

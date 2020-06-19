@@ -69,5 +69,27 @@ namespace obit_manager_settings.components
             return true;
         }
 
+        #region properties
+
+        public Client ClientRef
+        {
+            get => this.mClient;
+            set => this.mClient = value;
+        }
+
+        public Server ServerRef
+        {
+            get => this.mServer;
+            set => this.mServer = value;
+        }
+
+        public Datamover DatamoverRef
+        {
+            get => this.mDatamover;
+            set => this.mDatamover = value;
+        }
+
+        #endregion properties
+
     }
 }

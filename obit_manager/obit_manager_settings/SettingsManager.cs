@@ -6,6 +6,7 @@ using NLog.Config;
 using obit_manager_settings.components.io;
 using static obit_manager_settings.Constants;
 using System.Configuration;
+using System.Runtime.Remoting.Messaging;
 
 namespace obit_manager_settings
 {
@@ -26,6 +27,10 @@ namespace obit_manager_settings
         // List of instances
         private List<Instance> mInstances;
 
+        // Keep track of the selected instance
+        private int mSelectedInstanceIndex = 0;
+
+ 
         public SettingsManager()
         {
             // Initialize application state
@@ -61,6 +66,9 @@ namespace obit_manager_settings
 
             // Populate the instances and update the state
             this.ApplicationState = this.PopulateInstances();
+
+            // Set the first instance to be the selected one
+            this.mSelectedInstanceIndex = 0;
         }
 
         public State ApplicationState { get; private set; }
@@ -158,6 +166,51 @@ namespace obit_manager_settings
                     this.mManagerParser.InstallationDir = value;
                 }
             }
+        }
+
+        /// <summary>
+        /// Index of the selected Instance
+        /// </summary>
+        public int SelectedInstanceIndex
+        {
+            get => this.mSelectedInstanceIndex;
+            set
+            {
+                if (value >= 0 && value < mInstances.Count)
+                {
+                    this.mSelectedInstanceIndex = value;
+                }
+                else
+                {
+                    throw new Exception("There is no Instance with index " + value.ToString() + ".");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Selected Instance
+        /// </summary>
+        public Instance SelectedInstance
+        {
+            get
+            {
+                if (this.mSelectedInstanceIndex >= 0 && this.mSelectedInstanceIndex < this.mInstances.Count)
+                {
+                    return this.mInstances[this.mSelectedInstanceIndex];
+                }
+                else
+                {
+                    throw new Exception("There is no valid selected Instance.");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Return the number of instances.
+        /// </summary>
+        public int NumInstances
+        {
+            get => this.mInstances.Count; 
         }
 
         #endregion properties

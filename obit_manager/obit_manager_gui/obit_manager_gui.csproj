@@ -81,6 +81,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="components\InstanceConfigurator.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="components\InstanceConfigurator.Designer.cs">
+      <DependentUpon>InstanceConfigurator.cs</DependentUpon>
+    </Compile>
+    <Compile Include="dialogs\AnnotatiolToolConfigurationDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="dialogs\AnnotatiolToolConfigurationDialog.Designer.cs">
+      <DependentUpon>AnnotatiolToolConfigurationDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="dialogs\DatamoverConfigurationDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="dialogs\DatamoverConfigurationDialog.Designer.cs">
+      <DependentUpon>DatamoverConfigurationDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="fs\AnnotationToolFileSystemTools.cs" />
     <Compile Include="obit_manager.cs">
       <SubType>Form</SubType>
@@ -97,6 +115,15 @@
       <DependentUpon>ServerConfigurationDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="tools\Tools.cs" />
+    <EmbeddedResource Include="components\InstanceConfigurator.resx">
+      <DependentUpon>InstanceConfigurator.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="dialogs\AnnotatiolToolConfigurationDialog.resx">
+      <DependentUpon>AnnotatiolToolConfigurationDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="dialogs\DatamoverConfigurationDialog.resx">
+      <DependentUpon>DatamoverConfigurationDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="obit_manager.resx">
       <DependentUpon>obit_manager.cs</DependentUpon>
     </EmbeddedResource>
