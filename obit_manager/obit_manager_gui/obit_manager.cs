@@ -81,12 +81,7 @@ namespace obit_manager_gui
                     this.mSettingsManager.InstallationDir = dialog.SelectedPath;
                     buttonOBITInstallationDirectory.Text = this.mSettingsManager.InstallationDir;
 
-                    // Update the application settings
-                }
-                else
-                {
-                    this.mSettingsManager.InstallationDir = dialog.SelectedPath;
-                    buttonOBITInstallationDirectory.Text = "Pick oBIT installation dir...";
+                    // @ToDo: Update the application settings
                 }
             }
         }

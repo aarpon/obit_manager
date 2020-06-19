@@ -35,7 +35,7 @@ namespace obit_manager_settings.components
 
         // Accept self-signed certificates
         [Setting(Configuration = "AnnotationTool", Component = "Server")]
-        public string AcceptSelfSignedCertificates { get; set; } = "no";
+        public bool AcceptSelfSignedCertificates { get; set; } = false;
 
         // User folder base path on the local machine
         [Setting(Configuration = "AnnotationTool", Component = "Client")]
@@ -43,7 +43,7 @@ namespace obit_manager_settings.components
 
         // Create marker file
         [Setting(Configuration = "AnnotationTool", Component = "Client")]
-        public string CreateMarkerFile { get; } = "no";
+        public bool CreateMarkerFile { get; set; } = false;
 
         /// <summary>
         /// Default constructor
@@ -66,15 +66,44 @@ namespace obit_manager_settings.components
             this.DatamoverIncomingDir = conf["DatamoverIncomingDir"];
             this.AcquisitionStation = conf["AcquisitionStation"];
             this.HumanFriendlyHostName = conf["HumanFriendlyHostName"];
-            this.AcceptSelfSignedCertificates = conf["AcceptSelfSignedCertificates"];
+            this.AcceptSelfSignedCertificates = conf["AcceptSelfSignedCertificates"].Equals("yes") ? true : false;
             this.UserDataDir = conf["UserDataDir"];
-            this.CreateMarkerFile = conf["CreateMarkerFile"];
+            this.CreateMarkerFile = conf["CreateMarkerFile"].Equals("yes") ? true : false;
+        }
+
+        /// <summary>
+        /// Copy constructor.
+        /// </summary>
+        /// <param name="other">Client object to be copied.</param>
+        public Client(Client other)
+        {
+            // Set the values
+            this.ConfigurationName = string.Copy(other.ConfigurationName);
+            this.OpenBISURL = string.Copy(other.OpenBISURL);
+            this.DatamoverIncomingDir = string.Copy(other.DatamoverIncomingDir);
+            this.AcquisitionStation = string.Copy(other.AcquisitionStation);
+            this.HumanFriendlyHostName = string.Copy(other.HumanFriendlyHostName);
+            this.AcceptSelfSignedCertificates = other.AcceptSelfSignedCertificates;
+            this.UserDataDir = string.Copy(other.UserDataDir);
+            this.CreateMarkerFile = other.CreateMarkerFile;
         }
 
         public Dictionary<string, string> ToConfiguration()
         {
-            // @ToDo: Implement (if needed!)
-            return new Dictionary<string, string>();
+            // Initialize
+            var conf = new Dictionary<string, string>();
+            
+            // Set the values
+            conf["ConfigurationName"] = this.ConfigurationName;
+            conf["OpenBISURL"] = this.OpenBISURL;
+            conf["DatamoverIncomingDir"] = this.DatamoverIncomingDir;
+            conf["AcquisitionStation"] = this.AcquisitionStation;
+            conf["HumanFriendlyHostName"] = this.HumanFriendlyHostName;
+            conf["AcceptSelfSignedCertificates"] = this.AcceptSelfSignedCertificates == true ? "yes" : "no";
+            conf["UserDataDir"] = this.UserDataDir;
+            conf["CreateMarkerFile"] = this.CreateMarkerFile == true ? "yes" : "no";
+
+            return conf;
         }
 
     }

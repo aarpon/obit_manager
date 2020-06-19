@@ -29,25 +29,25 @@
         private void InitializeComponent()
         {
             this.groupBoxInstance = new System.Windows.Forms.GroupBox();
-            this.comboBoxUserFolder = new System.Windows.Forms.ComboBox();
-            this.labelUserFolder = new System.Windows.Forms.Label();
-            this.buttonUserFolderAdd = new System.Windows.Forms.Button();
-            this.buttonUserFolderRemove = new System.Windows.Forms.Button();
-            this.buttonUserFolderEdit = new System.Windows.Forms.Button();
-            this.buttonDatamoverIncomingFolderEdit = new System.Windows.Forms.Button();
-            this.buttonDatamoverIncomingFolderRemove = new System.Windows.Forms.Button();
-            this.buttonDatamoverIncomingFolderAdd = new System.Windows.Forms.Button();
-            this.labelDatamoverIncomingFolder = new System.Windows.Forms.Label();
-            this.comboBoxDatamoverIncomingFolder = new System.Windows.Forms.ComboBox();
+            this.labelConfiguration = new System.Windows.Forms.Label();
+            this.buttonConfigurationEdit = new System.Windows.Forms.Button();
+            this.buttonConfigurationRemove = new System.Windows.Forms.Button();
+            this.buttonConfigurationAdd = new System.Windows.Forms.Button();
             this.buttonServerEdit = new System.Windows.Forms.Button();
             this.buttonServerRemove = new System.Windows.Forms.Button();
             this.buttonServerAdd = new System.Windows.Forms.Button();
             this.labelServer = new System.Windows.Forms.Label();
             this.comboBoxServer = new System.Windows.Forms.ComboBox();
-            this.buttonConfigurationAdd = new System.Windows.Forms.Button();
-            this.buttonConfigurationRemove = new System.Windows.Forms.Button();
-            this.buttonConfigurationEdit = new System.Windows.Forms.Button();
-            this.labelConfiguration = new System.Windows.Forms.Label();
+            this.buttonDatamoverIncomingFolderEdit = new System.Windows.Forms.Button();
+            this.buttonDatamoverIncomingFolderRemove = new System.Windows.Forms.Button();
+            this.buttonDatamoverIncomingFolderAdd = new System.Windows.Forms.Button();
+            this.labelDatamoverIncomingFolder = new System.Windows.Forms.Label();
+            this.comboBoxDatamoverIncomingFolder = new System.Windows.Forms.ComboBox();
+            this.buttonUserFolderEdit = new System.Windows.Forms.Button();
+            this.buttonUserFolderRemove = new System.Windows.Forms.Button();
+            this.buttonUserFolderAdd = new System.Windows.Forms.Button();
+            this.labelUserFolder = new System.Windows.Forms.Label();
+            this.comboBoxUserFolder = new System.Windows.Forms.ComboBox();
             this.groupBoxInstance.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -79,93 +79,41 @@
             this.groupBoxInstance.TabStop = false;
             this.groupBoxInstance.Text = "Default";
             // 
-            // comboBoxUserFolder
+            // labelConfiguration
             // 
-            this.comboBoxUserFolder.FormattingEnabled = true;
-            this.comboBoxUserFolder.Location = new System.Drawing.Point(99, 22);
-            this.comboBoxUserFolder.Name = "comboBoxUserFolder";
-            this.comboBoxUserFolder.Size = new System.Drawing.Size(357, 21);
-            this.comboBoxUserFolder.TabIndex = 0;
+            this.labelConfiguration.AutoSize = true;
+            this.labelConfiguration.Location = new System.Drawing.Point(390, 113);
+            this.labelConfiguration.Name = "labelConfiguration";
+            this.labelConfiguration.Size = new System.Drawing.Size(69, 13);
+            this.labelConfiguration.TabIndex = 18;
+            this.labelConfiguration.Text = "Configuration";
             // 
-            // labelUserFolder
+            // buttonConfigurationEdit
             // 
-            this.labelUserFolder.AutoSize = true;
-            this.labelUserFolder.Location = new System.Drawing.Point(7, 26);
-            this.labelUserFolder.Name = "labelUserFolder";
-            this.labelUserFolder.Size = new System.Drawing.Size(58, 13);
-            this.labelUserFolder.TabIndex = 1;
-            this.labelUserFolder.Text = "User folder";
+            this.buttonConfigurationEdit.Location = new System.Drawing.Point(461, 108);
+            this.buttonConfigurationEdit.Name = "buttonConfigurationEdit";
+            this.buttonConfigurationEdit.Size = new System.Drawing.Size(34, 23);
+            this.buttonConfigurationEdit.TabIndex = 12;
+            this.buttonConfigurationEdit.Text = "...";
+            this.buttonConfigurationEdit.UseVisualStyleBackColor = true;
             // 
-            // buttonUserFolderAdd
+            // buttonConfigurationRemove
             // 
-            this.buttonUserFolderAdd.Location = new System.Drawing.Point(501, 21);
-            this.buttonUserFolderAdd.Name = "buttonUserFolderAdd";
-            this.buttonUserFolderAdd.Size = new System.Drawing.Size(34, 23);
-            this.buttonUserFolderAdd.TabIndex = 2;
-            this.buttonUserFolderAdd.Text = "+";
-            this.buttonUserFolderAdd.UseVisualStyleBackColor = true;
+            this.buttonConfigurationRemove.Location = new System.Drawing.Point(540, 108);
+            this.buttonConfigurationRemove.Name = "buttonConfigurationRemove";
+            this.buttonConfigurationRemove.Size = new System.Drawing.Size(34, 23);
+            this.buttonConfigurationRemove.TabIndex = 14;
+            this.buttonConfigurationRemove.Text = "—";
+            this.buttonConfigurationRemove.UseVisualStyleBackColor = true;
             // 
-            // buttonUserFolderRemove
+            // buttonConfigurationAdd
             // 
-            this.buttonUserFolderRemove.Location = new System.Drawing.Point(540, 21);
-            this.buttonUserFolderRemove.Name = "buttonUserFolderRemove";
-            this.buttonUserFolderRemove.Size = new System.Drawing.Size(34, 23);
-            this.buttonUserFolderRemove.TabIndex = 3;
-            this.buttonUserFolderRemove.Text = "—";
-            this.buttonUserFolderRemove.UseVisualStyleBackColor = true;
-            // 
-            // buttonUserFolderEdit
-            // 
-            this.buttonUserFolderEdit.Location = new System.Drawing.Point(462, 21);
-            this.buttonUserFolderEdit.Name = "buttonUserFolderEdit";
-            this.buttonUserFolderEdit.Size = new System.Drawing.Size(34, 23);
-            this.buttonUserFolderEdit.TabIndex = 1;
-            this.buttonUserFolderEdit.Text = "...";
-            this.buttonUserFolderEdit.UseVisualStyleBackColor = true;
-            // 
-            // buttonDatamoverIncomingFolderEdit
-            // 
-            this.buttonDatamoverIncomingFolderEdit.Location = new System.Drawing.Point(462, 50);
-            this.buttonDatamoverIncomingFolderEdit.Name = "buttonDatamoverIncomingFolderEdit";
-            this.buttonDatamoverIncomingFolderEdit.Size = new System.Drawing.Size(34, 23);
-            this.buttonDatamoverIncomingFolderEdit.TabIndex = 5;
-            this.buttonDatamoverIncomingFolderEdit.Text = "...";
-            this.buttonDatamoverIncomingFolderEdit.UseVisualStyleBackColor = true;
-            // 
-            // buttonDatamoverIncomingFolderRemove
-            // 
-            this.buttonDatamoverIncomingFolderRemove.Location = new System.Drawing.Point(540, 50);
-            this.buttonDatamoverIncomingFolderRemove.Name = "buttonDatamoverIncomingFolderRemove";
-            this.buttonDatamoverIncomingFolderRemove.Size = new System.Drawing.Size(34, 23);
-            this.buttonDatamoverIncomingFolderRemove.TabIndex = 7;
-            this.buttonDatamoverIncomingFolderRemove.Text = "—";
-            this.buttonDatamoverIncomingFolderRemove.UseVisualStyleBackColor = true;
-            // 
-            // buttonDatamoverIncomingFolderAdd
-            // 
-            this.buttonDatamoverIncomingFolderAdd.Location = new System.Drawing.Point(501, 50);
-            this.buttonDatamoverIncomingFolderAdd.Name = "buttonDatamoverIncomingFolderAdd";
-            this.buttonDatamoverIncomingFolderAdd.Size = new System.Drawing.Size(34, 23);
-            this.buttonDatamoverIncomingFolderAdd.TabIndex = 6;
-            this.buttonDatamoverIncomingFolderAdd.Text = "+";
-            this.buttonDatamoverIncomingFolderAdd.UseVisualStyleBackColor = true;
-            // 
-            // labelDatamoverIncomingFolder
-            // 
-            this.labelDatamoverIncomingFolder.AutoSize = true;
-            this.labelDatamoverIncomingFolder.Location = new System.Drawing.Point(7, 55);
-            this.labelDatamoverIncomingFolder.Name = "labelDatamoverIncomingFolder";
-            this.labelDatamoverIncomingFolder.Size = new System.Drawing.Size(88, 13);
-            this.labelDatamoverIncomingFolder.TabIndex = 6;
-            this.labelDatamoverIncomingFolder.Text = "Datamover folder";
-            // 
-            // comboBoxDatamoverIncomingFolder
-            // 
-            this.comboBoxDatamoverIncomingFolder.FormattingEnabled = true;
-            this.comboBoxDatamoverIncomingFolder.Location = new System.Drawing.Point(99, 51);
-            this.comboBoxDatamoverIncomingFolder.Name = "comboBoxDatamoverIncomingFolder";
-            this.comboBoxDatamoverIncomingFolder.Size = new System.Drawing.Size(357, 21);
-            this.comboBoxDatamoverIncomingFolder.TabIndex = 4;
+            this.buttonConfigurationAdd.Location = new System.Drawing.Point(501, 108);
+            this.buttonConfigurationAdd.Name = "buttonConfigurationAdd";
+            this.buttonConfigurationAdd.Size = new System.Drawing.Size(34, 23);
+            this.buttonConfigurationAdd.TabIndex = 13;
+            this.buttonConfigurationAdd.Text = "+";
+            this.buttonConfigurationAdd.UseVisualStyleBackColor = true;
             // 
             // buttonServerEdit
             // 
@@ -212,41 +160,94 @@
             this.comboBoxServer.Size = new System.Drawing.Size(357, 21);
             this.comboBoxServer.TabIndex = 8;
             // 
-            // buttonConfigurationAdd
+            // buttonDatamoverIncomingFolderEdit
             // 
-            this.buttonConfigurationAdd.Location = new System.Drawing.Point(501, 108);
-            this.buttonConfigurationAdd.Name = "buttonConfigurationAdd";
-            this.buttonConfigurationAdd.Size = new System.Drawing.Size(34, 23);
-            this.buttonConfigurationAdd.TabIndex = 13;
-            this.buttonConfigurationAdd.Text = "+";
-            this.buttonConfigurationAdd.UseVisualStyleBackColor = true;
+            this.buttonDatamoverIncomingFolderEdit.Location = new System.Drawing.Point(462, 50);
+            this.buttonDatamoverIncomingFolderEdit.Name = "buttonDatamoverIncomingFolderEdit";
+            this.buttonDatamoverIncomingFolderEdit.Size = new System.Drawing.Size(34, 23);
+            this.buttonDatamoverIncomingFolderEdit.TabIndex = 5;
+            this.buttonDatamoverIncomingFolderEdit.Text = "...";
+            this.buttonDatamoverIncomingFolderEdit.UseVisualStyleBackColor = true;
             // 
-            // buttonConfigurationRemove
+            // buttonDatamoverIncomingFolderRemove
             // 
-            this.buttonConfigurationRemove.Location = new System.Drawing.Point(540, 108);
-            this.buttonConfigurationRemove.Name = "buttonConfigurationRemove";
-            this.buttonConfigurationRemove.Size = new System.Drawing.Size(34, 23);
-            this.buttonConfigurationRemove.TabIndex = 14;
-            this.buttonConfigurationRemove.Text = "—";
-            this.buttonConfigurationRemove.UseVisualStyleBackColor = true;
+            this.buttonDatamoverIncomingFolderRemove.Location = new System.Drawing.Point(540, 50);
+            this.buttonDatamoverIncomingFolderRemove.Name = "buttonDatamoverIncomingFolderRemove";
+            this.buttonDatamoverIncomingFolderRemove.Size = new System.Drawing.Size(34, 23);
+            this.buttonDatamoverIncomingFolderRemove.TabIndex = 7;
+            this.buttonDatamoverIncomingFolderRemove.Text = "—";
+            this.buttonDatamoverIncomingFolderRemove.UseVisualStyleBackColor = true;
             // 
-            // buttonConfigurationEdit
+            // buttonDatamoverIncomingFolderAdd
             // 
-            this.buttonConfigurationEdit.Location = new System.Drawing.Point(461, 108);
-            this.buttonConfigurationEdit.Name = "buttonConfigurationEdit";
-            this.buttonConfigurationEdit.Size = new System.Drawing.Size(34, 23);
-            this.buttonConfigurationEdit.TabIndex = 12;
-            this.buttonConfigurationEdit.Text = "...";
-            this.buttonConfigurationEdit.UseVisualStyleBackColor = true;
+            this.buttonDatamoverIncomingFolderAdd.Location = new System.Drawing.Point(501, 50);
+            this.buttonDatamoverIncomingFolderAdd.Name = "buttonDatamoverIncomingFolderAdd";
+            this.buttonDatamoverIncomingFolderAdd.Size = new System.Drawing.Size(34, 23);
+            this.buttonDatamoverIncomingFolderAdd.TabIndex = 6;
+            this.buttonDatamoverIncomingFolderAdd.Text = "+";
+            this.buttonDatamoverIncomingFolderAdd.UseVisualStyleBackColor = true;
             // 
-            // labelConfiguration
+            // labelDatamoverIncomingFolder
             // 
-            this.labelConfiguration.AutoSize = true;
-            this.labelConfiguration.Location = new System.Drawing.Point(390, 113);
-            this.labelConfiguration.Name = "labelConfiguration";
-            this.labelConfiguration.Size = new System.Drawing.Size(69, 13);
-            this.labelConfiguration.TabIndex = 18;
-            this.labelConfiguration.Text = "Configuration";
+            this.labelDatamoverIncomingFolder.AutoSize = true;
+            this.labelDatamoverIncomingFolder.Location = new System.Drawing.Point(7, 55);
+            this.labelDatamoverIncomingFolder.Name = "labelDatamoverIncomingFolder";
+            this.labelDatamoverIncomingFolder.Size = new System.Drawing.Size(59, 13);
+            this.labelDatamoverIncomingFolder.TabIndex = 6;
+            this.labelDatamoverIncomingFolder.Text = "Datamover";
+            // 
+            // comboBoxDatamoverIncomingFolder
+            // 
+            this.comboBoxDatamoverIncomingFolder.FormattingEnabled = true;
+            this.comboBoxDatamoverIncomingFolder.Location = new System.Drawing.Point(99, 51);
+            this.comboBoxDatamoverIncomingFolder.Name = "comboBoxDatamoverIncomingFolder";
+            this.comboBoxDatamoverIncomingFolder.Size = new System.Drawing.Size(357, 21);
+            this.comboBoxDatamoverIncomingFolder.TabIndex = 4;
+            // 
+            // buttonUserFolderEdit
+            // 
+            this.buttonUserFolderEdit.Location = new System.Drawing.Point(462, 21);
+            this.buttonUserFolderEdit.Name = "buttonUserFolderEdit";
+            this.buttonUserFolderEdit.Size = new System.Drawing.Size(34, 23);
+            this.buttonUserFolderEdit.TabIndex = 1;
+            this.buttonUserFolderEdit.Text = "...";
+            this.buttonUserFolderEdit.UseVisualStyleBackColor = true;
+            this.buttonUserFolderEdit.Click += new System.EventHandler(this.buttonUserFolderEdit_Click);
+            // 
+            // buttonUserFolderRemove
+            // 
+            this.buttonUserFolderRemove.Location = new System.Drawing.Point(540, 21);
+            this.buttonUserFolderRemove.Name = "buttonUserFolderRemove";
+            this.buttonUserFolderRemove.Size = new System.Drawing.Size(34, 23);
+            this.buttonUserFolderRemove.TabIndex = 3;
+            this.buttonUserFolderRemove.Text = "—";
+            this.buttonUserFolderRemove.UseVisualStyleBackColor = true;
+            // 
+            // buttonUserFolderAdd
+            // 
+            this.buttonUserFolderAdd.Location = new System.Drawing.Point(501, 21);
+            this.buttonUserFolderAdd.Name = "buttonUserFolderAdd";
+            this.buttonUserFolderAdd.Size = new System.Drawing.Size(34, 23);
+            this.buttonUserFolderAdd.TabIndex = 2;
+            this.buttonUserFolderAdd.Text = "+";
+            this.buttonUserFolderAdd.UseVisualStyleBackColor = true;
+            // 
+            // labelUserFolder
+            // 
+            this.labelUserFolder.AutoSize = true;
+            this.labelUserFolder.Location = new System.Drawing.Point(7, 26);
+            this.labelUserFolder.Name = "labelUserFolder";
+            this.labelUserFolder.Size = new System.Drawing.Size(82, 13);
+            this.labelUserFolder.TabIndex = 1;
+            this.labelUserFolder.Text = "Annotation Tool";
+            // 
+            // comboBoxUserFolder
+            // 
+            this.comboBoxUserFolder.FormattingEnabled = true;
+            this.comboBoxUserFolder.Location = new System.Drawing.Point(99, 22);
+            this.comboBoxUserFolder.Name = "comboBoxUserFolder";
+            this.comboBoxUserFolder.Size = new System.Drawing.Size(357, 21);
+            this.comboBoxUserFolder.TabIndex = 0;
             // 
             // InstanceConfigurator
             // 

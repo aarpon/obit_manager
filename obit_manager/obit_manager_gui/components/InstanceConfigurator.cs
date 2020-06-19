@@ -50,5 +50,24 @@ namespace obit_manager_gui.components
                 }
             }
         }
+
+        private void buttonUserFolderEdit_Click(object sender, EventArgs e)
+        {
+            using (var form = new AnnotatiolToolConfigurationDialog(this.mInstance.ClientRef))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    // Get the updated Client
+                    Client updatedClient = form.Result;
+
+                    // Set it
+                    this.mInstance.ClientRef = updatedClient;
+
+                    // Update the corresponding field
+                    this.comboBoxUserFolder.Text = this.mInstance.ClientRef.UserDataDir;
+                }
+            }
+        }
     }
 }

@@ -5,9 +5,21 @@ namespace obit_manager_settings.components
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
     public class SettingAttribute : Attribute
     {
-        // Define Owner read-only attribute
+        /// <summary>
+        /// Defines which configuration file stores this Property.
+        /// </summary>
+        ///
+        /// One of AnnotationTool, Datamover_JSL, or Datamover.
         public virtual string Configuration { get; set; }
 
+        /// <summary>
+        /// Defines which object owns this property.
+        /// <summary>
+        ///
+        /// One of Client, Datamover or Server.
+        /// 
+        /// This object is the only one that should accept changes to the underlying
+        /// Property (e.g. when exposed via some configuration dialog).
         public virtual string Component { get; set; }
     }
 }

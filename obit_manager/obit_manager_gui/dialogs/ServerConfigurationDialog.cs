@@ -213,10 +213,10 @@ namespace obit_manager_gui.dialogs
 
         #region properties
 
-        public Server Result
-        {
-            get => this.mReturnServer; 
-        }
+        /// <summary>
+        /// Result
+        /// </summary>
+        public Server Result => this.mReturnServer;
 
         #endregion
 

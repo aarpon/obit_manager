@@ -149,7 +149,7 @@ namespace obit_manager_settings.components
             this.ApplicationServerHostname = asc.Server;
             this.ApplicationServerPort = asc.Port;
             this.ApplicationServerPath = asc.Path;
-            this.ApplicationServerAcceptSelfSignedCert = Utils.StringToBool(client.AcceptSelfSignedCertificates);
+            this.ApplicationServerAcceptSelfSignedCert = client.AcceptSelfSignedCertificates;
 
             // Get the DSS settings
             DataStoreServerStringComponents dssc = parseOutgoingTargetString(datamoverSettingsParser.Get(key, "outgoing-target"));
