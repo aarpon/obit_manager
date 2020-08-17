@@ -206,6 +206,25 @@ namespace obit_manager_settings
             this.SelectedInstanceIndex = index;
         }
 
+        /// <summary>
+        /// Swap two Intances in the list of Instances.
+        /// </summary>
+        /// <param name="index1">Index of the first Instance to swap.</param>
+        /// <param name="index2">Index of the second Instance to swap.</param>
+        public void SwapInstances(int index1, int index2)
+        {
+            if (index1 >= this.mInstances.Count || index2 >= this.mInstances.Count)
+            {
+                throw new ArgumentOutOfRangeException(
+                    "Max possible Instance index is " + 
+                    (this.mInstances.Count - 1) + 
+                    ".");
+            }
+
+            Instance tmp = this.mInstances[index1];
+            this.mInstances[index1] = this.mInstances[index2];
+            this.mInstances[index2] = tmp;
+        }
 
         #region properties
 

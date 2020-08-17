@@ -226,6 +226,7 @@
             this.buttonInstanceUp.TabIndex = 10;
             this.buttonInstanceUp.Text = "↑";
             this.buttonInstanceUp.UseVisualStyleBackColor = true;
+            this.buttonInstanceUp.Click += new System.EventHandler(this.buttonInstanceUp_Click);
             // 
             // buttonInstanceDown
             // 
@@ -235,6 +236,7 @@
             this.buttonInstanceDown.TabIndex = 11;
             this.buttonInstanceDown.Text = "↓";
             this.buttonInstanceDown.UseVisualStyleBackColor = true;
+            this.buttonInstanceDown.Click += new System.EventHandler(this.buttonInstanceDown_Click);
             // 
             // labelInstanceConfigurator
             // 

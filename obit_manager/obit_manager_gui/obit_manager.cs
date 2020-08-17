@@ -379,5 +379,43 @@ namespace obit_manager_gui
                 }
             }
         }
+
+        private void buttonInstanceUp_Click(object sender, EventArgs e)
+        {
+            if (this.comboBoxInstances.SelectedIndex == 0)
+            {
+                return;
+            }
+
+            // Swap the selected Instance with the one immediately preceding it
+            int index2 = this.comboBoxInstances.SelectedIndex;
+            int index1 = this.comboBoxInstances.SelectedIndex - 1;
+            this.mSettingsManager.SwapInstances(index1, index2);
+
+            // Update the selected instance
+            this.mSettingsManager.SelectedInstanceIndex = index1;
+
+            // Update the UI
+            this.updateUI();
+        }
+
+        private void buttonInstanceDown_Click(object sender, EventArgs e)
+        {
+            if (this.comboBoxInstances.SelectedIndex == this.mSettingsManager.NumInstances - 1)
+            {
+                return;
+            }
+
+            // Swap the selected Instance with the one immediately preceding it
+            int index2 = this.comboBoxInstances.SelectedIndex + 1;
+            int index1 = this.comboBoxInstances.SelectedIndex;
+            this.mSettingsManager.SwapInstances(index1, index2);
+
+            // Update the selected instance
+            this.mSettingsManager.SelectedInstanceIndex = index2;
+
+            // Update the UI
+            this.updateUI();
+        }
     }
 }
