@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -35,6 +36,19 @@ namespace obit_manager_gui.dialogs
             this.textBoxDatamoverServiceName.Text = this.mEditableDatamover.ServiceName;
             this.textBoxDatamoverServiceUser.Text = this.mEditableDatamover.LocalUserAccount;
             this.buttonDatamoverDataDir.Text = this.mEditableDatamover.IncomingTarget;
+
+            if (Directory.Exists(this.mEditableDatamover.IncomingTarget))
+            {
+                this.labelFolderExists.Text = "Data folder exists.";
+                this.buttonCreateFolder.Enabled = false;
+                this.buttonSetPermissions.Enabled = true;
+            }
+            else
+            {
+                this.labelFolderExists.Text = "Data folder does not exist.";
+                this.buttonCreateFolder.Enabled = true;
+                this.buttonSetPermissions.Enabled = false;
+            }
         }
 
         /// <summary>
@@ -93,6 +107,16 @@ namespace obit_manager_gui.dialogs
         private void textBoxDatamoverServiceUser_TextChanged(object sender, EventArgs e)
         {
             this.mEditableDatamover.LocalUserAccount = this.textBoxDatamoverServiceUser.Text;
+        }
+
+        private void buttonCreateFolder_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Implement me!");
+        }
+
+        private void buttonSetPermissions_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Implement me!");
         }
     }
 }

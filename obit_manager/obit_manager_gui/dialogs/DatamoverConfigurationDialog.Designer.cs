@@ -36,12 +36,16 @@
             this.textBoxDatamoverServiceUser = new System.Windows.Forms.TextBox();
             this.buttonDatamoverDataDir = new System.Windows.Forms.Button();
             this.labelDatamoverDataDir = new System.Windows.Forms.Label();
-            this.buttonDatamoverServiceUser = new System.Windows.Forms.Button();
+            this.buttonFindDatamoverServiceUser = new System.Windows.Forms.Button();
+            this.buttonCreateDatamoverServiceUser = new System.Windows.Forms.Button();
+            this.labelFolderExists = new System.Windows.Forms.Label();
+            this.buttonCreateFolder = new System.Windows.Forms.Button();
+            this.buttonSetPermissions = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // buttonCancel
             // 
-            this.buttonCancel.Location = new System.Drawing.Point(235, 133);
+            this.buttonCancel.Location = new System.Drawing.Point(233, 121);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(204, 23);
             this.buttonCancel.TabIndex = 14;
@@ -51,7 +55,7 @@
             // 
             // buttonAccept
             // 
-            this.buttonAccept.Location = new System.Drawing.Point(15, 133);
+            this.buttonAccept.Location = new System.Drawing.Point(13, 121);
             this.buttonAccept.Name = "buttonAccept";
             this.buttonAccept.Size = new System.Drawing.Size(204, 23);
             this.buttonAccept.TabIndex = 13;
@@ -79,7 +83,7 @@
             // labelDatamoverServiceUser
             // 
             this.labelDatamoverServiceUser.AutoSize = true;
-            this.labelDatamoverServiceUser.Location = new System.Drawing.Point(12, 41);
+            this.labelDatamoverServiceUser.Location = new System.Drawing.Point(12, 44);
             this.labelDatamoverServiceUser.Name = "labelDatamoverServiceUser";
             this.labelDatamoverServiceUser.Size = new System.Drawing.Size(119, 13);
             this.labelDatamoverServiceUser.TabIndex = 17;
@@ -87,17 +91,17 @@
             // 
             // textBoxDatamoverServiceUser
             // 
-            this.textBoxDatamoverServiceUser.Location = new System.Drawing.Point(143, 37);
+            this.textBoxDatamoverServiceUser.Location = new System.Drawing.Point(143, 40);
             this.textBoxDatamoverServiceUser.Name = "textBoxDatamoverServiceUser";
-            this.textBoxDatamoverServiceUser.Size = new System.Drawing.Size(233, 20);
+            this.textBoxDatamoverServiceUser.Size = new System.Drawing.Size(189, 20);
             this.textBoxDatamoverServiceUser.TabIndex = 18;
             this.textBoxDatamoverServiceUser.TextChanged += new System.EventHandler(this.textBoxDatamoverServiceUser_TextChanged);
             // 
             // buttonDatamoverDataDir
             // 
-            this.buttonDatamoverDataDir.Location = new System.Drawing.Point(12, 87);
+            this.buttonDatamoverDataDir.Location = new System.Drawing.Point(143, 63);
             this.buttonDatamoverDataDir.Name = "buttonDatamoverDataDir";
-            this.buttonDatamoverDataDir.Size = new System.Drawing.Size(432, 23);
+            this.buttonDatamoverDataDir.Size = new System.Drawing.Size(301, 23);
             this.buttonDatamoverDataDir.TabIndex = 20;
             this.buttonDatamoverDataDir.Text = "...";
             this.buttonDatamoverDataDir.UseVisualStyleBackColor = true;
@@ -106,28 +110,70 @@
             // labelDatamoverDataDir
             // 
             this.labelDatamoverDataDir.AutoSize = true;
-            this.labelDatamoverDataDir.Location = new System.Drawing.Point(12, 64);
+            this.labelDatamoverDataDir.Location = new System.Drawing.Point(12, 70);
             this.labelDatamoverDataDir.Name = "labelDatamoverDataDir";
             this.labelDatamoverDataDir.Size = new System.Drawing.Size(112, 13);
             this.labelDatamoverDataDir.TabIndex = 19;
             this.labelDatamoverDataDir.Text = "Datamover data folder";
             // 
-            // buttonDatamoverServiceUser
+            // buttonFindDatamoverServiceUser
             // 
-            this.buttonDatamoverServiceUser.Location = new System.Drawing.Point(383, 36);
-            this.buttonDatamoverServiceUser.Name = "buttonDatamoverServiceUser";
-            this.buttonDatamoverServiceUser.Size = new System.Drawing.Size(61, 23);
-            this.buttonDatamoverServiceUser.TabIndex = 21;
-            this.buttonDatamoverServiceUser.Text = "Check";
-            this.buttonDatamoverServiceUser.UseVisualStyleBackColor = true;
-            this.buttonDatamoverServiceUser.Click += new System.EventHandler(this.buttonDatamoverServiceUser_Click);
+            this.buttonFindDatamoverServiceUser.Location = new System.Drawing.Point(338, 39);
+            this.buttonFindDatamoverServiceUser.Name = "buttonFindDatamoverServiceUser";
+            this.buttonFindDatamoverServiceUser.Size = new System.Drawing.Size(50, 23);
+            this.buttonFindDatamoverServiceUser.TabIndex = 21;
+            this.buttonFindDatamoverServiceUser.Text = "Find";
+            this.buttonFindDatamoverServiceUser.UseVisualStyleBackColor = true;
+            this.buttonFindDatamoverServiceUser.Click += new System.EventHandler(this.buttonDatamoverServiceUser_Click);
+            // 
+            // buttonCreateDatamoverServiceUser
+            // 
+            this.buttonCreateDatamoverServiceUser.Location = new System.Drawing.Point(394, 39);
+            this.buttonCreateDatamoverServiceUser.Name = "buttonCreateDatamoverServiceUser";
+            this.buttonCreateDatamoverServiceUser.Size = new System.Drawing.Size(50, 23);
+            this.buttonCreateDatamoverServiceUser.TabIndex = 22;
+            this.buttonCreateDatamoverServiceUser.Text = "Create";
+            this.buttonCreateDatamoverServiceUser.UseVisualStyleBackColor = true;
+            // 
+            // labelFolderExists
+            // 
+            this.labelFolderExists.AutoSize = true;
+            this.labelFolderExists.Location = new System.Drawing.Point(12, 97);
+            this.labelFolderExists.Name = "labelFolderExists";
+            this.labelFolderExists.Size = new System.Drawing.Size(130, 13);
+            this.labelFolderExists.TabIndex = 23;
+            this.labelFolderExists.Text = "Data folder does not exist.";
+            // 
+            // buttonCreateFolder
+            // 
+            this.buttonCreateFolder.Location = new System.Drawing.Point(226, 92);
+            this.buttonCreateFolder.Name = "buttonCreateFolder";
+            this.buttonCreateFolder.Size = new System.Drawing.Size(106, 23);
+            this.buttonCreateFolder.TabIndex = 24;
+            this.buttonCreateFolder.Text = "Create folder";
+            this.buttonCreateFolder.UseVisualStyleBackColor = true;
+            this.buttonCreateFolder.Click += new System.EventHandler(this.buttonCreateFolder_Click);
+            // 
+            // buttonSetPermissions
+            // 
+            this.buttonSetPermissions.Location = new System.Drawing.Point(338, 92);
+            this.buttonSetPermissions.Name = "buttonSetPermissions";
+            this.buttonSetPermissions.Size = new System.Drawing.Size(106, 23);
+            this.buttonSetPermissions.TabIndex = 25;
+            this.buttonSetPermissions.Text = "Set permissions";
+            this.buttonSetPermissions.UseVisualStyleBackColor = true;
+            this.buttonSetPermissions.Click += new System.EventHandler(this.buttonSetPermissions_Click);
             // 
             // DatamoverConfigurationDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(449, 167);
-            this.Controls.Add(this.buttonDatamoverServiceUser);
+            this.ClientSize = new System.Drawing.Size(449, 152);
+            this.Controls.Add(this.buttonSetPermissions);
+            this.Controls.Add(this.buttonCreateFolder);
+            this.Controls.Add(this.labelFolderExists);
+            this.Controls.Add(this.buttonCreateDatamoverServiceUser);
+            this.Controls.Add(this.buttonFindDatamoverServiceUser);
             this.Controls.Add(this.buttonDatamoverDataDir);
             this.Controls.Add(this.labelDatamoverDataDir);
             this.Controls.Add(this.labelDatamoverServiceUser);
@@ -153,6 +199,10 @@
         private System.Windows.Forms.TextBox textBoxDatamoverServiceUser;
         private System.Windows.Forms.Button buttonDatamoverDataDir;
         private System.Windows.Forms.Label labelDatamoverDataDir;
-        private System.Windows.Forms.Button buttonDatamoverServiceUser;
+        private System.Windows.Forms.Button buttonFindDatamoverServiceUser;
+        private System.Windows.Forms.Button buttonCreateDatamoverServiceUser;
+        private System.Windows.Forms.Label labelFolderExists;
+        private System.Windows.Forms.Button buttonCreateFolder;
+        private System.Windows.Forms.Button buttonSetPermissions;
     }
 }
