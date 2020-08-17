@@ -6,6 +6,7 @@ using NLog.Config;
 using obit_manager_settings.components.io;
 using static obit_manager_settings.Constants;
 using System.Configuration;
+using System.Runtime.InteropServices;
 using System.Runtime.Remoting.Messaging;
 
 namespace obit_manager_settings
@@ -153,6 +154,59 @@ namespace obit_manager_settings
             return State.OBIT_NOT_INSTALLED;
         }
 
+        /// <summary>
+        /// Return a list of Instance names.
+        /// </summary>
+        /// <returns>List of Instance names.</returns>
+        public List<string> GetInstanceNames()
+        {
+            List<string> names = new List<string>();
+
+            foreach (Instance instance in this.mInstances)
+            {
+                names.Add(instance.ClientRef.ConfigurationName);
+            }
+
+            // Return the list of names
+            return names;
+        }
+
+        /// <summary>
+        /// Return the Instance with given configuration name.
+        /// </summary>
+        /// <param name="name">Configuration name.</param>
+        /// <returns>Instance or null if not found.</returns>
+        public Instance GetInstanceByName(string name)
+        {
+            // Look for the instance with matching configuration name
+            foreach (Instance instance in this.mInstances)
+            {
+                if (instance.ClientRef.ConfigurationName.Equals(name))
+                {
+                    return instance;
+                }
+            }
+
+            // If not found, return null
+            return null;
+        }
+
+        /// <summary>
+        /// Select the Instance with given configuration name.
+        /// </summary>
+        /// <param name="name">Configuration name.</param>
+        public void SetSelectedInstanceByName(string name)
+        {
+            // Find the Instance by name
+            int index = this.mInstances.FindIndex(a => a.ClientRef.ConfigurationName == name);
+            if (index == -1)
+            {
+                throw new Exception("No Instance with given name found!");
+            }
+            this.SelectedInstanceIndex = index;
+        }
+
+
         #region properties
 
         // openBIS Importer Toolset installation dir
@@ -203,7 +257,36 @@ namespace obit_manager_settings
                     throw new Exception("There is no valid selected Instance.");
                 }
             }
+
+            set
+            {
+                int index = this.mInstances.FindIndex(a => a == value);
+                if (index == -1)
+                {
+                    throw new Exception("The passed Instance is not recognized!");
+                }
+                this.SelectedInstanceIndex = index;
+
+                //Instance res = this.GetInstanceByName(((Instance) value).ClientRef.ConfigurationName;
+                //if (res == null)
+                //{
+                //    throw new Exception("The passed Instance is not recognized!");
+                //}
+
+                //for (int i = 0; i < this.mInstances.Count; i++)
+                //{
+                //    if (this.mInstances[i] == res)
+                //    {
+                //        this.SelectedInstanceIndex = i;
+                //    }
+                //}
+            }
         }
+
+        ///// <summary>
+        ///// List of instances.
+        ///// </summary>
+        //public List<Instance> Instances => this.mInstances;
 
         /// <summary>
         /// Return the number of instances.

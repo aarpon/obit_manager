@@ -15,21 +15,42 @@ namespace obit_manager_gui.components
     {
         private Instance mInstance;
 
-        public InstanceConfigurator(Instance instance)
+        public InstanceConfigurator()
+        {
+            InitializeComponent();
+            
+        }
+
+        public void SetInstance(Instance instance)
         {
             this.mInstance = instance;
 
-            InitializeComponent();
+            this.UpdateUI();
+        }
 
+        // Refresh the control
+        public void Refresh()
+        {
             this.UpdateUI();
         }
 
         private void UpdateUI()
         {
-            this.groupBoxInstance.Text = this.mInstance.ClientRef.ConfigurationName;
-            this.comboBoxUserFolder.Text = this.mInstance.ClientRef.UserDataDir;
-            this.comboBoxDatamoverIncomingFolder.Text = this.mInstance.DatamoverRef.IncomingTarget;
-            this.comboBoxServer.Text = this.mInstance.ServerRef.Label;
+            if (this.mInstance == null)
+            {
+                this.groupBoxInstance.Text = "";
+                this.comboBoxUserFolder.Text = "";
+                this.comboBoxDatamoverIncomingFolder.Text = "";
+                this.comboBoxServer.Text = "";
+
+            }
+            else
+            {
+                this.groupBoxInstance.Text = this.mInstance.ClientRef.ConfigurationName;
+                this.comboBoxUserFolder.Text = this.mInstance.ClientRef.UserDataDir;
+                this.comboBoxDatamoverIncomingFolder.Text = this.mInstance.DatamoverRef.IncomingTarget;
+                this.comboBoxServer.Text = this.mInstance.ServerRef.Label;
+            }
         }
 
         private void buttonServerEdit_Click(object sender, EventArgs e)

@@ -7,7 +7,7 @@ using static obit_manager_settings.Constants;
 
 namespace obit_manager_settings.components
 {
-    public class Instance
+    public partial class Instance
     {
         // Configuration name
         private string mName = "Default";

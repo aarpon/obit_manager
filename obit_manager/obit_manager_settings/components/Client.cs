@@ -6,16 +6,33 @@ using NLog;
 
 namespace obit_manager_settings.components
 {
-    public class Client
+    public partial class Client
     {
         /// <summary>
         /// Logger
         /// </summary>
         private static Logger sLogger = LogManager.GetCurrentClassLogger();
 
+        // Configuration name 
+        private string mConfiguratioName = "Default";
+
         // Configuration name
         [Setting(Configuration = "AnnotationTool", Component = "Client")]
-        public string ConfigurationName { get; set; } = "Default";
+        public string ConfigurationName
+        {
+            get
+            {
+                return this.mConfiguratioName;
+            }
+            set
+            {
+                // Set the new configuration name
+                this.mConfiguratioName = value;
+
+                // Raise the event
+                Client.OnConfigurationNameChanged(this, value);
+            }
+        }
 
         // OpenBIS AS URL
         [Setting(Configuration = "AnnotationTool", Component = "Server")]

@@ -99,7 +99,16 @@
     <Compile Include="dialogs\DatamoverConfigurationDialog.Designer.cs">
       <DependentUpon>DatamoverConfigurationDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="dialogs\SingleStringEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="dialogs\SingleStringEditor.Designer.cs">
+      <DependentUpon>SingleStringEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="fs\AnnotationToolFileSystemTools.cs" />
+    <Compile Include="handlers\obit_manager_EventsHandlers.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="obit_manager.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -123,6 +132,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="dialogs\DatamoverConfigurationDialog.resx">
       <DependentUpon>DatamoverConfigurationDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="dialogs\SingleStringEditor.resx">
+      <DependentUpon>SingleStringEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="obit_manager.resx">
       <DependentUpon>obit_manager.cs</DependentUpon>

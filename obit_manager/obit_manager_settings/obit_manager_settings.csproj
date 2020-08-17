@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="components\Datamover.cs" />
+    <Compile Include="components\events\ClientEvents.cs" />
     <Compile Include="components\io\DatamoverJSLSettingsParser.cs" />
     <Compile Include="components\Server.cs" />
     <Compile Include="components\io\DatamoverSettingsParser.cs" />
@@ -80,5 +81,6 @@
       <Name>obit_manager_api</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

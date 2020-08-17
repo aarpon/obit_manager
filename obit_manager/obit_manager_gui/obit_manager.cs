@@ -1,11 +1,15 @@
 ﻿using System;
+using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using obit_manager_api.core;
 using obit_manager_gui.components;
+using obit_manager_gui.dialogs;
 using obit_manager_settings;
+using obit_manager_settings.components;
 
 namespace obit_manager_gui
 {
@@ -30,8 +34,11 @@ namespace obit_manager_gui
             // Initialize components
             InitializeComponent();
 
+            // Register the event handlers
+            this.RegisterEventHandlers();
+
             // Set defaults
-            setUIDefaults();
+            updateUI();
 
             // Log some information
             this.textBoxLogWindow.AppendText("Loaded " + this.mSettingsManager.NumInstances + " instance(s).\r\n");
@@ -168,7 +175,7 @@ namespace obit_manager_gui
             //return Directory.Exists(jdkFinalPath);
         //}
 
-        private void setUIDefaults()
+        private void updateUI()
         {
             // Get the installation directory from the application settings
             string installationDir = this.mSettingsManager.InstallationDir;
@@ -183,8 +190,17 @@ namespace obit_manager_gui
                 this.mSettingsManager.InstallationDir = installationDir;
             }
 
-            // Add a new configuration editor
-            this.panelContainerConfigurations.Controls.Add(new InstanceConfigurator(this.mSettingsManager.SelectedInstance));
+            // Fill the Instance dropdown menu
+            this.comboBoxInstances.Items.Clear();
+            foreach (string name in this.mSettingsManager.GetInstanceNames())
+            {
+                this.comboBoxInstances.Items.Add(name);
+            }
+
+            this.comboBoxInstances.SelectedItem = this.mSettingsManager.SelectedInstance.ClientRef.ConfigurationName;
+
+            // Update The InstanceConfigurator with current Instance's settings
+            this.mInstanceConfigurator.SetInstance(this.mSettingsManager.SelectedInstance);
 
             //// Set the platform bits
             //if (Environment.Is64BitOperatingSystem)
@@ -309,6 +325,59 @@ namespace obit_manager_gui
         private void viewLogToolStripMenuItem_Click(object sender, EventArgs e)
         {
             System.Diagnostics.Process.Start(@"C:/ProgramData/obit/AnnotationTool/obit_manager.log");
+        }
+
+        private void comboBoxInstances_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // Get the instance name
+            string name = ((ComboBox)sender).Text;
+
+            // Get the instance
+            Instance instance = this.mSettingsManager.GetInstanceByName(name);
+
+            // Update the SettingsManager
+            this.mSettingsManager.SelectedInstance = instance;
+
+            // Update the configurator
+            this.mInstanceConfigurator.SetInstance(instance);
+
+            // Update the default Instance label
+            if (this.comboBoxInstances.SelectedIndex == 0)
+            {
+                this.labelSelectedInstanceIsDefault.Text = "This is the default Instance.";
+            }
+            else
+            {
+                this.labelSelectedInstanceIsDefault.Text = "The default Instance is '" +
+                                                           this.comboBoxInstances.Items[0] +
+                                                           "'.";
+            }
+        }
+
+        private void buttonEditInstanceName_Click(object sender, EventArgs e)
+        {
+            using (var form = new SingleStringEditor(
+                "Edit Instance name", 
+                "Instance name",
+                this.mSettingsManager.SelectedInstance.ClientRef.ConfigurationName))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    // Update the name
+                    string newInstanceName = form.Result;
+
+                    // Set it
+                    this.mSettingsManager.SelectedInstance.ClientRef.ConfigurationName = newInstanceName;
+
+                    // Update the dropdown menu
+                    var lomm = this.comboBoxInstances.SelectedItem;
+                    this.comboBoxInstances.Items[this.comboBoxInstances.SelectedIndex] = newInstanceName;
+
+                    // Update the configurator
+                    this.mInstanceConfigurator.Refresh();
+                }
+            }
         }
     }
 }
