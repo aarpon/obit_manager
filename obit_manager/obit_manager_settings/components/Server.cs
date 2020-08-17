@@ -110,7 +110,7 @@ namespace obit_manager_settings.components
                 }
             }
 
-            // Was the expected configuration found!
+            // Was the expected configuration found?
             if (!found)
             {
                 string msg = "No known Datamover configuration uses the incoming folder '" + client.DatamoverIncomingDir + "'.";

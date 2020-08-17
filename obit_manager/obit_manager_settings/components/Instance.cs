@@ -74,19 +74,34 @@ namespace obit_manager_settings.components
         public Client ClientRef
         {
             get => this.mClient;
-            set => this.mClient = value;
+            set
+            {
+                this.mClient = value;
+
+                // @TODO Update client - datamover - server logical links
+            }
         }
 
         public Server ServerRef
         {
             get => this.mServer;
-            set => this.mServer = value;
+            set
+            {
+                this.mServer = value;
+
+                // @TODO Update client - datamover - server logical links
+            }
         }
 
         public Datamover DatamoverRef
         {
             get => this.mDatamover;
-            set => this.mDatamover = value;
+            set
+            {
+                this.mDatamover = value;
+
+                // @TODO Update client - datamover - server logical links
+            }
         }
 
         #endregion properties

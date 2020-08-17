@@ -37,6 +37,9 @@ namespace obit_manager_gui
             // Register the event handlers
             this.RegisterEventHandlers();
 
+            // Pass the reference to the SettingsManager to the InstanceConfigurator
+            this.mInstanceConfigurator.SetConfiguration(this.mSettingsManager);
+
             // Set defaults
             updateUI();
 
@@ -85,10 +88,17 @@ namespace obit_manager_gui
 
                 if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(dialog.SelectedPath))
                 {
-                    this.mSettingsManager.InstallationDir = dialog.SelectedPath;
-                    buttonOBITInstallationDirectory.Text = this.mSettingsManager.InstallationDir;
-
-                    // @ToDo: Update the application settings
+                    DialogResult dialogResult = MessageBox.Show(
+                        "This will reset all current changes. Do you want to continue?",
+                        "Are you sure?",
+                        MessageBoxButtons.YesNo);
+                    if(dialogResult == DialogResult.Yes)
+                    {
+                        this.mSettingsManager = null;
+                        this.mSettingsManager = new SettingsManager();
+                        this.mSettingsManager.InstallationDir = dialog.SelectedPath;
+                        buttonOBITInstallationDirectory.Text = this.mSettingsManager.InstallationDir;
+                    }
                 }
             }
         }
@@ -110,70 +120,6 @@ namespace obit_manager_gui
             //});
             //Task.WaitAll(installationTasks);
         }
-
-
-        //private async Task<bool> downloadAndExtractJavaAsync(bool is64bit = true)
-        //{
-            //// Check that we have an installation folder 
-            //if (this.mAppSettings.InstallationDir.Equals(""))
-            //{
-            //    return false;
-            //}
-
-            //// Prepare relevant variables
-            //String downloadURL = "";
-            //String targetFileName = "";
-            //String jdkExtractPath = "";
-            //String jdkFinalPath = "";
-
-            //// Assign the correct values depending on the choice of the platform
-            //if (is64bit)
-            //{
-            //    downloadURL = Constants.Jdk64bitURL;
-            //    targetFileName = Path.Combine(InstallationFolder, Constants.Jdk64bitArchiveFileName);
-            //    jdkExtractPath = Path.Combine(InstallationFolder, Constants.Jdk64bitExtractDirName);
-            //    jdkFinalPath = Path.Combine(InstallationFolder, Constants.Jdk64bitFinalPath);
-            //}
-            //else
-            //{
-            //    downloadURL = Constants.Jdk32bitURL;
-            //    targetFileName = Path.Combine(InstallationFolder, Constants.Jdk32bitArchiveFileName);
-            //    jdkExtractPath = Path.Combine(InstallationFolder, Constants.Jdk32bitExtractDirName);
-            //    jdkFinalPath = Path.Combine(InstallationFolder, Constants.Jdk32bitFinalPath);
-            //}
-
-            //// Does the destination folder already exist?
-            //if (Directory.Exists(jdkFinalPath))
-            //{
-            //    return false;
-            //}
-
-            //// Download the file
-            //await WebUtils.DownloadAsync(downloadURL, targetFileName);
-            //if (!File.Exists(targetFileName))
-            //{
-            //    return false;
-            //}
-
-            //// Decompress the file
-            //FileSystem.ExtractZIPFileToFolder(targetFileName, InstallationFolder);
-
-            //// Check that the extract folder exists
-            //if (!Directory.Exists(jdkExtractPath))
-            //{
-            //    return false;
-            //}
-
-            //// Move the JRE subfolder in the final location
-            //Directory.Move(Path.Combine(jdkExtractPath, "jre"), jdkFinalPath);
-
-            //// Delete temporary files and folders
-            //File.Delete(targetFileName);
-            //Directory.Delete(jdkExtractPath, recursive: true);
-
-            //// Finally, return true if the jre folder is in the final location
-            //return Directory.Exists(jdkFinalPath);
-        //}
 
         private void updateUI()
         {
@@ -200,19 +146,8 @@ namespace obit_manager_gui
             this.comboBoxInstances.SelectedItem = this.mSettingsManager.SelectedInstance.ClientRef.ConfigurationName;
 
             // Update The InstanceConfigurator with current Instance's settings
-            this.mInstanceConfigurator.SetInstance(this.mSettingsManager.SelectedInstance);
+            this.mInstanceConfigurator.Refresh();
 
-            //// Set the platform bits
-            //if (Environment.Is64BitOperatingSystem)
-            //{
-            //    radioButtonPlatform32bit.Checked = false;
-            //    radioButtonPlatform64bit.Checked = true;
-            //}
-            //else
-            //{
-            //    radioButtonPlatform32bit.Checked = true;
-            //    radioButtonPlatform64bit.Checked = false;
-            //}
         }
 
         private void download32bitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -339,7 +274,7 @@ namespace obit_manager_gui
             this.mSettingsManager.SelectedInstance = instance;
 
             // Update the configurator
-            this.mInstanceConfigurator.SetInstance(instance);
+            this.mInstanceConfigurator.Refresh();
 
             // Update the default Instance label
             if (this.comboBoxInstances.SelectedIndex == 0)

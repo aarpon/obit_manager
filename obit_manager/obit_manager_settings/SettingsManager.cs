@@ -6,6 +6,7 @@ using NLog.Config;
 using obit_manager_settings.components.io;
 using static obit_manager_settings.Constants;
 using System.Configuration;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.Remoting.Messaging;
 
@@ -28,6 +29,11 @@ namespace obit_manager_settings
         // List of instances
         private List<Instance> mInstances;
 
+        // List of Clients, Datamovers and Servers
+        private List<Client> mClients;
+        private List<Datamover> mDatamovers;
+        private List<Server> mServers;
+
         // Keep track of the selected instance
         private int mSelectedInstanceIndex = 0;
 
@@ -39,6 +45,11 @@ namespace obit_manager_settings
 
             // Initialize list of instances
             this.mInstances = new List<Instance>();
+
+            // Initialize lists of clients, datamovers and servers
+            this.mClients = new List<Client>();
+            this.mDatamovers= new List<Datamover>();
+            this.mServers = new List<Server>();
 
             // Load (if possible, otherwise instantiate with default values)
             // the oBIT Manager Application Settings
@@ -140,6 +151,11 @@ namespace obit_manager_settings
                     continue;
                 }
 
+                // Store the Client, Datamover and Server objects
+                this.mClients.Add(client);
+                this.mDatamovers.Add(datamover);
+                this.mServers.Add(server);
+
                 // Create new instance
                 Instance instance = new Instance(configuration.Key, client, server, datamover);
 
@@ -184,6 +200,67 @@ namespace obit_manager_settings
                 if (instance.ClientRef.ConfigurationName.Equals(name))
                 {
                     return instance;
+                }
+            }
+
+            // If not found, return null
+            return null;
+        }
+
+        /// <summary>
+        /// Return the Client with given user data dir.
+        /// </summary>
+        /// <param name="userDataDir">User data directory.</param>
+        /// <returns>Client or null if not found.</returns>
+        public Client GetClientByUserDataDir(string userDataDir)
+        {
+            // Look for the instance with matching configuration name
+            foreach (Client client in this.mClients)
+            {
+                if (client.UserDataDir.Equals(userDataDir))
+                {
+                    return client;
+                }
+            }
+
+            // If not found, return null
+            return null;
+        }
+
+
+        /// <summary>
+        /// Return the Datamover with given user incoming dir.
+        /// </summary>
+        /// <param name="incomingDir">Incoming directory.</param>
+        /// <returns>Datamover or null if not found.</returns>
+        public Datamover GetDatamoverByIncomingDir(string incomingDir)
+        {
+            // Look for the instance with matching configuration name
+            foreach (Datamover datamover in this.mDatamovers)
+            {
+                if (datamover.IncomingTarget.Equals(incomingDir))
+                {
+                    return datamover;
+                }
+            }
+
+            // If not found, return null
+            return null;
+        }
+
+        /// <summary>
+        /// Return the Server with given label.
+        /// </summary>
+        /// <param name="label">Server label.</param>
+        /// <returns>Server or null if not found.</returns>
+        public Server GetServerByLabel(string label)
+        {
+            // Look for the instance with matching configuration name
+            foreach (Server server in this.mServers)
+            {
+                if (server.Label.Equals(label))
+                {
+                    return server;
                 }
             }
 
@@ -313,6 +390,60 @@ namespace obit_manager_settings
         public int NumInstances
         {
             get => this.mInstances.Count; 
+        }
+
+        public int NumClients
+        {
+            get => this.mClients.Count;
+        }
+
+        public int NumDatamovers
+        {
+            get => this.mDatamovers.Count;
+        }
+
+        public int numServers
+        {
+            get => this.mServers.Count;
+        }
+
+        public List<string> ClientStrings
+        {
+            get
+            {
+                List<string> clientStrings = new List<string>(this.NumClients);
+                foreach (Client client in this.mClients)
+                {
+                    clientStrings.Add(client.UserDataDir);
+                }
+                return clientStrings;
+            }
+        }
+
+        public List<string> DatamoverStrings
+        {
+            get
+            {
+                List<string> datamoverStrings = new List<string>(this.NumDatamovers);
+                foreach (Datamover datamover in this.mDatamovers)
+                {
+                    datamoverStrings.Add(datamover.IncomingTarget);
+                }
+                return datamoverStrings;
+            }
+        }
+
+        public List<string> ServerStrings
+        {
+            get
+            {
+                List<string> serverStrings = new List<string>(this.numServers);
+                foreach (Server server in this.mServers)
+                {
+                    serverStrings.Add(server.Label);
+                }
+                return serverStrings;
+            }
         }
 
         #endregion properties

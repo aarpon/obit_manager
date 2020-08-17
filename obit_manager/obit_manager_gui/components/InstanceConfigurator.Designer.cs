@@ -110,11 +110,13 @@
             // 
             // comboBoxServer
             // 
+            this.comboBoxServer.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxServer.FormattingEnabled = true;
             this.comboBoxServer.Location = new System.Drawing.Point(94, 80);
             this.comboBoxServer.Name = "comboBoxServer";
             this.comboBoxServer.Size = new System.Drawing.Size(357, 21);
             this.comboBoxServer.TabIndex = 8;
+            this.comboBoxServer.SelectedIndexChanged += new System.EventHandler(this.comboBoxServer_SelectedIndexChanged);
             // 
             // buttonDatamoverIncomingFolderEdit
             // 
@@ -155,11 +157,13 @@
             // 
             // comboBoxDatamoverIncomingFolder
             // 
+            this.comboBoxDatamoverIncomingFolder.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxDatamoverIncomingFolder.FormattingEnabled = true;
             this.comboBoxDatamoverIncomingFolder.Location = new System.Drawing.Point(94, 51);
             this.comboBoxDatamoverIncomingFolder.Name = "comboBoxDatamoverIncomingFolder";
             this.comboBoxDatamoverIncomingFolder.Size = new System.Drawing.Size(357, 21);
             this.comboBoxDatamoverIncomingFolder.TabIndex = 4;
+            this.comboBoxDatamoverIncomingFolder.SelectedIndexChanged += new System.EventHandler(this.comboBoxDatamoverIncomingFolder_SelectedIndexChanged);
             // 
             // buttonUserFolderEdit
             // 
@@ -200,11 +204,13 @@
             // 
             // comboBoxUserFolder
             // 
+            this.comboBoxUserFolder.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxUserFolder.FormattingEnabled = true;
             this.comboBoxUserFolder.Location = new System.Drawing.Point(94, 22);
             this.comboBoxUserFolder.Name = "comboBoxUserFolder";
             this.comboBoxUserFolder.Size = new System.Drawing.Size(357, 21);
             this.comboBoxUserFolder.TabIndex = 0;
+            this.comboBoxUserFolder.SelectedIndexChanged += new System.EventHandler(this.comboBoxUserFolder_SelectedIndexChanged);
             // 
             // InstanceConfigurator
             // 
