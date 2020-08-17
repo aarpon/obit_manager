@@ -32,7 +32,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(obit_manager));
             this.obitManagerNotifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.buttonOBITInstallationDirectory = new System.Windows.Forms.Button();
-            this.buttonFreshInstall = new System.Windows.Forms.Button();
+            this.buttonApplyAllChanges = new System.Windows.Forms.Button();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.downloadOnlyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -74,15 +74,15 @@
             this.buttonOBITInstallationDirectory.UseVisualStyleBackColor = true;
             this.buttonOBITInstallationDirectory.Click += new System.EventHandler(this.buttonOBITInstallationDirectory_Click);
             // 
-            // buttonFreshInstall
+            // buttonApplyAllChanges
             // 
-            this.buttonFreshInstall.Location = new System.Drawing.Point(12, 347);
-            this.buttonFreshInstall.Name = "buttonFreshInstall";
-            this.buttonFreshInstall.Size = new System.Drawing.Size(580, 34);
-            this.buttonFreshInstall.TabIndex = 1;
-            this.buttonFreshInstall.Text = "Fresh install";
-            this.buttonFreshInstall.UseVisualStyleBackColor = true;
-            this.buttonFreshInstall.Click += new System.EventHandler(this.buttonFreshInstall_Click);
+            this.buttonApplyAllChanges.Location = new System.Drawing.Point(12, 347);
+            this.buttonApplyAllChanges.Name = "buttonApplyAllChanges";
+            this.buttonApplyAllChanges.Size = new System.Drawing.Size(580, 34);
+            this.buttonApplyAllChanges.TabIndex = 1;
+            this.buttonApplyAllChanges.Text = "Apply all";
+            this.buttonApplyAllChanges.UseVisualStyleBackColor = true;
+            this.buttonApplyAllChanges.Click += new System.EventHandler(this.buttonApplyAllChanges_Click);
             // 
             // menuStrip1
             // 
@@ -300,7 +300,7 @@
             this.Controls.Add(this.comboBoxInstances);
             this.Controls.Add(this.labelInstancesTitle);
             this.Controls.Add(this.textBoxLogWindow);
-            this.Controls.Add(this.buttonFreshInstall);
+            this.Controls.Add(this.buttonApplyAllChanges);
             this.Controls.Add(this.buttonOBITInstallationDirectory);
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -318,7 +318,7 @@
 
         private System.Windows.Forms.NotifyIcon obitManagerNotifyIcon;
         private System.Windows.Forms.Button buttonOBITInstallationDirectory;
-        private System.Windows.Forms.Button buttonFreshInstall;
+        private System.Windows.Forms.Button buttonApplyAllChanges;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem downloadOnlyToolStripMenuItem;

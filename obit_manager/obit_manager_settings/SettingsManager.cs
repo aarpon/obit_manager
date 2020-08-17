@@ -29,11 +29,6 @@ namespace obit_manager_settings
         // List of instances
         private List<Instance> mInstances;
 
-        // List of Clients, Datamovers and Servers
-        private List<Client> mClients;
-        private List<Datamover> mDatamovers;
-        private List<Server> mServers;
-
         // Keep track of the selected instance
         private int mSelectedInstanceIndex = 0;
 
@@ -45,11 +40,6 @@ namespace obit_manager_settings
 
             // Initialize list of instances
             this.mInstances = new List<Instance>();
-
-            // Initialize lists of clients, datamovers and servers
-            this.mClients = new List<Client>();
-            this.mDatamovers= new List<Datamover>();
-            this.mServers = new List<Server>();
 
             // Load (if possible, otherwise instantiate with default values)
             // the oBIT Manager Application Settings
@@ -101,7 +91,7 @@ namespace obit_manager_settings
         {
             // @Todo Implement!
             this.mManagerParser.Save();
-            this.mAnnotationToolParser.Save();
+            this.mAnnotationToolParser.Save(this.mInstances);
             this.mDatamoverJSLParser.Save();
             this.mDatamoverParser.Save();
         }
@@ -150,11 +140,6 @@ namespace obit_manager_settings
                     // Skip this configuration.
                     continue;
                 }
-
-                // Store the Client, Datamover and Server objects
-                this.mClients.Add(client);
-                this.mDatamovers.Add(datamover);
-                this.mServers.Add(server);
 
                 // Create new instance
                 Instance instance = new Instance(configuration.Key, client, server, datamover);
@@ -215,11 +200,11 @@ namespace obit_manager_settings
         public Client GetClientByUserDataDir(string userDataDir)
         {
             // Look for the instance with matching configuration name
-            foreach (Client client in this.mClients)
+            foreach (Instance instance in this.mInstances)
             {
-                if (client.UserDataDir.Equals(userDataDir))
+                if (instance.ClientRef.UserDataDir.Equals(userDataDir))
                 {
-                    return client;
+                    return instance.ClientRef;
                 }
             }
 
@@ -236,11 +221,11 @@ namespace obit_manager_settings
         public Datamover GetDatamoverByIncomingDir(string incomingDir)
         {
             // Look for the instance with matching configuration name
-            foreach (Datamover datamover in this.mDatamovers)
+            foreach (Instance instance in this.mInstances)
             {
-                if (datamover.IncomingTarget.Equals(incomingDir))
+                if (instance.DatamoverRef.IncomingTarget.Equals(incomingDir))
                 {
-                    return datamover;
+                    return instance.DatamoverRef;
                 }
             }
 
@@ -256,11 +241,11 @@ namespace obit_manager_settings
         public Server GetServerByLabel(string label)
         {
             // Look for the instance with matching configuration name
-            foreach (Server server in this.mServers)
+            foreach (Instance instance in this.mInstances)
             {
-                if (server.Label.Equals(label))
+                if (instance.ServerRef.Label.Equals(label))
                 {
-                    return server;
+                    return instance.ServerRef;
                 }
             }
 
@@ -362,20 +347,6 @@ namespace obit_manager_settings
                     throw new Exception("The passed Instance is not recognized!");
                 }
                 this.SelectedInstanceIndex = index;
-
-                //Instance res = this.GetInstanceByName(((Instance) value).ClientRef.ConfigurationName;
-                //if (res == null)
-                //{
-                //    throw new Exception("The passed Instance is not recognized!");
-                //}
-
-                //for (int i = 0; i < this.mInstances.Count; i++)
-                //{
-                //    if (this.mInstances[i] == res)
-                //    {
-                //        this.SelectedInstanceIndex = i;
-                //    }
-                //}
             }
         }
 
@@ -394,17 +365,17 @@ namespace obit_manager_settings
 
         public int NumClients
         {
-            get => this.mClients.Count;
+            get => this.mInstances.Count;
         }
 
         public int NumDatamovers
         {
-            get => this.mDatamovers.Count;
+            get => this.mInstances.Count;
         }
 
         public int numServers
         {
-            get => this.mServers.Count;
+            get => this.mInstances.Count;
         }
 
         public List<string> ClientStrings
@@ -412,9 +383,9 @@ namespace obit_manager_settings
             get
             {
                 List<string> clientStrings = new List<string>(this.NumClients);
-                foreach (Client client in this.mClients)
+                foreach (Instance instance in this.mInstances)
                 {
-                    clientStrings.Add(client.UserDataDir);
+                    clientStrings.Add(instance.ClientRef.UserDataDir);
                 }
                 return clientStrings;
             }
@@ -425,9 +396,9 @@ namespace obit_manager_settings
             get
             {
                 List<string> datamoverStrings = new List<string>(this.NumDatamovers);
-                foreach (Datamover datamover in this.mDatamovers)
+                foreach (Instance instance in this.mInstances)
                 {
-                    datamoverStrings.Add(datamover.IncomingTarget);
+                    datamoverStrings.Add(instance.DatamoverRef.IncomingTarget);
                 }
                 return datamoverStrings;
             }
@@ -438,9 +409,9 @@ namespace obit_manager_settings
             get
             {
                 List<string> serverStrings = new List<string>(this.numServers);
-                foreach (Server server in this.mServers)
+                foreach (Instance instance in this.mInstances)
                 {
-                    serverStrings.Add(server.Label);
+                    serverStrings.Add(instance.ServerRef.Label);
                 }
                 return serverStrings;
             }

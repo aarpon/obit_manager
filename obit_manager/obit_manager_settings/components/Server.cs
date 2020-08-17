@@ -39,7 +39,7 @@ namespace obit_manager_settings.components
 
         // Does the Application Server accept self-signed certificates?
         [Setting(Configuration = "AnnotationTool", Component = "Server")]
-        public bool ApplicationServerAcceptSelfSignedCert { get; set; } = false;
+        public string ApplicationServerAcceptSelfSignedCert { get; set; } = "no";
 
         // DataStore Server host name
         [Setting(Configuration = "Datamover", Component = "Server")]
@@ -56,6 +56,9 @@ namespace obit_manager_settings.components
         [Setting(Configuration = "AnnotationTool", Component = "Server")]
         public string DataStoreServerHardwareClass { get; set; } = "";
 
+        [Setting(Configuration = "AnnotationTool", Component = "Server")]
+        public string DataStoreServerHardwareSubClass { get; set; } = "";
+
         // (Optional) Full path to the lastchanged executable on the DataStore Server
         [Setting(Configuration = "Datamover", Component = "Server")]
         public string DataStoreServerPathToLastChangedExecutable { get; set; } = string.Empty;
@@ -67,7 +70,27 @@ namespace obit_manager_settings.components
         }
 
         // This property is not stored: it is built on the fly on request
-        public string Label => this.DataStoreServerHostname + " (" + this.DataStoreServerHardwareClass + ")";
+        public string ApplicationServerURL
+        {
+            get => this.BuildApplicationServerString();
+        }
+
+        // This property is not stored: it is built on the fly on request
+        public string Label {
+            get
+            {
+                if (this.DataStoreServerHardwareClass.ToLower().Equals("microscopy"))
+                {
+                    return this.DataStoreServerHostname + " (" + this.DataStoreServerHardwareClass + ")";
+                }
+                else
+                {
+                    return this.DataStoreServerHostname + " (" + this.DataStoreServerHardwareClass +
+                           ": " + Hardware.Inventory[this.DataStoreServerHardwareSubClass].Name +
+                           ")";
+                }
+            }
+        } 
 
         /// <summary>
         /// Default constructor.
@@ -132,6 +155,7 @@ namespace obit_manager_settings.components
             this.DataStoreServerUserName = String.Copy(other.DataStoreServerUserName);
             this.DataStoreServerPathToRootDropboxFolder = String.Copy(other.DataStoreServerPathToRootDropboxFolder);
             this.DataStoreServerHardwareClass = String.Copy(other.DataStoreServerHardwareClass);
+            this.DataStoreServerHardwareSubClass = String.Copy(other.DataStoreServerHardwareSubClass);
             this.DataStoreServerPathToLastChangedExecutable = String.Copy(other.DataStoreServerPathToLastChangedExecutable);
         }
 
@@ -156,11 +180,11 @@ namespace obit_manager_settings.components
             this.DataStoreServerHostname = dssc.Server;
             this.DataStoreServerUserName = dssc.UserName;
             this.DataStoreServerPathToRootDropboxFolder = dssc.DropboxRoot;
-            this.DataStoreServerHardwareClass = dssc.Hardware;
+            this.DataStoreServerHardwareClass = dssc.HardwareClass;
+            this.DataStoreServerHardwareSubClass = dssc.HardwareSubClass;
 
             // Get the last-changed executable
             this.DataStoreServerPathToLastChangedExecutable = datamoverSettingsParser.Get(key, "outgoing-host-lastchanged-executable");
-
         }
 
         /// <summary>
@@ -174,9 +198,9 @@ namespace obit_manager_settings.components
             DataStoreServerStringComponents s;
             s.UserName = "";
             s.Server = "";
-            s.Port = -1;
             s.DropboxRoot = "";
-            s.Hardware = "";
+            s.HardwareClass = "";
+            s.HardwareSubClass = "";
 
             string pattern = @"(?<username>.+)@(?<server>.+):(?<port>\d*)(?<dropbox>.+)incoming-(?<hardware>.+)";
             MatchCollection matches = Regex.Matches(outgoingTargetString, pattern);
@@ -189,12 +213,14 @@ namespace obit_manager_settings.components
             // Only one match is expected
             foreach (Match match in matches)
             {
-                // Fill in the structure
+                // Fill in the structure (we ignore the port, that shouldn't be there anyway)
                 s.UserName = match.Groups["username"].Value;
                 s.Server = match.Groups["server"].Value;
-                s.Port = match.Groups["port"].Value.Equals("") ? -1 : Int32.Parse(match.Groups["port"].Value);
                 s.DropboxRoot = match.Groups["dropbox"].Value;
-                s.Hardware = match.Groups["hardware"].Value;
+                s.HardwareClass = match.Groups["hardware"].Value.ToLower().Equals("microscopy")
+                    ? "Microscopy"
+                    : "Flow cytometry";
+                s.HardwareSubClass = match.Groups["hardware"].Value;
             }
 
             return s;
@@ -240,19 +266,25 @@ namespace obit_manager_settings.components
         /// </summary>
         /// <param name="s">ApplicationServerStringComponents structure.</param>
         /// <returns></returns>
-        private string BuildApplicationServerString(ApplicationServerStringComponents s)
+        private string BuildApplicationServerString()
         {
             StringBuilder builder = new StringBuilder();
 
-            builder.Append(s.Protocol);
+            builder.Append(this.ApplicationServerProtocol);
             builder.Append("://");
-            builder.Append(s.Server);
-            if (s.Port != -1)
+            builder.Append(this.ApplicationServerHostname);
+            if (this.ApplicationServerPort != -1)
             {
                 builder.Append(":");
-                builder.Append(s.Port.ToString());
+                builder.Append(ApplicationServerPort.ToString());
             }
-            builder.Append(s.Path);
+
+            if (!this.ApplicationServerPath.StartsWith("/"))
+            {
+                builder.Append("/");
+            }
+
+            builder.Append(this.ApplicationServerPath);
 
             return builder.ToString();
         }
@@ -262,29 +294,6 @@ namespace obit_manager_settings.components
         /// </summary>
         /// <param name="s">DataStoreServerStringComponents structure.</param>
         /// <returns></returns>
-        private string BuildOutgoingTargetString(DataStoreServerStringComponents s)
-        {
-            StringBuilder builder = new StringBuilder();
-
-            builder.Append(s.UserName);
-            builder.Append("@");
-            builder.Append(s.Server);
-            builder.Append(":");
-            if (s.Port != -1)
-            {
-                builder.Append(s.Port.ToString());
-            }
-            builder.Append(s.DropboxRoot);
-            builder.Append("/incoming-");
-            builder.Append(s.Hardware);
-
-            return builder.ToString();
-        }
-
-        /// <summary>
-        /// Build the 'outgoing-target' Datamover setting from its components (stored in the Server object itself).
-        /// </summary>
-        /// <returns></returns>
         private string BuildOutgoingTargetString()
         {
             StringBuilder builder = new StringBuilder();
@@ -293,10 +302,13 @@ namespace obit_manager_settings.components
             builder.Append("@");
             builder.Append(this.DataStoreServerHostname);
             builder.Append(":");
-            // @ToDo: fix the DSS URL scanning -- there is no port!
+            if (!this.DataStoreServerPathToRootDropboxFolder.StartsWith("/"))
+            {
+                builder.Append("/");
+            }
             builder.Append(this.DataStoreServerPathToRootDropboxFolder);
             builder.Append("/incoming-");
-            builder.Append(this.DataStoreServerHardwareClass);
+            builder.Append(this.DataStoreServerHardwareSubClass);
 
             return builder.ToString();
         }
@@ -309,9 +321,9 @@ namespace obit_manager_settings.components
     {
         public string UserName;
         public string Server;
-        public int Port;
         public string DropboxRoot;
-        public string Hardware;
+        public string HardwareClass;
+        public string HardwareSubClass;
     };
 
     /// <summary>

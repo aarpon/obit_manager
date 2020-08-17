@@ -44,7 +44,7 @@ namespace obit_manager_settings.components
         public string LocalUserAccount { get; set; } = "openbis";
 
         // Datamover incoming target
-        [Setting(Configuration = "Datamover", Component = "Datamover")]
+        [Setting(Configuration = "AnnotationTool;Datamover", Component = "Datamover")]
         public string IncomingTarget { get; set; } = @"D:/Datamover/incoming";
 
         // Skip accesibility test on incoming?

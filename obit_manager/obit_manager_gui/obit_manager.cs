@@ -352,5 +352,12 @@ namespace obit_manager_gui
             // Update the UI
             this.updateUI();
         }
+
+        private void buttonApplyAllChanges_Click(object sender, EventArgs e)
+        {
+            this.mSettingsManager.Save();
+
+            // @TODO All the rest!
+        }
     }
 }

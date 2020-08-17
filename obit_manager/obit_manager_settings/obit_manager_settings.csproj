@@ -46,6 +46,7 @@
     <Compile Include="components\io\DatamoverJSLSettingsParser.cs" />
     <Compile Include="components\Server.cs" />
     <Compile Include="components\io\DatamoverSettingsParser.cs" />
+    <Compile Include="HardwareInventory.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>

@@ -55,6 +55,7 @@
             this.textBoxDSSPathToLastChangedExecutable = new System.Windows.Forms.TextBox();
             this.buttonAccept = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
+            this.labelHardwareDescription = new System.Windows.Forms.Label();
             this.groupBoxOpenBISServer.SuspendLayout();
             this.groupBoxDSS.SuspendLayout();
             this.SuspendLayout();
@@ -199,6 +200,7 @@
             // 
             // groupBoxDSS
             // 
+            this.groupBoxDSS.Controls.Add(this.labelHardwareDescription);
             this.groupBoxDSS.Controls.Add(this.comboBoxHardwareSubCategory);
             this.groupBoxDSS.Controls.Add(this.labelHardwareSubCategory);
             this.groupBoxDSS.Controls.Add(this.comboBoxHardwareCategory);
@@ -217,7 +219,7 @@
             this.groupBoxDSS.Controls.Add(this.labelDSSUnixUser);
             this.groupBoxDSS.Location = new System.Drawing.Point(12, 126);
             this.groupBoxDSS.Name = "groupBoxDSS";
-            this.groupBoxDSS.Size = new System.Drawing.Size(424, 270);
+            this.groupBoxDSS.Size = new System.Drawing.Size(424, 309);
             this.groupBoxDSS.TabIndex = 12;
             this.groupBoxDSS.TabStop = false;
             this.groupBoxDSS.Text = "Data Store Server";
@@ -226,13 +228,14 @@
             // 
             this.comboBoxHardwareSubCategory.FormattingEnabled = true;
             this.comboBoxHardwareSubCategory.Items.AddRange(new object[] {
-            "BD LSR Fortessa",
+            "BC CytoFlexS",
+            "BC MoFlo XDP",
             "BD FACS Aria",
+            "BD LSR Fortessa",
             "BD Influx",
             "Bio-Rad S3e",
-            "BC MoFlo XDP",
-            "Sony SH800S",
-            "Sony MA900"});
+            "Sony MA900",
+            "Sony SH800S"});
             this.comboBoxHardwareSubCategory.Location = new System.Drawing.Point(171, 188);
             this.comboBoxHardwareSubCategory.Name = "comboBoxHardwareSubCategory";
             this.comboBoxHardwareSubCategory.Size = new System.Drawing.Size(242, 21);
@@ -288,7 +291,7 @@
             // labelLPathLastChanged
             // 
             this.labelLPathLastChanged.AutoSize = true;
-            this.labelLPathLastChanged.Location = new System.Drawing.Point(6, 215);
+            this.labelLPathLastChanged.Location = new System.Drawing.Point(6, 240);
             this.labelLPathLastChanged.Name = "labelLPathLastChanged";
             this.labelLPathLastChanged.Size = new System.Drawing.Size(241, 13);
             this.labelLPathLastChanged.TabIndex = 15;
@@ -313,7 +316,7 @@
             // 
             // textBoxDSSPathToLastChangedExecutable
             // 
-            this.textBoxDSSPathToLastChangedExecutable.Location = new System.Drawing.Point(6, 235);
+            this.textBoxDSSPathToLastChangedExecutable.Location = new System.Drawing.Point(6, 260);
             this.textBoxDSSPathToLastChangedExecutable.Name = "textBoxDSSPathToLastChangedExecutable";
             this.textBoxDSSPathToLastChangedExecutable.Size = new System.Drawing.Size(407, 22);
             this.textBoxDSSPathToLastChangedExecutable.TabIndex = 10;
@@ -321,7 +324,7 @@
             // 
             // buttonAccept
             // 
-            this.buttonAccept.Location = new System.Drawing.Point(12, 417);
+            this.buttonAccept.Location = new System.Drawing.Point(12, 441);
             this.buttonAccept.Name = "buttonAccept";
             this.buttonAccept.Size = new System.Drawing.Size(204, 23);
             this.buttonAccept.TabIndex = 11;
@@ -331,7 +334,7 @@
             // 
             // buttonCancel
             // 
-            this.buttonCancel.Location = new System.Drawing.Point(232, 417);
+            this.buttonCancel.Location = new System.Drawing.Point(232, 441);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(204, 23);
             this.buttonCancel.TabIndex = 12;
@@ -339,11 +342,20 @@
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
             // 
+            // labelHardwareDescription
+            // 
+            this.labelHardwareDescription.AutoSize = true;
+            this.labelHardwareDescription.Location = new System.Drawing.Point(6, 216);
+            this.labelHardwareDescription.Name = "labelHardwareDescription";
+            this.labelHardwareDescription.Size = new System.Drawing.Size(16, 13);
+            this.labelHardwareDescription.TabIndex = 20;
+            this.labelHardwareDescription.Text = "...";
+            // 
             // ServerConfigurationDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(444, 453);
+            this.ClientSize = new System.Drawing.Size(444, 485);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonAccept);
             this.Controls.Add(this.groupBoxDSS);
@@ -388,5 +400,6 @@
         private System.Windows.Forms.Label labelHardwareSubCategory;
         private System.Windows.Forms.ComboBox comboBoxHardwareCategory;
         private System.Windows.Forms.Label labelHardwareCategory;
+        private System.Windows.Forms.Label labelHardwareDescription;
     }
 }

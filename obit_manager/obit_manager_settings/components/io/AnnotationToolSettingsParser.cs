@@ -141,9 +141,67 @@ namespace obit_manager_settings.components.io
             return true;
         }
 
-        public bool Save()
+        public void Save(List<Instance> instances)
         {
-            throw new NotImplementedException("Implement me!");
+            // First update the internal configurations
+            Dictionary<string, Dictionary<string, string>> newConfigurations =
+                new Dictionary<string, Dictionary<string, string>>(instances.Count);
+
+            foreach (Instance instance in instances)
+            {
+                Dictionary<string, string> conf = new Dictionary<string, string>();
+                conf["CreateMarkerFile"] = instance.ClientRef.CreateMarkerFile.ToString();
+                conf["OpenBISURL"] = instance.ServerRef.ApplicationServerURL;
+                conf["AcceptSelfSignedCertificates"] = instance.ServerRef.ApplicationServerAcceptSelfSignedCert.ToString();
+                conf["HumanFriendlyHostName"] = instance.ClientRef.HumanFriendlyHostName;
+                conf["AcquisitionStation"] = instance.ServerRef.DataStoreServerHardwareClass;
+                conf["DatamoverIncomingDir"] = instance.DatamoverRef.IncomingTarget;
+                conf["UserDataDir"] = instance.ClientRef.UserDataDir;
+                conf["ConfigurationName"] = instance.ClientRef.ConfigurationName;
+                newConfigurations[conf["ConfigurationName"]] = conf;
+            }
+
+            // Update the internal configurations
+            this.mConfigurations = null;
+            this.mConfigurations = newConfigurations;
+
+            // Now write to file
+
+            // Initialize XML document
+            XmlDocument xmlDoc = new XmlDocument();
+
+            // Add
+            XmlNode docNode = xmlDoc.CreateXmlDeclaration("1.0", "UTF-8", null);
+            xmlDoc.AppendChild(docNode);
+
+            // Create root node
+            XmlNode rootNode = xmlDoc.CreateElement("AnnotationTool_App_Settings");
+
+            // Add attribute "version"
+            XmlAttribute attribute = xmlDoc.CreateAttribute("version");
+            attribute.Value = AnnotationToolSettingsParser.sAnnotationToolSettingsVersion.ToString();
+            rootNode.Attributes.Append(attribute);
+            xmlDoc.AppendChild(rootNode);
+
+            // Now serialize the configurations
+            foreach (var entry in this.mConfigurations)
+            {
+                // Create configuration node
+                XmlNode confNode = xmlDoc.CreateElement("configuration");
+
+                // Add all attributes
+                foreach (var attrs in entry.Value)
+                {
+                    XmlAttribute attr = xmlDoc.CreateAttribute(attrs.Key);
+                    attr.Value = attrs.Value;
+
+                    confNode.Attributes.Append(attr);
+                }
+
+                rootNode.AppendChild(confNode);
+            }
+
+            xmlDoc.Save(AnnotationToolSettingsParser.sSettingsFileName);
         }
 
         /// <summary>

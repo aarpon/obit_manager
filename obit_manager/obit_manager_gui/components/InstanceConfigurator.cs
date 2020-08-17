@@ -80,8 +80,8 @@ namespace obit_manager_gui.components
                     // Set it
                     this.mSettingsManager.SelectedInstance.ServerRef = updatedServer;
 
-                    // Update the corresponding field
-                    this.comboBoxServer.SelectedItem = this.mSettingsManager.SelectedInstance.ServerRef.Label;
+                    // Refresh the InstanceConfigurator
+                    this.Refresh();
                 }
             }
         }
@@ -101,6 +101,9 @@ namespace obit_manager_gui.components
 
                     // Update the corresponding field
                     this.comboBoxUserFolder.Text = this.mSettingsManager.SelectedInstance.ClientRef.UserDataDir;
+
+                    // Refresh the InstanceConfigurator
+                    this.Refresh();
                 }
             }
         }
@@ -120,6 +123,9 @@ namespace obit_manager_gui.components
 
                     // Update the corresponding field
                     this.comboBoxDatamoverIncomingFolder.Text = this.mSettingsManager.SelectedInstance.DatamoverRef.IncomingTarget;
+
+                    // Refresh the InstanceConfigurator
+                    this.Refresh();
                 }
             }
         }

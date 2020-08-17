@@ -52,7 +52,7 @@ namespace obit_manager_settings.components
 
         // Accept self-signed certificates
         [Setting(Configuration = "AnnotationTool", Component = "Server")]
-        public bool AcceptSelfSignedCertificates { get; set; } = false;
+        public string AcceptSelfSignedCertificates { get; set; } = "no";
 
         // User folder base path on the local machine
         [Setting(Configuration = "AnnotationTool", Component = "Client")]
@@ -60,7 +60,7 @@ namespace obit_manager_settings.components
 
         // Create marker file
         [Setting(Configuration = "AnnotationTool", Component = "Client")]
-        public bool CreateMarkerFile { get; set; } = false;
+        public string CreateMarkerFile { get; set; } = "no";
 
         /// <summary>
         /// Default constructor
@@ -83,9 +83,9 @@ namespace obit_manager_settings.components
             this.DatamoverIncomingDir = conf["DatamoverIncomingDir"];
             this.AcquisitionStation = conf["AcquisitionStation"];
             this.HumanFriendlyHostName = conf["HumanFriendlyHostName"];
-            this.AcceptSelfSignedCertificates = conf["AcceptSelfSignedCertificates"].Equals("yes") ? true : false;
+            this.AcceptSelfSignedCertificates = conf["AcceptSelfSignedCertificates"];
             this.UserDataDir = conf["UserDataDir"];
-            this.CreateMarkerFile = conf["CreateMarkerFile"].Equals("yes") ? true : false;
+            this.CreateMarkerFile = conf["CreateMarkerFile"];
         }
 
         /// <summary>
@@ -116,9 +116,9 @@ namespace obit_manager_settings.components
             conf["DatamoverIncomingDir"] = this.DatamoverIncomingDir;
             conf["AcquisitionStation"] = this.AcquisitionStation;
             conf["HumanFriendlyHostName"] = this.HumanFriendlyHostName;
-            conf["AcceptSelfSignedCertificates"] = this.AcceptSelfSignedCertificates == true ? "yes" : "no";
+            conf["AcceptSelfSignedCertificates"] = this.AcceptSelfSignedCertificates;
             conf["UserDataDir"] = this.UserDataDir;
-            conf["CreateMarkerFile"] = this.CreateMarkerFile == true ? "yes" : "no";
+            conf["CreateMarkerFile"] = this.CreateMarkerFile;
 
             return conf;
         }

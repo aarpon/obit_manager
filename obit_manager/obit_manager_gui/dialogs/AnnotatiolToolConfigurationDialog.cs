@@ -39,7 +39,7 @@ namespace obit_manager_gui.dialogs
         {
             this.buttonUserDataDir.Text = this.mEditableClient.UserDataDir;
             this.textBoxHumanFriedlyMachineName.Text = this.mEditableClient.HumanFriendlyHostName;
-            this.checkBoxCreateMarkerFile.Checked = this.mEditableClient.CreateMarkerFile;
+            this.checkBoxCreateMarkerFile.Checked = this.mEditableClient.CreateMarkerFile.Equals("yes") ? true: false;
         }
 
         private void buttonUserDataDir_Click(object sender, EventArgs e)
@@ -63,7 +63,7 @@ namespace obit_manager_gui.dialogs
 
         private void checkBoxCreateMarkerFile_CheckedChanged(object sender, EventArgs e)
         {
-            this.mEditableClient.CreateMarkerFile = this.checkBoxCreateMarkerFile.Checked;
+            this.mEditableClient.CreateMarkerFile = this.checkBoxCreateMarkerFile.Checked ? "yes" : "no";
         }
 
         private void buttonAccept_Click(object sender, EventArgs e)

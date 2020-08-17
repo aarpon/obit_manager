@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics.Eventing.Reader;
 using System.Windows.Forms;
+using obit_manager_settings;
 using obit_manager_settings.components;
 
 namespace obit_manager_gui.dialogs
@@ -10,90 +12,6 @@ namespace obit_manager_gui.dialogs
     {
         private Server mEditableServer;
         private Server mReturnServer = null;
-
-        private static Dictionary<string, HardwareMapEntry> HardwareMap = new Dictionary<string, HardwareMapEntry>()
-        {
-            {
-                "microscopy", 
-                new HardwareMapEntry()
-                {
-                    Key = "microscopy",
-                    Category = "Microscopy",
-                    Name = "All microscopes",
-                    Description = ""
-                }
-            },
-            {
-                "lsrfortessa",
-                new HardwareMapEntry()
-                {
-                    Key = "lsrfortessa",
-                    Category = "Flow cytometry",
-                    Name = "BD LSR Fortessa",
-                    Description = ""
-                }
-            },
-            {
-                "facsaria", 
-                new HardwareMapEntry()
-                {
-                    Key = "facsaria",
-                    Category = "Flow cytometry",
-                    Name = "BD FACS Aria",
-                    Description = ""
-                }
-            },
-            {
-                "influx",
-                new HardwareMapEntry()
-                {
-                    Key = "influx",
-                    Category = "Flow cytometry",
-                    Name = "BD Influx",
-                    Description = ""
-                }
-            },
-            {
-                "s3e",
-                new HardwareMapEntry()
-                {
-                    Key = "s3e",
-                    Category = "Flow cytometry",
-                    Name = "Bio-Rad S3e",
-                    Description = ""
-                }
-            },
-            {
-                "mofloxdp",
-                new HardwareMapEntry()
-                {
-                    Key = "mofloxdp",
-                    Category = "Flow cytometry",
-                    Name = "BC MoFlo XDP",
-                    Description = ""
-                }
-            },
-            {
-                "sonysh800s",
-                new HardwareMapEntry()
-                {
-                    Key = "sonysh800s",
-                    Category = "Flow cytometry",
-                    Name = "Sony SH800S",
-                    Description = ""
-                }
-            },
-            {
-                "sonyma900",
-                new HardwareMapEntry()
-                {
-                    Key = "sonyma900",
-                    Category = "Flow cytometry",
-                    Name = "Sony MA900",
-                    Description = ""
-                }
-            }
-        };
 
         public ServerConfigurationDialog(Server server)
         {
@@ -122,7 +40,7 @@ namespace obit_manager_gui.dialogs
             {
                 this.textBoxOpenBISServerPort.Text = "";
             }
-            this.checkBoxOpenBISSErverAcceptSelfSignedCert.Checked = this.mEditableServer.ApplicationServerAcceptSelfSignedCert;
+            this.checkBoxOpenBISSErverAcceptSelfSignedCert.Checked = this.mEditableServer.ApplicationServerAcceptSelfSignedCert.Equals("yes") ? true: false;;
 
             // DataStore Server
             this.textBoxDSSHostName.Text = this.mEditableServer.DataStoreServerHostname;
@@ -132,18 +50,18 @@ namespace obit_manager_gui.dialogs
 
             // Hardware
             HardwareMapEntry hardwareMapEntry =
-                ServerConfigurationDialog.HardwareMap[this.mEditableServer.DataStoreServerHardwareClass];
+                Hardware.Inventory[this.mEditableServer.DataStoreServerHardwareSubClass];
             if (hardwareMapEntry.Key.Equals("microscopy"))
             {
-                this.comboBoxHardwareCategory.SelectedItem = "Microscopy";
                 this.comboBoxHardwareSubCategory.Enabled = false;
             }
             else
             {
-                this.comboBoxHardwareCategory.SelectedItem = "Flow cytometry";
-                this.comboBoxHardwareSubCategory.SelectedItem = hardwareMapEntry.Name;
                 this.comboBoxHardwareSubCategory.Enabled = true;
             }
+            this.comboBoxHardwareCategory.SelectedItem = hardwareMapEntry.Category;
+            this.comboBoxHardwareSubCategory.SelectedItem = hardwareMapEntry.Name;
+            this.labelHardwareDescription.Text = hardwareMapEntry.Description;
         }
 
         private void buttonGenerateCryptoKey_Click(object sender, EventArgs e)
@@ -244,24 +162,42 @@ namespace obit_manager_gui.dialogs
         private void checkBoxOpenBISSErverAcceptSelfSignedCert_CheckedChanged(object sender, EventArgs e)
         {
             this.mEditableServer.ApplicationServerAcceptSelfSignedCert =
-                this.checkBoxOpenBISSErverAcceptSelfSignedCert.Checked;
+                this.checkBoxOpenBISSErverAcceptSelfSignedCert.Checked ? "yes" : "no";
         }
 
         private void comboBoxHardwareCategory_SelectedIndexChanged(object sender, EventArgs e)
         {
+            HardwareMapEntry map;
+
             if (this.comboBoxHardwareCategory.SelectedItem.Equals("Microscopy"))
             {
+                map = Hardware.Inventory["microscopy"];
+
                 this.comboBoxHardwareSubCategory.SelectedItem = null;
-                this.mEditableServer.DataStoreServerHardwareClass = "microscopy";
                 this.comboBoxHardwareSubCategory.Enabled = false;
             }
             else
             {
-                // Default to BD LSR Fortessa
-                this.comboBoxHardwareSubCategory.SelectedItem = "BD LSR Fortessa";
-                this.mEditableServer.DataStoreServerHardwareClass = "lsr-fortessa";
+                // Is there a subcategory selected?
+                if (this.comboBoxHardwareSubCategory.SelectedItem == null)
+                {
+                    // Default to BD LSR Fortessa
+                    map = Hardware.Inventory["lsrfortessa"];
+                }
+                else
+                {
+                    map = Hardware.Inventory[this.comboBoxHardwareSubCategory.SelectedItem.ToString()];
+                }
+                
+                this.comboBoxHardwareSubCategory.SelectedItem = map.Name;
                 this.comboBoxHardwareSubCategory.Enabled = true;
+
             }
+
+            this.labelHardwareDescription.Text = map.Description;
+
+            this.mEditableServer.DataStoreServerHardwareClass = map.Category;
+            this.mEditableServer.DataStoreServerHardwareSubClass = map.Key;
         }
 
         private void comboBoxHardwareSubCategory_SelectedIndexChanged(object sender, EventArgs e)
@@ -271,21 +207,34 @@ namespace obit_manager_gui.dialogs
                 return;
             }
 
-            foreach (var entry in ServerConfigurationDialog.HardwareMap)
+            foreach (var entry in Hardware.Inventory)
             {
                 if (entry.Value.Name.Equals(this.comboBoxHardwareSubCategory.SelectedItem.ToString()))
                 {
-                    this.mEditableServer.DataStoreServerHardwareClass = entry.Key;
+                    this.labelHardwareDescription.Text = entry.Value.Description;
+
+                    this.mEditableServer.DataStoreServerHardwareClass = this.GetHardwareClassFromSubclass(entry.Key);
+                    this.mEditableServer.DataStoreServerHardwareSubClass = entry.Key;
                 }
             }
         }
-    }
 
-    public class HardwareMapEntry
-    {
-        public string Key { get; set; }
-        public string Category { get; set; }
-        public string Name { get; set; }
-        public String Description { get; set; }
+        /// <summary>
+        /// Return the hardware class from the specialized subclass.
+        /// </summary>
+        /// <param name="subclass"></param>
+        /// <returns></returns>
+        public string GetHardwareClassFromSubclass(string subclass)
+        {
+            if (subclass.ToLower().Equals("microscopy"))
+            {
+                return "Microscopy";
+            }
+            else
+            {
+                return "Flow cytometry";
+            }
+        }
+
     }
 }

@@ -9,7 +9,8 @@ namespace obit_manager_settings.components
         /// Defines which configuration file stores this Property.
         /// </summary>
         ///
-        /// One of AnnotationTool, Datamover_JSL, or Datamover.
+        /// One of AnnotationTool, Datamover_JSL, or Datamover;
+        /// combinations are also possile, e.g. "AnnotationTool;Datamover"
         public virtual string Configuration { get; set; }
 
         /// <summary>
