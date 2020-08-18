@@ -29,6 +29,11 @@ namespace obit_manager_settings
         // List of instances
         private List<Instance> mInstances;
 
+        // List of Client, Datamover and Server objects
+        private List<Client> mClients;
+        private List<Datamover> mDatamovers;
+        private List<Server> mServers;
+
         // Keep track of the selected instance
         private int mSelectedInstanceIndex = 0;
 
@@ -38,8 +43,11 @@ namespace obit_manager_settings
             // Initialize application state
             this.ApplicationState = State.OBIT_NOT_INSTALLED;
 
-            // Initialize list of instances
+            // Initialize all lists
             this.mInstances = new List<Instance>();
+            this.mClients = new List<Client>();
+            this.mDatamovers = new List<Datamover>();
+            this.mServers = new List<Server>();
 
             // Load (if possible, otherwise instantiate with default values)
             // the oBIT Manager Application Settings
@@ -91,7 +99,7 @@ namespace obit_manager_settings
         {
             // @Todo Implement!
             this.mManagerParser.Save();
-            this.mAnnotationToolParser.Save(this.mInstances);
+            this.mAnnotationToolParser.Save(this);
             this.mDatamoverJSLParser.Save();
             this.mDatamoverParser.Save();
         }
@@ -100,6 +108,8 @@ namespace obit_manager_settings
         {
             // Get the list of instances from the Annotation Tool parser
             var configurations = this.mAnnotationToolParser.Configurations;
+
+            int currentInstance = 0;
 
             // Inform
             foreach (KeyValuePair<string, Dictionary<string, string>> configuration in configurations)
@@ -141,11 +151,19 @@ namespace obit_manager_settings
                     continue;
                 }
 
+                // Add the objects
+                this.mClients.Add(client);
+                this.mDatamovers.Add(datamover);
+                this.mServers.Add(server);
+
                 // Create new instance
-                Instance instance = new Instance(configuration.Key, client, server, datamover);
+                Instance instance = new Instance(currentInstance, currentInstance, currentInstance);
 
                 // Add to the instance list
                 this.mInstances.Add(instance);
+
+                // Update the counter
+                currentInstance++;
 
                 // Inform
                 sLogger.Info("Created instance '" + configuration.Key + "'.");
@@ -165,7 +183,7 @@ namespace obit_manager_settings
 
             foreach (Instance instance in this.mInstances)
             {
-                names.Add(instance.ClientRef.ConfigurationName);
+                names.Add(this.mClients[instance.ClientIndex].ConfigurationName);
             }
 
             // Return the list of names
@@ -182,7 +200,7 @@ namespace obit_manager_settings
             // Look for the instance with matching configuration name
             foreach (Instance instance in this.mInstances)
             {
-                if (instance.ClientRef.ConfigurationName.Equals(name))
+                if (this.mClients[instance.ClientIndex].ConfigurationName.Equals(name))
                 {
                     return instance;
                 }
@@ -193,18 +211,105 @@ namespace obit_manager_settings
         }
 
         /// <summary>
+        /// Returns Client associated to Instance with given index.
+        /// </summary>
+        /// <param name="index">Index of the Instance.</param>
+        /// <returns>Client object.</returns>
+        public Client GetClientFromInstanceWithIndex(int index)
+        {
+            return this.mClients[this.mInstances[index].ClientIndex];
+        }
+
+        /// <summary>
+        /// Returns Client associated with currently selected Instance.
+        /// </summary>
+        /// <returns>Client object.</returns>
+        public Client GetClientFromSelectedInstance()
+        {
+            return this.mClients[this.SelectedInstance.ClientIndex];
+        }
+
+        /// <summary>
+        /// Returns Client associated to given Instance.
+        /// </summary>
+        /// <param name="instance">Instance.</param>
+        /// <returns>Client object.</returns>
+        public Client GetClientFromInstance(Instance instance)
+        {
+            return this.mClients[instance.ClientIndex];
+        }
+
+        /// <summary>
+        /// Returns Datamover associated to Instance with given index.
+        /// </summary>
+        /// <param name="index">Index of the Instance.</param>
+        /// <returns>Datamover object.</returns>
+        public Datamover GetDatamoverFromInstanceWithIndex(int index)
+        {
+            return this.mDatamovers[this.mInstances[index].DatamoverIndex];
+        }
+
+        /// <summary>
+        /// Returns Datamover associated to given Instance.
+        /// </summary>
+        /// <param name="instance">Instance.</param>
+        /// <returns>Datamover object.</returns>
+        public Datamover GetDatamoverFromInstance(Instance instance)
+        {
+            return this.mDatamovers[instance.DatamoverIndex];
+        }
+
+        /// <summary>
+        /// Returns Datamover associated with currently selected Instance.
+        /// </summary>
+        /// <returns>Datamover object.</returns>
+        public Datamover GetDatamoverFromSelectedInstance()
+        {
+            return this.mDatamovers[this.SelectedInstance.DatamoverIndex];
+        }
+
+        /// <summary>
+        /// Returns Server associated to Instance with given index.
+        /// </summary>
+        /// <param name="index">Index of the Instance.</param>
+        /// <returns>Server object.</returns>
+        public Server GetServerFromInstanceWithIndex(int index)
+        {
+            return this.mServers[this.mInstances[index].ServerIndex];
+        }
+
+        /// <summary>
+        /// Returns Server associated with currently selected Instance.
+        /// </summary>
+        /// <returns>Server object.</returns>
+        public Server GetServerFromSelectedInstance()
+        {
+            return this.mServers[this.SelectedInstance.ServerIndex];
+        }
+
+        /// <summary>
+        /// Returns Server associated to given Instance.
+        /// </summary>
+        /// <param name="instance">Instance.</param>
+        /// <returns>Server object.</returns>
+        public Server GetServerFromInstance(Instance instance)
+        {
+            return this.mServers[instance.ServerIndex];
+        }
+
+        /// <summary>
         /// Return the Client with given user data dir.
         /// </summary>
         /// <param name="userDataDir">User data directory.</param>
         /// <returns>Client or null if not found.</returns>
         public Client GetClientByUserDataDir(string userDataDir)
         {
-            // Look for the instance with matching configuration name
+            // Look for the Client with matching user data dir
             foreach (Instance instance in this.mInstances)
             {
-                if (instance.ClientRef.UserDataDir.Equals(userDataDir))
+                if (this.mClients[instance.ClientIndex].UserDataDir.Equals(userDataDir))
                 {
-                    return instance.ClientRef;
+                    return this.mClients[instance.ClientIndex];
                 }
             }
 
@@ -220,12 +325,12 @@ namespace obit_manager_settings
         /// <returns>Datamover or null if not found.</returns>
         public Datamover GetDatamoverByIncomingDir(string incomingDir)
         {
-            // Look for the instance with matching configuration name
+            // Look for the Datamover with matching incoming dir
             foreach (Instance instance in this.mInstances)
             {
-                if (instance.DatamoverRef.IncomingTarget.Equals(incomingDir))
+                if (this.mDatamovers[instance.DatamoverIndex].IncomingTarget.Equals(incomingDir))
                 {
-                    return instance.DatamoverRef;
+                    return this.mDatamovers[instance.DatamoverIndex];
                 }
             }
 
@@ -240,12 +345,12 @@ namespace obit_manager_settings
         /// <returns>Server or null if not found.</returns>
         public Server GetServerByLabel(string label)
         {
-            // Look for the instance with matching configuration name
+            // Look for the Server with matching label
             foreach (Instance instance in this.mInstances)
             {
-                if (instance.ServerRef.Label.Equals(label))
+                if (this.mServers[instance.ServerIndex].Label.Equals(label))
                 {
-                    return instance.ServerRef;
+                    return this.mServers[instance.ServerIndex];
                 }
             }
 
@@ -260,12 +365,121 @@ namespace obit_manager_settings
         public void SetSelectedInstanceByName(string name)
         {
             // Find the Instance by name
-            int index = this.mInstances.FindIndex(a => a.ClientRef.ConfigurationName == name);
+
+            int index = -1;
+            for (int i = 0; i < this.NumInstances; i++)
+            {
+                if (this.mClients[this.mInstances[i].ClientIndex].ConfigurationName.Equals(name))
+                {
+                    index = i;
+                    break;
+                }
+            }
+
             if (index == -1)
             {
                 throw new Exception("No Instance with given name found!");
             }
             this.SelectedInstanceIndex = index;
+        }
+
+        /// <summary>
+        /// Replace the Client for given Instance with a new one.
+        /// </summary>
+        /// <param name="instance">Instance object.</param>
+        /// <param name="updatedClient">Client object.</param>
+        public void ReplaceClientObjectForInstance(Instance instance, Client updatedClient)
+        {
+            this.mClients[instance.ClientIndex] = updatedClient;
+        }
+
+        /// <summary>
+        /// Change the Client index for given Instance.
+        /// </summary>
+        /// <param name="instance">Instance object.</param>
+        /// <param name="newClientIndex">New Client index.</param>
+        public void ChangeClientIndexForInstance(Instance instance, int newClientIndex)
+        {
+            if (newClientIndex < 0 || newClientIndex > (this.NumInstances - 1))
+            {
+                throw new ArgumentOutOfRangeException("newClientIndex", "Must be between 0 and " + (this.NumInstances - 1));
+            }
+            instance.ClientIndex = newClientIndex;
+        }
+
+        /// <summary>
+        /// Change the Client index for current Instance.
+        /// </summary>
+        /// <param name="newClientIndex">New Client index.</param>
+        public void ChangeClientIndexForCurrentInstance(int newClientIndex)
+        {
+            this.ChangeClientIndexForInstance(this.SelectedInstance, newClientIndex);
+        }
+
+        /// <summary>
+        /// Replace the Datamover for given Instance with a new one.
+        /// </summary>
+        /// <param name="instance">Instance object.</param>
+        /// <param name="updatedDatamover">Datamover object.</param>
+        public void ReplaceDatamoverObjectForInstance(Instance instance, Datamover updatedDatamover)
+        {
+            this.mDatamovers[instance.DatamoverIndex] = updatedDatamover;
+        }
+
+        /// <summary>
+        /// Change the Datamover index for given Instance.
+        /// </summary>
+        /// <param name="instance">Instance object.</param>
+        /// <param name="newDatamoverIndex">New Datamover index.</param>
+        public void ChangeDatamoverIndexForInstance(Instance instance, int newDatamoverIndex)
+        {
+            if (newDatamoverIndex < 0 || newDatamoverIndex > (this.NumInstances - 1))
+            {
+                throw new ArgumentOutOfRangeException("newDatamoverIndex", "Must be between 0 and " + (this.NumInstances - 1));
+            }
+            instance.DatamoverIndex = newDatamoverIndex;
+        }
+
+        /// <summary>
+        /// Change the Datamover index for current Instance.
+        /// </summary>
+        /// <param name="newDatamoverIndex">New Datamover index.</param>
+        public void ChangeDatamoverIndexForCurrentInstance(int newDatamoverIndex)
+        {
+            this.ChangeDatamoverIndexForInstance(this.SelectedInstance, newDatamoverIndex);
+        }
+
+        /// <summary>
+        /// Replace the Server for given Instance with a new one.
+        /// </summary>
+        /// <param name="instance">Instance object.</param>
+        /// <param name="updatedServer">Server object.</param>
+        public void ReplaceServerObjectForInstance(Instance instance, Server updatedServer)
+        {
+            this.mServers[instance.ServerIndex] = updatedServer;
+        }
+
+        /// <summary>
+        /// Change the Server index for given Instance.
+        /// </summary>
+        /// <param name="instance">Instance object.</param>
+        /// <param name="newServerIndex">New Server index.</param>
+        public void ChangeServerIndexForInstance(Instance instance, int newServerIndex)
+        {
+            if (newServerIndex < 0 || newServerIndex > (this.NumInstances - 1))
+            {
+                throw new ArgumentOutOfRangeException("newServerIndex", "Must be between 0 and " + (this.NumInstances - 1));
+            }
+            instance.ServerIndex = newServerIndex;
+        }
+
+        /// <summary>
+        /// Change the Server index for current Instance.
+        /// </summary>
+        /// <param name="newServerIndex">New Server index.</param>
+        public void ChangeServerIndexForCurrentInstance(int newServerIndex)
+        {
+            this.ChangeServerIndexForInstance(this.SelectedInstance, newServerIndex);
         }
 
         /// <summary>
@@ -350,11 +564,6 @@ namespace obit_manager_settings
             }
         }
 
-        ///// <summary>
-        ///// List of instances.
-        ///// </summary>
-        //public List<Instance> Instances => this.mInstances;
-
         /// <summary>
         /// Return the number of instances.
         /// </summary>
@@ -385,7 +594,7 @@ namespace obit_manager_settings
                 List<string> clientStrings = new List<string>(this.NumClients);
                 foreach (Instance instance in this.mInstances)
                 {
-                    clientStrings.Add(instance.ClientRef.UserDataDir);
+                    clientStrings.Add(this.mClients[instance.ClientIndex].UserDataDir);
                 }
                 return clientStrings;
             }
@@ -398,7 +607,7 @@ namespace obit_manager_settings
                 List<string> datamoverStrings = new List<string>(this.NumDatamovers);
                 foreach (Instance instance in this.mInstances)
                 {
-                    datamoverStrings.Add(instance.DatamoverRef.IncomingTarget);
+                    datamoverStrings.Add(this.mDatamovers[instance.DatamoverIndex].IncomingTarget);
                 }
                 return datamoverStrings;
             }
@@ -411,7 +620,7 @@ namespace obit_manager_settings
                 List<string> serverStrings = new List<string>(this.numServers);
                 foreach (Instance instance in this.mInstances)
                 {
-                    serverStrings.Add(instance.ServerRef.Label);
+                    serverStrings.Add(this.mServers[instance.ServerIndex].Label);
                 }
                 return serverStrings;
             }

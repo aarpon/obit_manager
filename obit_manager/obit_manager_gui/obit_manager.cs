@@ -143,7 +143,7 @@ namespace obit_manager_gui
                 this.comboBoxInstances.Items.Add(name);
             }
 
-            this.comboBoxInstances.SelectedItem = this.mSettingsManager.SelectedInstance.ClientRef.ConfigurationName;
+            this.comboBoxInstances.SelectedItem = this.mSettingsManager.GetClientFromSelectedInstance().ConfigurationName;
 
             // Update The InstanceConfigurator with current Instance's settings
             this.mInstanceConfigurator.Refresh();
@@ -294,7 +294,7 @@ namespace obit_manager_gui
             using (var form = new SingleStringEditor(
                 "Edit Instance name", 
                 "Instance name",
-                this.mSettingsManager.SelectedInstance.ClientRef.ConfigurationName))
+                this.mSettingsManager.GetClientFromSelectedInstance().ConfigurationName))
             {
                 var result = form.ShowDialog();
                 if (result == DialogResult.OK)
@@ -303,7 +303,7 @@ namespace obit_manager_gui
                     string newInstanceName = form.Result;
 
                     // Set it
-                    this.mSettingsManager.SelectedInstance.ClientRef.ConfigurationName = newInstanceName;
+                    this.mSettingsManager.GetClientFromSelectedInstance().ConfigurationName = newInstanceName;
 
                     // Update the dropdown menu
                     var lomm = this.comboBoxInstances.SelectedItem;

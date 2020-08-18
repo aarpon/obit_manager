@@ -9,96 +9,78 @@ namespace obit_manager_settings.components
 {
     public partial class Instance
     {
-        // Configuration name
-        private string mName = "Default";
-
-        // A Client
-        private Client mClient = new Client();
+        // Index of the Client
+        private int mClientIndex;
 
         // A Server
-        private Server mServer = new Server();
+        private int mServerIndex;
 
         // A Datamover
-        private Datamover mDatamover = new Datamover();
+        private int mDatamoverIndex;
 
         /// <summary>
         /// Default constructor.
         /// </summary>
-        /// <param name="name"></param>
-        public Instance(string name = "Default")
+        public Instance()
         {
-            // Configuration name
-            this.mName = name;
+            // Initialize with invalid Client index
+            this.mClientIndex = -1;
 
-            // A Client
-            this.mClient = new Client();
+            // Initialize with invalid Server index
+            this.mServerIndex = -1;
 
-            // A Server
-            this.mServer = new Server();
-
-            // A Datamover
-            this.mDatamover = new Datamover();
+            // Initialize with invalid Datamover index
+            this.mDatamoverIndex = -1;
         }
 
         /// <summary>
         /// Alternative constructor.
         /// </summary>
-        /// <param name="name"></param>
-        public Instance(string name, Client client, Server server, Datamover datamover)
+        /// <param name="clientIndex">Index of the Client in the list of Clients.</param>
+        /// <param name="serverIndex">Index of the Server in the list of Servers.</param>
+        /// <param name="datamoverIndex">Index of the Datamover in the list of Datamovers.</param>
+        public Instance(int clientIndex, int serverIndex, int datamoverIndex)
         {
-            // Configuration name
-            this.mName = name;
+            // Assign given Client index
+            this.mClientIndex = clientIndex;
 
-            // A Client
-            this.mClient = client;
+            // Assign given Server index
+            this.mServerIndex = serverIndex;
 
-            // A Server
-            this.mServer = server;
-
-            // A Datamover
-            this.mDatamover = datamover;
-        }
-
-        /// <summary>
-        /// Validate that the various parts of the Instance settings are consistent and correct.
-        /// </summary>
-        /// <returns>True if the Instance is valid and consistent, false otherwise.</returns>
-        public bool Validate()
-        {
-            // @ToDo: Implement me!
-            return true;
+            // Assign given Datamover index
+            this.mDatamoverIndex = datamoverIndex;
         }
 
         #region properties
 
-        public Client ClientRef
+        public int ClientIndex
         {
-            get => this.mClient;
+            get => this.mClientIndex;
             set
             {
-                this.mClient = value;
+                this.mClientIndex = value;
 
                 // @TODO Update client - datamover - server logical links
             }
         }
 
-        public Server ServerRef
+        public int ServerIndex
         {
-            get => this.mServer;
+            get => this.mServerIndex;
             set
             {
-                this.mServer = value;
+                this.mServerIndex = value;
 
                 // @TODO Update client - datamover - server logical links
             }
         }
 
-        public Datamover DatamoverRef
+        public int DatamoverIndex
         {
-            get => this.mDatamover;
+            get => this.mDatamoverIndex;
             set
             {
-                this.mDatamover = value;
+                this.mDatamoverIndex = value;
 
                 // @TODO Update client - datamover - server logical links
             }

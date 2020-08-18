@@ -141,23 +141,27 @@ namespace obit_manager_settings.components.io
             return true;
         }
 
-        public void Save(List<Instance> instances)
+        public void Save(SettingsManager settingsManager)
         {
             // First update the internal configurations
             Dictionary<string, Dictionary<string, string>> newConfigurations =
-                new Dictionary<string, Dictionary<string, string>>(instances.Count);
+                new Dictionary<string, Dictionary<string, string>>(settingsManager.NumInstances);
 
-            foreach (Instance instance in instances)
+            for (int i = 0; i < settingsManager.NumInstances; i++)
             {
+                Client client = settingsManager.GetClientFromInstanceWithIndex(i);
+                Server server = settingsManager.GetServerFromInstanceWithIndex(i);
+                Datamover datamover = settingsManager.GetDatamoverFromInstanceWithIndex(i);
+
                 Dictionary<string, string> conf = new Dictionary<string, string>();
-                conf["CreateMarkerFile"] = instance.ClientRef.CreateMarkerFile.ToString();
-                conf["OpenBISURL"] = instance.ServerRef.ApplicationServerURL;
-                conf["AcceptSelfSignedCertificates"] = instance.ServerRef.ApplicationServerAcceptSelfSignedCert.ToString();
-                conf["HumanFriendlyHostName"] = instance.ClientRef.HumanFriendlyHostName;
-                conf["AcquisitionStation"] = instance.ServerRef.DataStoreServerHardwareClass;
-                conf["DatamoverIncomingDir"] = instance.DatamoverRef.IncomingTarget;
-                conf["UserDataDir"] = instance.ClientRef.UserDataDir;
-                conf["ConfigurationName"] = instance.ClientRef.ConfigurationName;
+                conf["CreateMarkerFile"] = client.CreateMarkerFile;
+                conf["OpenBISURL"] = server.ApplicationServerURL;
+                conf["AcceptSelfSignedCertificates"] = server.ApplicationServerAcceptSelfSignedCert.ToString();
+                conf["HumanFriendlyHostName"] = client.HumanFriendlyHostName;
+                conf["AcquisitionStation"] = server.DataStoreServerHardwareClass;
+                conf["DatamoverIncomingDir"] = datamover.IncomingTarget;
+                conf["UserDataDir"] = client.UserDataDir;
+                conf["ConfigurationName"] = client.ConfigurationName;
                 newConfigurations[conf["ConfigurationName"]] = conf;
             }
 

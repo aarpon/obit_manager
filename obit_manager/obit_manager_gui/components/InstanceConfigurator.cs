@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using obit_manager_gui.dialogs;
 using obit_manager_settings;
@@ -60,16 +54,18 @@ namespace obit_manager_gui.components
             // Now choose the right ones for the selected Instance
             if (this.mSettingsManager.SelectedInstance != null)
             {
-                this.groupBoxInstance.Text = this.mSettingsManager.SelectedInstance.ClientRef.ConfigurationName;
-                this.comboBoxUserFolder.SelectedItem = this.mSettingsManager.SelectedInstance.ClientRef.UserDataDir;
-                this.comboBoxDatamoverIncomingFolder.SelectedItem = this.mSettingsManager.SelectedInstance.DatamoverRef.IncomingTarget;
-                this.comboBoxServer.SelectedItem = this.mSettingsManager.SelectedInstance.ServerRef.Label;
+                this.groupBoxInstance.Text = this.mSettingsManager.GetClientFromSelectedInstance().ConfigurationName;
+                this.comboBoxUserFolder.SelectedIndex = this.mSettingsManager.SelectedInstance.ClientIndex;
+                this.comboBoxDatamoverIncomingFolder.SelectedIndex = this.mSettingsManager.SelectedInstance.DatamoverIndex;
+                this.comboBoxServer.SelectedIndex = this.mSettingsManager.SelectedInstance.ServerIndex;
             }
         }
 
         private void buttonServerEdit_Click(object sender, EventArgs e)
         {
-            using (var form = new ServerConfigurationDialog(this.mSettingsManager.SelectedInstance.ServerRef))
+            Server server = this.mSettingsManager.GetServerFromInstance(this.mSettingsManager.SelectedInstance);
+
+            using (var form = new ServerConfigurationDialog(server))
             {
                 var result = form.ShowDialog();
                 if (result == DialogResult.OK)
@@ -78,7 +74,10 @@ namespace obit_manager_gui.components
                     Server updatedServer = form.Result;
 
                     // Set it
-                    this.mSettingsManager.SelectedInstance.ServerRef = updatedServer;
+                    this.mSettingsManager.ReplaceServerObjectForInstance(
+                        this.mSettingsManager.SelectedInstance,
+                        updatedServer
+                    );
 
                     // Refresh the InstanceConfigurator
                     this.Refresh();
@@ -88,7 +87,9 @@ namespace obit_manager_gui.components
 
         private void buttonUserFolderEdit_Click(object sender, EventArgs e)
         {
-            using (var form = new AnnotatiolToolConfigurationDialog(this.mSettingsManager.SelectedInstance.ClientRef))
+            Client client = this.mSettingsManager.GetClientFromInstance(this.mSettingsManager.SelectedInstance);
+
+            using (var form = new AnnotatiolToolConfigurationDialog(client))
             {
                 var result = form.ShowDialog();
                 if (result == DialogResult.OK)
@@ -97,10 +98,12 @@ namespace obit_manager_gui.components
                     Client updatedClient = form.Result;
 
                     // Set it
-                    this.mSettingsManager.SelectedInstance.ClientRef = updatedClient;
+                    this.mSettingsManager.ReplaceClientObjectForInstance(
+                        this.mSettingsManager.SelectedInstance,
+                        updatedClient);
 
                     // Update the corresponding field
-                    this.comboBoxUserFolder.Text = this.mSettingsManager.SelectedInstance.ClientRef.UserDataDir;
+                    this.comboBoxUserFolder.Text = updatedClient.UserDataDir;
 
                     // Refresh the InstanceConfigurator
                     this.Refresh();
@@ -110,7 +113,9 @@ namespace obit_manager_gui.components
 
         private void buttonDatamoverIncomingFolderEdit_Click(object sender, EventArgs e)
         {
-            using (var form = new DatamoverConfigurationDialog(this.mSettingsManager.SelectedInstance.DatamoverRef))
+            Datamover datamover = this.mSettingsManager.GetDatamoverFromInstance(this.mSettingsManager.SelectedInstance);
+
+            using (var form = new DatamoverConfigurationDialog(datamover))
             {
                 var result = form.ShowDialog();
                 if (result == DialogResult.OK)
@@ -119,10 +124,13 @@ namespace obit_manager_gui.components
                     Datamover updatedDatamover = form.Result;
 
                     // Set it
-                    this.mSettingsManager.SelectedInstance.DatamoverRef = updatedDatamover;
+                    this.mSettingsManager.ReplaceDatamoverObjectForInstance(
+                        this.mSettingsManager.SelectedInstance,
+                        updatedDatamover
+                    );
 
                     // Update the corresponding field
-                    this.comboBoxDatamoverIncomingFolder.Text = this.mSettingsManager.SelectedInstance.DatamoverRef.IncomingTarget;
+                    this.comboBoxDatamoverIncomingFolder.Text = updatedDatamover.IncomingTarget;
 
                     // Refresh the InstanceConfigurator
                     this.Refresh();
@@ -132,24 +140,14 @@ namespace obit_manager_gui.components
 
         private void comboBoxUserFolder_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string userDataDir = this.comboBoxUserFolder.SelectedItem.ToString();
-            Client client = this.mSettingsManager.GetClientByUserDataDir(userDataDir);
-            if (client == null)
-            {
-                throw new Exception(
-                    "Client with user data dir " +
-                    userDataDir + 
-                    " not found in list of Instances!");
-            }
-
-            // Nothing to do if no change
-            if (Object.ReferenceEquals(this.mSettingsManager.SelectedInstance.ClientRef, client))
+            // Check that new and old indices are indeed different -- otherwise we will create a stack overflow
+            if (this.mSettingsManager.SelectedInstance.ClientIndex == this.comboBoxUserFolder.SelectedIndex)
             {
                 return;
             }
 
             // Update the reference
-            this.mSettingsManager.SelectedInstance.ClientRef = client;
+            this.mSettingsManager.ChangeClientIndexForCurrentInstance(this.comboBoxUserFolder.SelectedIndex);
 
             // Refresh the UI
             this.Refresh();
@@ -157,24 +155,14 @@ namespace obit_manager_gui.components
 
         private void comboBoxDatamoverIncomingFolder_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string incomingDir = this.comboBoxDatamoverIncomingFolder.SelectedItem.ToString();
-            Datamover datamover = this.mSettingsManager.GetDatamoverByIncomingDir(incomingDir);
-            if (datamover == null)
-            {
-                throw new Exception(
-                    "Datamover with incoming dir " +
-                    datamover + 
-                    " not found in list of Instances!");
-            }
-
-            // Nothing to do if no change
-            if (Object.ReferenceEquals(this.mSettingsManager.SelectedInstance.DatamoverRef, datamover))
+            // Check that new and old indices are indeed different -- otherwise we will create a stack overflow
+            if (this.mSettingsManager.SelectedInstance.DatamoverIndex == this.comboBoxDatamoverIncomingFolder.SelectedIndex)
             {
                 return;
             }
 
             // Update the reference
-            this.mSettingsManager.SelectedInstance.DatamoverRef = datamover;
+            this.mSettingsManager.ChangeDatamoverIndexForCurrentInstance(this.comboBoxDatamoverIncomingFolder.SelectedIndex);
 
             // Refresh the UI
             this.Refresh();
@@ -182,24 +170,14 @@ namespace obit_manager_gui.components
 
         private void comboBoxServer_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string label = this.comboBoxServer.SelectedItem.ToString();
-            Server server = this.mSettingsManager.GetServerByLabel(label);
-            if (server == null)
-            {
-                throw new Exception(
-                    "Server with label " +
-                    server + 
-                    " not found in list of Instances!");
-            }
-
-            // Nothing to do if no change
-            if (Object.ReferenceEquals(this.mSettingsManager.SelectedInstance.ServerRef, server))
+            // Check that new and old indices are indeed different -- otherwise we will create a stack overflow
+            if (this.mSettingsManager.SelectedInstance.ServerIndex == this.comboBoxServer.SelectedIndex)
             {
                 return;
             }
 
             // Update the reference
-            this.mSettingsManager.SelectedInstance.ServerRef = server;
+            this.mSettingsManager.ChangeServerIndexForCurrentInstance(this.comboBoxServer.SelectedIndex);
 
             // Refresh the UI
             this.Refresh();
