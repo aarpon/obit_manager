@@ -13,26 +13,9 @@ namespace obit_manager_settings.components
         /// </summary>
         private static Logger sLogger = LogManager.GetCurrentClassLogger();
 
-        // Configuration name 
-        private string mConfiguratioName = "Default";
-
         // Configuration name
         [Setting(Configuration = "AnnotationTool", Component = "Client")]
-        public string ConfigurationName
-        {
-            get
-            {
-                return this.mConfiguratioName;
-            }
-            set
-            {
-                // Set the new configuration name
-                this.mConfiguratioName = value;
-
-                // Raise the event
-                Client.OnConfigurationNameChanged(this, value);
-            }
-        }
+        public string ConfigurationName { get; set; } = "Default";
 
         // OpenBIS AS URL
         [Setting(Configuration = "AnnotationTool", Component = "Server")]
@@ -40,7 +23,7 @@ namespace obit_manager_settings.components
 
         // Datamover incoming-dir
         [Setting(Configuration = "AnnotationTool", Component = "Datamover")]
-        public string DatamoverIncomingDir { get; } = @"D:\Datamover\incoming";
+        public string DatamoverIncomingDir { get; set; } = @"D:\Datamover\incoming";
 
         // Acquisition station type
         [Setting(Configuration = "AnnotationTool", Component = "Client")]

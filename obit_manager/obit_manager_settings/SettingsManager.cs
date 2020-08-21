@@ -17,6 +17,9 @@ namespace obit_manager_settings
     /// </summary>
     public class SettingsManager
     {
+        // Instance
+        private static SettingsManager mInstance = null;
+
         // Logger
         private static Logger sLogger = LogManager.GetCurrentClassLogger();
 
@@ -37,8 +40,10 @@ namespace obit_manager_settings
         // Keep track of the selected instance
         private int mSelectedInstanceIndex = 0;
 
- 
-        public SettingsManager()
+        /// <summary>
+        /// Private constructor.
+        /// </summary>
+        private SettingsManager()
         {
             // Initialize application state
             this.ApplicationState = State.OBIT_NOT_INSTALLED;
@@ -79,6 +84,46 @@ namespace obit_manager_settings
 
             // Set the first instance to be the selected one
             this.mSelectedInstanceIndex = 0;
+        }
+
+        /// <summary>
+        /// Make sure not to allow access to the Copy Constructor.
+        /// </summary>
+        /// <param name="other"></param>
+        private SettingsManager(SettingsManager other)
+        {
+            throw new AccessViolationException("The SettingsManager object cannot be copied!");
+        }
+
+        /// <summary>
+        /// Get reference to SettingsManager (singleton) instance.
+        /// </summary>
+        public static SettingsManager Get()
+        {
+            // If the SettingsManager has not been created yet,
+            // instantiate it now.
+            if (mInstance == null)
+            {
+                mInstance = new SettingsManager();
+            }
+
+            // Return a reference
+            return mInstance;
+        }
+
+        public void ResetAll()
+        {
+            // Delete the previous object
+            mInstance = null;
+
+            // Encourage a memory cleanup
+            System.GC.Collect();
+
+            // Create a new Instance
+            SettingsManager settingsManager = new SettingsManager();
+
+            // Set the new reference
+            mInstance = settingsManager;
         }
 
         public State ApplicationState { get; private set; }
@@ -157,7 +202,7 @@ namespace obit_manager_settings
                 this.mServers.Add(server);
 
                 // Create new instance
-                Instance instance = new Instance(currentInstance, currentInstance, currentInstance);
+                Instance instance = new Instance(client.ConfigurationName, currentInstance, currentInstance, currentInstance);
 
                 // Add to the instance list
                 this.mInstances.Add(instance);

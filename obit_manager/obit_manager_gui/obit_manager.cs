@@ -28,8 +28,8 @@ namespace obit_manager_gui
         {
             sLogger.Info("oBIT Manager started.");
 
-            // Initialize the Settings Manager
-            this.mSettingsManager = new SettingsManager();
+            // Store the reference to the Settings Manager
+            this.mSettingsManager = SettingsManager.Get();
 
             // Initialize components
             InitializeComponent();
@@ -94,8 +94,7 @@ namespace obit_manager_gui
                         MessageBoxButtons.YesNo);
                     if(dialogResult == DialogResult.Yes)
                     {
-                        this.mSettingsManager = null;
-                        this.mSettingsManager = new SettingsManager();
+                        this.mSettingsManager.ResetAll();
                         this.mSettingsManager.InstallationDir = dialog.SelectedPath;
                         buttonOBITInstallationDirectory.Text = this.mSettingsManager.InstallationDir;
                     }

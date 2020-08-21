@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 using obit_manager_gui.dialogs;
 using obit_manager_settings;
 using obit_manager_settings.components;
@@ -11,6 +12,11 @@ namespace obit_manager_gui.components
         // Reference to the SettingsManager
         private SettingsManager mSettingsManager;
 
+        // Instance Consolidator and Validator
+        private InstancesConsolidator mConsolidator;
+        private InstancesValidator mValidator;
+
+
         public InstanceConfigurator()
         {
             InitializeComponent();
@@ -19,6 +25,8 @@ namespace obit_manager_gui.components
         public void SetConfiguration(SettingsManager settingsManager)
         {
             this.mSettingsManager = settingsManager;
+            this.mConsolidator = new InstancesConsolidator();
+            this.mValidator = new InstancesValidator();
 
             this.UpdateUI();
         }
@@ -54,7 +62,7 @@ namespace obit_manager_gui.components
             // Now choose the right ones for the selected Instance
             if (this.mSettingsManager.SelectedInstance != null)
             {
-                this.groupBoxInstance.Text = this.mSettingsManager.GetClientFromSelectedInstance().ConfigurationName;
+                this.groupBoxInstance.Text = this.mSettingsManager.SelectedInstance.Name;
                 this.comboBoxUserFolder.SelectedIndex = this.mSettingsManager.SelectedInstance.ClientIndex;
                 this.comboBoxDatamoverIncomingFolder.SelectedIndex = this.mSettingsManager.SelectedInstance.DatamoverIndex;
                 this.comboBoxServer.SelectedIndex = this.mSettingsManager.SelectedInstance.ServerIndex;
@@ -149,8 +157,11 @@ namespace obit_manager_gui.components
             // Update the reference
             this.mSettingsManager.ChangeClientIndexForCurrentInstance(this.comboBoxUserFolder.SelectedIndex);
 
-            // Refresh the UI
-            this.Refresh();
+            // Consolidate the Instances
+            this.mConsolidator.Consolidate();
+
+            // Validate the Instances
+            this.mValidator.Validate();
         }
 
         private void comboBoxDatamoverIncomingFolder_SelectedIndexChanged(object sender, EventArgs e)
@@ -164,8 +175,11 @@ namespace obit_manager_gui.components
             // Update the reference
             this.mSettingsManager.ChangeDatamoverIndexForCurrentInstance(this.comboBoxDatamoverIncomingFolder.SelectedIndex);
 
-            // Refresh the UI
-            this.Refresh();
+            // Consolidate the Instances
+            this.mConsolidator.Consolidate();
+
+            // Validate the Instances
+            this.mValidator.Validate();
         }
 
         private void comboBoxServer_SelectedIndexChanged(object sender, EventArgs e)
@@ -179,8 +193,11 @@ namespace obit_manager_gui.components
             // Update the reference
             this.mSettingsManager.ChangeServerIndexForCurrentInstance(this.comboBoxServer.SelectedIndex);
 
-            // Refresh the UI
-            this.Refresh();
+            // Consolidate the Instances
+            this.mConsolidator.Consolidate();
+
+            // Validate the Instances
+            this.mValidator.Validate();
         }
     }
 }

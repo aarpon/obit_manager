@@ -13,14 +13,14 @@ namespace obit_manager_gui
 
         private void RegisterEventHandlers()
         {
-            Client.ConfigurationNameChanged += ConfigurationNameChangeHandler;
+            Instance.ConfigurationNameChanged += ConfigurationNameChangeHandler;
         }
 
         // Event handlers
         void ConfigurationNameChangeHandler(object sender, string e)
         {
             // Cast the sender
-            Client client = (Client) sender;
+            Instance instance = (Instance) sender;
 
             // Refresh the Instance Configurator
             this.mInstanceConfigurator.Refresh();

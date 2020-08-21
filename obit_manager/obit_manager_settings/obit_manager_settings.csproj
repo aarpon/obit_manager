@@ -42,11 +42,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="components\Datamover.cs" />
-    <Compile Include="components\events\ClientEvents.cs" />
+    <Compile Include="components\events\InstanceEvents.cs" />
     <Compile Include="components\io\DatamoverJSLSettingsParser.cs" />
     <Compile Include="components\Server.cs" />
     <Compile Include="components\io\DatamoverSettingsParser.cs" />
     <Compile Include="HardwareInventory.cs" />
+    <Compile Include="InstancesConsolidator.cs" />
+    <Compile Include="InstancesValidator.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
