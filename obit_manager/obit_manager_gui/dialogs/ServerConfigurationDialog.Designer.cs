@@ -43,6 +43,7 @@
             this.comboBoxOpenBISServerProtocol = new System.Windows.Forms.ComboBox();
             this.labelProtocol = new System.Windows.Forms.Label();
             this.groupBoxDSS = new System.Windows.Forms.GroupBox();
+            this.labelHardwareDescription = new System.Windows.Forms.Label();
             this.comboBoxHardwareSubCategory = new System.Windows.Forms.ComboBox();
             this.labelHardwareSubCategory = new System.Windows.Forms.Label();
             this.comboBoxHardwareCategory = new System.Windows.Forms.ComboBox();
@@ -55,7 +56,6 @@
             this.textBoxDSSPathToLastChangedExecutable = new System.Windows.Forms.TextBox();
             this.buttonAccept = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
-            this.labelHardwareDescription = new System.Windows.Forms.Label();
             this.groupBoxOpenBISServer.SuspendLayout();
             this.groupBoxDSS.SuspendLayout();
             this.SuspendLayout();
@@ -224,6 +224,15 @@
             this.groupBoxDSS.TabStop = false;
             this.groupBoxDSS.Text = "Data Store Server";
             // 
+            // labelHardwareDescription
+            // 
+            this.labelHardwareDescription.AutoSize = true;
+            this.labelHardwareDescription.Location = new System.Drawing.Point(6, 216);
+            this.labelHardwareDescription.Name = "labelHardwareDescription";
+            this.labelHardwareDescription.Size = new System.Drawing.Size(16, 13);
+            this.labelHardwareDescription.TabIndex = 20;
+            this.labelHardwareDescription.Text = "...";
+            // 
             // comboBoxHardwareSubCategory
             // 
             this.comboBoxHardwareSubCategory.FormattingEnabled = true;
@@ -231,8 +240,8 @@
             "BC CytoFlexS",
             "BC MoFlo XDP",
             "BD FACS Aria",
-            "BD LSR Fortessa",
             "BD Influx",
+            "BD LSR Fortessa",
             "Bio-Rad S3e",
             "Sony MA900",
             "Sony SH800S"});
@@ -341,15 +350,6 @@
             this.buttonCancel.Text = "Cancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
-            // 
-            // labelHardwareDescription
-            // 
-            this.labelHardwareDescription.AutoSize = true;
-            this.labelHardwareDescription.Location = new System.Drawing.Point(6, 216);
-            this.labelHardwareDescription.Name = "labelHardwareDescription";
-            this.labelHardwareDescription.Size = new System.Drawing.Size(16, 13);
-            this.labelHardwareDescription.TabIndex = 20;
-            this.labelHardwareDescription.Text = "...";
             // 
             // ServerConfigurationDialog
             // 

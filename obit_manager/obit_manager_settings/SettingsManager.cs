@@ -1,14 +1,10 @@
-﻿using System;
+﻿using NLog;
 using obit_manager_settings.components;
-using System.Collections.Generic;
-using NLog;
-using NLog.Config;
 using obit_manager_settings.components.io;
-using static obit_manager_settings.Constants;
+using System;
+using System.Collections.Generic;
 using System.Configuration;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using System.Runtime.Remoting.Messaging;
+using static obit_manager_settings.Constants;
 
 namespace obit_manager_settings
 {
@@ -362,7 +358,6 @@ namespace obit_manager_settings
             return null;
         }
 
-
         /// <summary>
         /// Return the Datamover with given user incoming dir.
         /// </summary>
@@ -537,8 +532,8 @@ namespace obit_manager_settings
             if (index1 >= this.mInstances.Count || index2 >= this.mInstances.Count)
             {
                 throw new ArgumentOutOfRangeException(
-                    "Max possible Instance index is " + 
-                    (this.mInstances.Count - 1) + 
+                    "Max possible Instance index is " +
+                    (this.mInstances.Count - 1) +
                     ".");
             }
 
@@ -598,7 +593,7 @@ namespace obit_manager_settings
                 }
             }
 
-            set
+            private set
             {
                 int index = this.mInstances.FindIndex(a => a == value);
                 if (index == -1)
@@ -614,7 +609,7 @@ namespace obit_manager_settings
         /// </summary>
         public int NumInstances
         {
-            get => this.mInstances.Count; 
+            get => this.mInstances.Count;
         }
 
         public int NumClients

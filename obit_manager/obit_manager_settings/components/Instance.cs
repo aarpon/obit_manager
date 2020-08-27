@@ -74,9 +74,6 @@ namespace obit_manager_settings.components
                 }
 
                 this.mName = value;
-
-                // Raise the event
-                Instance.OnConfigurationNameChanged(this, value);
             }
         }
 

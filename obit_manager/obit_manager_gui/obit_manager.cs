@@ -6,7 +6,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using obit_manager_api.core;
-using obit_manager_gui.components;
 using obit_manager_gui.dialogs;
 using obit_manager_settings;
 using obit_manager_settings.components;
@@ -21,7 +20,7 @@ namespace obit_manager_gui
         // Private application settings
         private SettingsManager mSettingsManager;
 
-       // Threads and locks
+        // Threads and locks
         private Thread freshInstallThread = null;
 
         public obit_manager()
@@ -34,14 +33,8 @@ namespace obit_manager_gui
             // Initialize components
             InitializeComponent();
 
-            // Register the event handlers
-            this.RegisterEventHandlers();
-
-            // Pass the reference to the SettingsManager to the InstanceConfigurator
-            this.mInstanceConfigurator.SetConfiguration(this.mSettingsManager);
-
-            // Set defaults
-            updateUI();
+            // Fill UI with current values
+            this.FillUI();
 
             // Log some information
             this.textBoxLogWindow.AppendText("Loaded " + this.mSettingsManager.NumInstances + " instance(s).\r\n");
@@ -120,7 +113,7 @@ namespace obit_manager_gui
             //Task.WaitAll(installationTasks);
         }
 
-        private void updateUI()
+        private void FillUI()
         {
             // Get the installation directory from the application settings
             string installationDir = this.mSettingsManager.InstallationDir;
@@ -142,10 +135,44 @@ namespace obit_manager_gui
                 this.comboBoxInstances.Items.Add(name);
             }
 
-            this.comboBoxInstances.SelectedItem = this.mSettingsManager.GetClientFromSelectedInstance().ConfigurationName;
+            // Fill the pull down menus
+            this.comboBoxUserFolder.Items.Clear();
+            foreach (string clientString in this.mSettingsManager.ClientStrings)
+            {
+                this.comboBoxUserFolder.Items.Add(clientString);
+            }
 
-            // Update The InstanceConfigurator with current Instance's settings
-            this.mInstanceConfigurator.Refresh();
+            this.comboBoxDatamoverIncomingFolder.Items.Clear();
+            foreach (string datamoverString in this.mSettingsManager.DatamoverStrings)
+            {
+                this.comboBoxDatamoverIncomingFolder.Items.Add(datamoverString);
+            }
+
+            this.comboBoxServer.Items.Clear();
+            foreach (string serverString in this.mSettingsManager.ServerStrings)
+            {
+                this.comboBoxServer.Items.Add(serverString);
+            }
+
+            // Point the comboBox to the selected instance
+            this.comboBoxInstances.SelectedIndex = this.mSettingsManager.SelectedInstanceIndex;
+
+            // Update all Instance configuration items
+            this.UpdateUIForChangedInstance();
+        }
+
+        private void UpdateUIForChangedInstance()
+        {
+            // Now choose the right ones for the selected Instance
+            if (this.mSettingsManager.SelectedInstance != null &&
+                this.mSettingsManager.SelectedInstanceIndex != -1)
+            {
+
+                this.groupBoxInstance.Text = this.mSettingsManager.SelectedInstance.Name;
+                this.comboBoxUserFolder.SelectedIndex = this.mSettingsManager.SelectedInstance.ClientIndex;
+                this.comboBoxDatamoverIncomingFolder.SelectedIndex = this.mSettingsManager.SelectedInstance.DatamoverIndex;
+                this.comboBoxServer.SelectedIndex = this.mSettingsManager.SelectedInstance.ServerIndex;
+            }
 
         }
 
@@ -263,17 +290,11 @@ namespace obit_manager_gui
 
         private void comboBoxInstances_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Get the instance name
-            string name = ((ComboBox)sender).Text;
-
-            // Get the instance
-            Instance instance = this.mSettingsManager.GetInstanceByName(name);
-
             // Update the SettingsManager
-            this.mSettingsManager.SelectedInstance = instance;
+            this.mSettingsManager.SelectedInstanceIndex = comboBoxInstances.SelectedIndex;
 
-            // Update the configurator
-            this.mInstanceConfigurator.Refresh();
+            // Update all Instance configuration items
+            this.UpdateUIForChangedInstance();
 
             // Update the default Instance label
             if (this.comboBoxInstances.SelectedIndex == 0)
@@ -293,7 +314,7 @@ namespace obit_manager_gui
             using (var form = new SingleStringEditor(
                 "Edit Instance name", 
                 "Instance name",
-                this.mSettingsManager.GetClientFromSelectedInstance().ConfigurationName))
+                this.mSettingsManager.SelectedInstance.Name))
             {
                 var result = form.ShowDialog();
                 if (result == DialogResult.OK)
@@ -302,14 +323,13 @@ namespace obit_manager_gui
                     string newInstanceName = form.Result;
 
                     // Set it
-                    this.mSettingsManager.GetClientFromSelectedInstance().ConfigurationName = newInstanceName;
+                    this.mSettingsManager.SelectedInstance.Name = newInstanceName;
 
                     // Update the dropdown menu
-                    var lomm = this.comboBoxInstances.SelectedItem;
                     this.comboBoxInstances.Items[this.comboBoxInstances.SelectedIndex] = newInstanceName;
 
-                    // Update the configurator
-                    this.mInstanceConfigurator.Refresh();
+                    // Update all Instance configuration items  
+                    this.UpdateUIForChangedInstance();
                 }
             }
         }
@@ -329,8 +349,8 @@ namespace obit_manager_gui
             // Update the selected instance
             this.mSettingsManager.SelectedInstanceIndex = index1;
 
-            // Update the UI
-            this.updateUI();
+            // Update all Instance configuration items
+            this.UpdateUIForChangedInstance();
         }
 
         private void buttonInstanceDown_Click(object sender, EventArgs e)
@@ -348,8 +368,8 @@ namespace obit_manager_gui
             // Update the selected instance
             this.mSettingsManager.SelectedInstanceIndex = index2;
 
-            // Update the UI
-            this.updateUI();
+            // Update all Instance configuration items
+            this.UpdateUIForChangedInstance();
         }
 
         private void buttonApplyAllChanges_Click(object sender, EventArgs e)
@@ -358,5 +378,166 @@ namespace obit_manager_gui
 
             // @TODO All the rest!
         }
+
+        private void comboBoxUserFolder_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // Check that new and old indices are indeed different -- otherwise we will create a stack overflow
+            if (this.mSettingsManager.SelectedInstance.ClientIndex == this.comboBoxUserFolder.SelectedIndex)
+            {
+                return;
+            }
+
+            // Update the reference
+            this.mSettingsManager.ChangeClientIndexForCurrentInstance(this.comboBoxUserFolder.SelectedIndex);
+
+            // Consolidate the Instances
+            this.ConsolidateInstances();
+
+            // Validate the Instances
+            this.ValidateInstances();
+        }
+
+        private void comboBoxDatamoverIncomingFolder_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // Check that new and old indices are indeed different -- otherwise we will create a stack overflow
+            if (this.mSettingsManager.SelectedInstance.DatamoverIndex == this.comboBoxDatamoverIncomingFolder.SelectedIndex)
+            {
+                return;
+            }
+
+            // Update the reference
+            this.mSettingsManager.ChangeDatamoverIndexForCurrentInstance(this.comboBoxDatamoverIncomingFolder.SelectedIndex);
+
+            // Consolidate the Instances
+            this.ConsolidateInstances();
+
+            // Validate the Instances
+            this.ValidateInstances();
+        }
+
+
+        private void comboBoxServer_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // Check that new and old indices are indeed different -- otherwise we will create a stack overflow
+            if (this.mSettingsManager.SelectedInstance.ServerIndex == this.comboBoxServer.SelectedIndex)
+            {
+                return;
+            }
+
+            // Update the reference
+            this.mSettingsManager.ChangeServerIndexForCurrentInstance(this.comboBoxServer.SelectedIndex);
+
+            // Consolidate the Instances
+            this.ConsolidateInstances();
+
+            // Validate the Instances
+            this.ValidateInstances();
+        }
+
+       private void buttonUserFolderEdit_Click(object sender, EventArgs e)
+        {
+            Client client = this.mSettingsManager.GetClientFromInstance(this.mSettingsManager.SelectedInstance);
+
+            using (var form = new AnnotatiolToolConfigurationDialog(client))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    // Get the updated Client
+                    Client updatedClient = form.Result;
+
+                    // Set it
+                    this.mSettingsManager.ReplaceClientObjectForInstance(
+                        this.mSettingsManager.SelectedInstance,
+                        updatedClient);
+
+                    // Update the corresponding field
+                    this.comboBoxUserFolder.Text = updatedClient.UserDataDir;
+
+                    // Refresh the InstanceConfigurator
+                    this.Refresh();
+                }
+            }
+        }
+
+        private void buttonDatamoverIncomingFolderEdit_Click(object sender, EventArgs e)
+        {
+            Datamover datamover = this.mSettingsManager.GetDatamoverFromInstance(this.mSettingsManager.SelectedInstance);
+
+            using (var form = new DatamoverConfigurationDialog(datamover))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    // Get the updated Client
+                    Datamover updatedDatamover = form.Result;
+
+                    // Set it
+                    this.mSettingsManager.ReplaceDatamoverObjectForInstance(
+                        this.mSettingsManager.SelectedInstance,
+                        updatedDatamover
+                    );
+
+                    // Update the corresponding field
+                    this.comboBoxDatamoverIncomingFolder.Text = updatedDatamover.IncomingTarget;
+
+                    // Refresh the InstanceConfigurator
+                    this.Refresh();
+                }
+            }
+        }
+
+        private void buttonServerEdit_Click(object sender, EventArgs e)
+        {
+            Server server = this.mSettingsManager.GetServerFromInstance(this.mSettingsManager.SelectedInstance);
+
+            using (var form = new ServerConfigurationDialog(server))
+            {
+                var result = form.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    // Get the updated Server
+                    Server updatedServer = form.Result;
+
+                    // Set it
+                    this.mSettingsManager.ReplaceServerObjectForInstance(
+                        this.mSettingsManager.SelectedInstance,
+                        updatedServer
+                    );
+
+                    // Refresh the InstanceConfigurator
+                    this.Refresh();
+                }
+            }
+        }
+
+        public bool ConsolidateInstances()
+        {
+            // Get the reference to the SettingsManager
+            SettingsManager settingsManager = SettingsManager.Get();
+
+            // Get references to the relevant objects
+            Instance instance = settingsManager.SelectedInstance;
+            Client client = settingsManager.GetClientFromSelectedInstance();
+            Datamover datamover = settingsManager.GetDatamoverFromSelectedInstance();
+            Server server = settingsManager.GetServerFromSelectedInstance();
+
+            // Mirror the Instance name to the Client ConfigurationName property
+            client.ConfigurationName = instance.Name;
+
+            // Store the IncomingTarget property from the Datamover object in the
+            // DatamoveIncomingDir property of the client.
+            client.DatamoverIncomingDir = datamover.IncomingTarget;
+
+            // @TODO Anything else?
+
+            return true;
+        }
+
+        public bool ValidateInstances()
+        {
+            return true;
+        }
+
     }
 }

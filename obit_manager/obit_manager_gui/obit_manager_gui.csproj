@@ -81,12 +81,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="components\InstanceConfigurator.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="components\InstanceConfigurator.Designer.cs">
-      <DependentUpon>InstanceConfigurator.cs</DependentUpon>
-    </Compile>
     <Compile Include="dialogs\AnnotatiolToolConfigurationDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -106,9 +100,6 @@
       <DependentUpon>SingleStringEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="fs\AnnotationToolFileSystemTools.cs" />
-    <Compile Include="handlers\obit_manager_EventsHandlers.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="obit_manager.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -124,9 +115,6 @@
       <DependentUpon>ServerConfigurationDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="tools\Tools.cs" />
-    <EmbeddedResource Include="components\InstanceConfigurator.resx">
-      <DependentUpon>InstanceConfigurator.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="dialogs\AnnotatiolToolConfigurationDialog.resx">
       <DependentUpon>AnnotatiolToolConfigurationDialog.cs</DependentUpon>
     </EmbeddedResource>
