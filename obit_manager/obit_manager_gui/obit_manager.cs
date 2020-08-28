@@ -459,9 +459,6 @@ namespace obit_manager_gui
 
                     // Update the corresponding field
                     this.comboBoxUserFolder.Text = updatedClient.UserDataDir;
-
-                    // Refresh the InstanceConfigurator
-                    this.Refresh();
                 }
             }
         }
@@ -486,9 +483,6 @@ namespace obit_manager_gui
 
                     // Update the corresponding field
                     this.comboBoxDatamoverIncomingFolder.Text = updatedDatamover.IncomingTarget;
-
-                    // Refresh the InstanceConfigurator
-                    this.Refresh();
                 }
             }
         }
@@ -510,9 +504,6 @@ namespace obit_manager_gui
                         this.mSettingsManager.SelectedInstance,
                         updatedServer
                     );
-
-                    // Refresh the InstanceConfigurator
-                    this.Refresh();
                 }
             }
         }

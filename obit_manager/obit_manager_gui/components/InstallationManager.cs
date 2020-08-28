@@ -1,5 +1,8 @@
 ﻿using obit_manager_api.core;
 using obit_manager_settings;
+using obit_manager_settings.components;
+using System.Collections.Generic;
+using System.IO;
 
 namespace obit_manager_gui.components
 {
@@ -49,6 +52,10 @@ namespace obit_manager_gui.components
             // Reset the error message
             this.ErrorMessage = "";
 
+            // Check if the expected tools subdirectories exist in the Installation Dir,
+            // otherwise download and setup.
+            success = this.SearchAndPrepareTools();
+
             // Return success status
             return success;
         }
@@ -62,7 +69,7 @@ namespace obit_manager_gui.components
             // Set an alias to the SettingsManager
             SettingsManager settingsManager = SettingsManager.Get();
 
-            // Send to operations
+            // Send to operations bar
             this.SendToOperations("Prepare installation directory.");
 
             // First check if the installation directory exists.
@@ -80,7 +87,79 @@ namespace obit_manager_gui.components
                     settingsManager.InstallationDir + "'.");
             }
 
+            // Clear operations bar
+            this.ClearOperations();
+
             // Return success
+            return true;
+        }
+
+        /// <summary>
+        /// Check if the expected tools subdirectories exist in the Installation Dir,
+        // otherwise download and configure them.
+        /// </summary>
+        /// <returns></returns>
+        private bool SearchAndPrepareTools()
+        {
+            // Set an alias to the SettingsManager
+            SettingsManager settingsManager = SettingsManager.Get();
+
+            // Send to operations bar
+            this.SendToOperations("Look for oBIT tools.", true);
+
+            // Check for the existence of the Annotation Tool
+            string annotationToolPath = Path.Combine(settingsManager.InstallationDir, "obit_annotation_tool");
+            if (Directory.Exists(annotationToolPath))
+            {
+                this.SendToLogAndOutputPane("Annotation Tool found in '" +
+                    annotationToolPath + "'.");
+            }
+            else
+            {
+                this.SendToLogAndOutputPane("Annotation Tool not installed yet.");
+            }
+
+            // Get the list of Datamover installations
+            for (int i = 0; i < settingsManager.NumInstances; i++)
+            {
+                // Get current Datamover
+                Datamover datamover = settingsManager.GetDatamoverFromInstanceWithIndex(i);
+
+                // Does the folder exist?
+                string datamoverJSLPath = Path.Combine(settingsManager.InstallationDir, datamover.InstallationSubDir);
+                if (Directory.Exists(datamoverJSLPath))
+                {
+                    this.SendToLogAndOutputPane("Datamover '" + datamover.ServiceName + "' found in '" +
+                        datamoverJSLPath + "'.");
+                }
+                else
+                {
+                    this.SendToLogAndOutputPane("Datamover '" + datamover.ServiceName + 
+                        "' not installed yet.");
+                }
+            }
+
+            // Check for the existance of a Java runtime
+            string jrePath = Path.Combine(settingsManager.InstallationDir, "jre");
+            if (Directory.Exists(jrePath))
+            {
+                this.SendToLogAndOutputPane("Java runtime found in '" + jrePath + "'.");
+            }
+            else
+            {
+                this.SendToLogAndOutputPane("Java runtime not found in '" +
+                    settingsManager.InstallationDir + "'.");
+            }
+
+            // Process the instances
+            for (int i = 0; i < settingsManager.NumInstances; i++)
+            {
+                // Get the client
+                Client client = settingsManager.GetClientFromInstanceWithIndex(i);
+
+                // Check for existance of the 
+            }
+
             return true;
         }
 
@@ -98,7 +177,7 @@ namespace obit_manager_gui.components
         }
 
         /// <summary>
-        /// Send text to Operations output. If needed also to Log and OutputPane.
+        /// Send text to Operations bar. If needed also to Log and OutputPane.
         /// </summary>
         /// 
         /// Operations are meant to have higher granularity than the rest of the 
@@ -127,6 +206,15 @@ namespace obit_manager_gui.components
         {
             // Send to log
             InstallationManager.sLogger.Info(text);
+        }
+
+        /// <summary>
+        /// Clear the operations bar.
+        /// </summary>
+        private void ClearOperations()
+        {
+            // Send an empty string to operations.
+            this.SendToOperations("", false);
         }
     }
 }
