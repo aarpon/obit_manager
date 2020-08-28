@@ -5,6 +5,7 @@ using obit_manager_settings.components.io;
 using obit_manager_api.core;
 using NLog;
 using System.Configuration;
+using System.IO;
 
 namespace obit_manager_settings.components
 {
@@ -18,6 +19,10 @@ namespace obit_manager_settings.components
         /// Logger
         /// </summary>
         private static Logger sLogger = LogManager.GetCurrentClassLogger();
+
+        // Subfolder (relative to the installation directory) where this Datamover instance is installed.
+        // This is not a Setting.
+        public string InstallationSubDir { get; set; } = "obit_datamover_jsl";
 
         // Application name
         [Setting(Configuration = "Datamover_JSL", Component = "Datamover_JSL")]
@@ -92,19 +97,14 @@ namespace obit_manager_settings.components
         public string OutgoingHostLastchangedExecutable { get; set; } = string.Empty;
 
         /// <summary>
-        /// Constructor.
-        /// </summary>
-        public Datamover()
-        {
-        }
-
-        /// <summary>
         /// Alternative constructor.
         /// </summary>
+        /// <param name="datamoverInstallationSubDir">Datamover installation subdirectory (relative to the oBIT installation directory.</param>
         /// <param name="DatamoverIncomingDir">Datamover incoming directory.</param>
         /// <param name="datamoverJslSettingsParser">A DatamoverJSLSettingsParser object.</param>
         /// <param name="datamoverSettingsParser">A DatamoverSettingsParser object.</param>
-        public Datamover(string datamoverIncomingDir,
+        public Datamover(
+            string datamoverIncomingDir,
             DatamoverJSLSettingsParser datamoverJslSettingsParser,
             DatamoverSettingsParser datamoverSettingsParser)
         {
@@ -127,7 +127,7 @@ namespace obit_manager_settings.components
 
                         // Inform
                         sLogger.Info("Processed Datamover configuration file from Datamover JSL parent folder '" + datamoverJSLPath + "'.");
-                        
+
                         break;
                     }
                 }
@@ -163,7 +163,7 @@ namespace obit_manager_settings.components
                 }
             }
 
-            
+
             if (!found)
             {
                 string msg = "No known Datamover JSL configuration uses the incoming folder '" + datamoverIncomingDir + "'.";
@@ -205,6 +205,7 @@ namespace obit_manager_settings.components
         /// <param name="datamoverSettingsParser">DatamoverSettingsParser object.</param>
         private void Fill(string key, DatamoverSettingsParser datamoverSettingsParser)
         {
+            this.InstallationSubDir = GetDatamoverJSLSubDirName(key);
             this.IncomingTarget =
                 FileSystem.ChangeBackwardToForwardSlashesInPath(datamoverSettingsParser.Get(key, "incoming-target"));
             this.SkipAccessibilityTestOnIncoming = Utils.StringToBool(datamoverSettingsParser.Get(key, "skip-accessibility-test-on-incoming"));
@@ -245,6 +246,25 @@ namespace obit_manager_settings.components
             this.ServiceDescription = datamoverJSLSettingsParser.Get(key, "service", "servicedescription");
             //this.DataStoreServerLocalPrivateKeyPath = string.Empty;
             this.LocalUserAccount = datamoverJSLSettingsParser.Get(key, "service", "account");
+        }
+
+        /// <summary>
+        /// Return the DatamoverJSL subfolder from the full path.
+        /// </summary>
+        /// <param name="fullPath">Full path to the DatamoverJSL folder.</param>
+        private string GetDatamoverJSLSubDirName(string fullPath)
+        {
+            // Make sure to have a clean Windows full path
+            string tmp = Path.GetFullPath(fullPath);
+
+            // Remove any final backslash
+            while (tmp.LastIndexOf(@"\") == (tmp.Length - 1))
+            {
+                tmp = tmp.Remove(tmp.Length - 1);
+            }
+
+            // Now extract and return the last part of the path
+            return Path.GetFileName(tmp);
         }
     }
 }
