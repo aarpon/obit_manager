@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using obit_manager_api.core;
+using obit_manager_gui.components;
 using obit_manager_gui.dialogs;
 using obit_manager_settings;
 using obit_manager_settings.components;
@@ -16,6 +17,9 @@ namespace obit_manager_gui
     {
         // Logger
         private static readonly NLog.Logger sLogger = NLog.LogManager.GetCurrentClassLogger();
+
+        // Installation manager
+        private InstallationManager mInstallationManager = new InstallationManager();
 
         // Private application settings
         private SettingsManager mSettingsManager;
@@ -33,12 +37,15 @@ namespace obit_manager_gui
             // Initialize components
             InitializeComponent();
 
+            // Register the event handlers
+            this.RegisterEventHandlers();
+
             // Fill UI with current values
             this.FillUI();
 
             // Log some information
-            this.textBoxLogWindow.AppendText("Loaded " + this.mSettingsManager.NumInstances + " instance(s).\r\n");
-            this.textBoxLogWindow.AppendText("Completed initialization.\r\n");
+            this.textBoxOutputPane.AppendText("Loaded " + this.mSettingsManager.NumInstances + " instance(s).\r\n");
+            this.textBoxOutputPane.AppendText("Completed initialization.\r\n");
         }
 
         private void obit_manager_Resize(object sender, EventArgs e)
@@ -374,9 +381,8 @@ namespace obit_manager_gui
 
         private void buttonApplyAllChanges_Click(object sender, EventArgs e)
         {
-            this.mSettingsManager.Save();
-
-            // @TODO All the rest!
+            // Unleash the Installation Manager
+            this.mInstallationManager.Apply();
         }
 
         private void comboBoxUserFolder_SelectedIndexChanged(object sender, EventArgs e)
@@ -538,6 +544,5 @@ namespace obit_manager_gui
         {
             return true;
         }
-
     }
 }

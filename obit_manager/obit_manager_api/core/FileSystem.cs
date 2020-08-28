@@ -17,6 +17,26 @@ namespace obit_manager_api.core
         private static readonly Logger sLogger = LogManager.GetCurrentClassLogger();
 
         /// <summary>
+        /// Create a folder is it does not exist.
+        /// </summary>
+        /// <param name="folder">Full path to the folder to check or create.</param>
+        /// <returns>True if the folder was created, false if it already existed.</returns>
+        public static bool CreateIfDoesNotExist(string folder)
+        {
+            // Does the folder exist?
+            if (!Directory.Exists(folder))
+            {
+                Directory.CreateDirectory(folder);
+
+                // Return true, since the folder was created.
+                return true;
+            }
+
+            // Return false, since the folder already existed.
+            return false;
+        }
+
+        /// <summary>
         /// Copy folder recursively.
         /// </summary>
         /// <param name="sourceFolder">Source folder.</param>
