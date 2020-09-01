@@ -5,7 +5,6 @@ using NLog;
 using obit_manager_api.core;
 using obit_manager_config;
 
-
 namespace obit_manager_gui.tools
 {
     public static class Operations

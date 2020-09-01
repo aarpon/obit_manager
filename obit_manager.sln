@@ -21,14 +21,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "obit_manager_settings", "ob
 		{1E426DEE-8F0D-4258-AD79-2B4CDBFAAC5C} = {1E426DEE-8F0D-4258-AD79-2B4CDBFAAC5C}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "obit_manager_config", "obit_manager_config\obit_manager_config.csproj", "{1E426DEE-8F0D-4258-AD79-2B4CDBFAAC5C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "obit_manager_config", "obit_manager\obit_manager_config\obit_manager_config.csproj", "{1E426DEE-8F0D-4258-AD79-2B4CDBFAAC5C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "obit_manager_ops", "obit_manager_ops\obit_manager_ops.csproj", "{B062250A-B815-4B6F-94C6-06C8959859BA}"
-	ProjectSection(ProjectDependencies) = postProject
-		{9CCE9A17-179A-44FB-937A-E97D6A2A4529} = {9CCE9A17-179A-44FB-937A-E97D6A2A4529}
-		{1814C8B5-E237-43B5-A4A9-C6033FF84C4C} = {1814C8B5-E237-43B5-A4A9-C6033FF84C4C}
-		{1E426DEE-8F0D-4258-AD79-2B4CDBFAAC5C} = {1E426DEE-8F0D-4258-AD79-2B4CDBFAAC5C}
-	EndProjectSection
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "obit_manager_ops", "obit_manager\obit_manager_ops\obit_manager_ops.csproj", "{B062250A-B815-4B6F-94C6-06C8959859BA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
