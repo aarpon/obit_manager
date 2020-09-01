@@ -178,7 +178,6 @@ namespace obit_manager_api.core
             return checksum;
         }
 
-
         /// <summary>
         /// Check if two paths point to the same physical location.
         /// </summary>
@@ -210,7 +209,7 @@ namespace obit_manager_api.core
         /// </summary>
         /// <param name="path">Path to be normalized.</param>
         /// <returns></returns>
-        private static string NormalizePath(string path)
+        public static string NormalizePath(string path)
         {
             return Path.GetFullPath(new Uri(path).LocalPath)
                 .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
