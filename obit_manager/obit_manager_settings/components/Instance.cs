@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Win32.SafeHandles;
-using static obit_manager_settings.Constants;
+
 
 namespace obit_manager_settings.components
 {

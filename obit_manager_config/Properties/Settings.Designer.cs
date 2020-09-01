@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace obit_manager_settings.Properties {
+namespace obit_manager_config.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

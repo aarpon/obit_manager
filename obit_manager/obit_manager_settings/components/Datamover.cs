@@ -254,14 +254,8 @@ namespace obit_manager_settings.components
         /// <param name="fullPath">Full path to the DatamoverJSL folder.</param>
         private string GetDatamoverJSLSubDirName(string fullPath)
         {
-            // Make sure to have a clean Windows full path
-            string tmp = Path.GetFullPath(fullPath);
-
-            // Remove any final backslash
-            while (tmp.LastIndexOf(@"\") == (tmp.Length - 1))
-            {
-                tmp = tmp.Remove(tmp.Length - 1);
-            }
+            // Make sure to have a clean Windows full path with no trailing separator
+            String tmp = FileSystem.NormalizePath(fullPath);
 
             // Now extract and return the last part of the path
             return Path.GetFileName(tmp);

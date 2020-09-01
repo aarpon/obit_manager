@@ -2,7 +2,7 @@
 using System.IO;
 using System.Runtime.CompilerServices;
 
-namespace obit_manager_settings
+namespace obit_manager_config
 {
     public static class Constants
     {

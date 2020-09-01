@@ -58,6 +58,14 @@
     <Compile Include="WebUtilsTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\obit_manager_config\obit_manager_config.csproj">
+      <Project>{1E426DEE-8F0D-4258-AD79-2B4CDBFAAC5C}</Project>
+      <Name>obit_manager_config</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\obit_manager_ops\obit_manager_ops.csproj">
+      <Project>{B062250A-B815-4B6F-94C6-06C8959859BA}</Project>
+      <Name>obit_manager_ops</Name>
+    </ProjectReference>
     <ProjectReference Include="..\obit_manager_api\obit_manager_api.csproj">
       <Project>{9cce9a17-179a-44fb-937a-e97d6a2a4529}</Project>
       <Name>obit_manager_api</Name>

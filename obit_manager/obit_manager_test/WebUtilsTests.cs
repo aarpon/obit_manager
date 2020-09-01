@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using obit_manager_api.core;
+using obit_manager_config;
 using obit_manager_settings;
 
 namespace obit_manager_test
@@ -172,7 +173,7 @@ namespace obit_manager_test
         {
             // Parameters
             string url = Constants.AnnotationTool64bitURL;
-            string fileName = Path.Combine(this.InstallationFolder, "annotationTool64bit.zip");
+            string fileName = Path.Combine(this.InstallationFolder, Constants.AnnotationTool64bitArchiveFileName);
             string dirName = Path.Combine(this.InstallationFolder, Constants.AnnotationTool64bitFinalPath);
 
             // Download the archive
@@ -193,7 +194,7 @@ namespace obit_manager_test
         {
             // Parameters
             string url = Constants.AnnotationTool32bitURL;
-            string fileName = Path.Combine(this.InstallationFolder, "annotationTool32bit.zip");
+            string fileName = Path.Combine(this.InstallationFolder, Constants.AnnotationTool32bitArchiveFileName);
             string dirName = Path.Combine(this.InstallationFolder, Constants.AnnotationTool32bitFinalPath);
 
             // Download the archive

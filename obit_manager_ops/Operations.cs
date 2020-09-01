@@ -3,11 +3,12 @@ using System.IO;
 using System.Threading.Tasks;
 using NLog;
 using obit_manager_api.core;
-using obit_manager_settings;
+using obit_manager_config;
+
 
 namespace obit_manager_gui.tools
 {
-    public static class Tools
+    public static class Operations
     {
         #region public
 
@@ -113,6 +114,9 @@ namespace obit_manager_gui.tools
                 targetMD5FileName = Path.Combine(installationFolder, Constants.Jdk32bitMD5FileName);
             }
 
+            // Make sure that the installation directory exists
+            Directory.CreateDirectory(installationFolder);
+
             // Download the file
             await WebUtils.DownloadAsync(downloadURL, targetFileName);
             if (!File.Exists(targetFileName))
@@ -204,7 +208,13 @@ namespace obit_manager_gui.tools
         /// <summary>
         /// Download, check and extract the Annotation Tool.
         /// </summary>
-        /// <param name="is64bit">True for the 64-bit vMersion, false for the 32-bit one.</param>
+        /// 
+        /// This Task will perform all necessary checks and immediately return if no work is 
+        /// necessary. This way, all DownloadCheckAndInstall* Tasks can safely be added to a 
+        /// Task.WhenAll() composite Task without bothering about figuring out which of the
+        /// Tasks needs to be run and which won't.
+        /// 
+        /// <param name="is64bit">True for the 64-bit version, false for the 32-bit one.</param>
         /// <param name="installationFolder">Installation folder.</param>
         /// <returns></returns>
         public static async Task DownloadCheckAndInstallAnnotationToolAsync(bool is64bit, string installationFolder)
@@ -216,25 +226,38 @@ namespace obit_manager_gui.tools
             if (is64bit)
             {
                 url = Constants.AnnotationTool64bitURL;
-                fileName = Path.Combine(installationFolder, "annotationTool64bit.zip");
+                fileName = Path.Combine(installationFolder, Constants.AnnotationTool64bitArchiveFileName);
                 dirName = Path.Combine(installationFolder, Constants.AnnotationTool64bitFinalPath);
             }
             else
             {
                 url = Constants.AnnotationTool32bitURL;
-                fileName = Path.Combine(installationFolder, "annotationTool32bit.zip");
+                fileName = Path.Combine(installationFolder, Constants.AnnotationTool32bitArchiveFileName);
                 dirName = Path.Combine(installationFolder, Constants.AnnotationTool32bitFinalPath);
             }
 
-            // Download the archive
-            await WebUtils.DownloadAsync(url, fileName);
-            if (!File.Exists(fileName))
-            {
-                // Inform
-                string msg = "Could not download Annotation Tool!";
+            // Make sure that the installation directory exists
+            Directory.CreateDirectory(installationFolder);
 
-                sLogger.Error(msg);
-                throw new FileNotFoundException(msg);
+            // First, check if the final (extracted) directory already exists. If it does, return.
+            if (Directory.Exists(dirName))
+            {
+                return;
+            }
+
+            // Then check if the expected archive file exists. If it exists, skip the download
+            if (! File.Exists(fileName))
+            {
+                // Download the archive
+                await WebUtils.DownloadAsync(url, fileName);
+                if (!File.Exists(fileName))
+                {
+                    // Inform
+                    string msg = "Could not download Annotation Tool!";
+
+                    sLogger.Error(msg);
+                    throw new FileNotFoundException(msg);
+                }
             }
 
             // Decompress the file
@@ -252,7 +275,13 @@ namespace obit_manager_gui.tools
         /// <summary>
         /// Download, check and extract Datamover JSL.
         /// </summary>
-        /// <param name="is64bit">True for the 64-bit vMersion, false for the 32-bit one.</param>
+        /// 
+        /// This Task will perform all necessary checks and immediately return if no work is 
+        /// necessary. This way, all DownloadCheckAndInstall* Tasks can safely be added to a 
+        /// Task.WhenAll() composite Task without bothering about figuring out which of the
+        /// Tasks needs to be run and which won't.
+        /// 
+        /// <param name="is64bit">True for the 64-bit version, false for the 32-bit one.</param>
         /// <param name="installationFolder">Installation folder.</param>
         /// <param name="relFolderName">Final (relative) Datamover JSL folder name. Skip to pick the default name (Constants.DatamoverJslFinalPath).</param>
         /// <returns></returns>
@@ -264,22 +293,36 @@ namespace obit_manager_gui.tools
             string jslExtractDirName = Path.Combine(installationFolder, Constants.DatamoverJslExtractDirName);
             string jslDirName = Path.Combine(installationFolder, Constants.DatamoverJslFinalPath);
 
-            string fileName = Path.Combine(installationFolder, "datamover.zip");
+            string fileName = Path.Combine(installationFolder, Constants.DatamoverArchiveFileName);
             string jslFileName = Path.Combine(installationFolder, Constants.DatamoverJslArchiveFileName);
             string dirName = Path.Combine(installationFolder, Constants.DatamoverFinalPath);
 
             // Make sure that the installation directory exists
             Directory.CreateDirectory(installationFolder);
 
-            // Download the DatamoverJSL archive
-            await WebUtils.DownloadAsync(jslUrl, jslFileName);
-            if (!File.Exists(jslFileName))
+            // First, check if the final (extracted) directories already exist. If they do, return.
+            if (Directory.Exists(jslDirName))
             {
-                // Inform
-                string msg = "Could not download Datamover JSL!";
+                if (Directory.Exists(dirName))
+                {
+                    return;
+                }
+            }
 
-                sLogger.Error(msg);
-                throw new FileNotFoundException(msg);
+            // Then check if the expected archive file exists. If it exists, skip the download
+            if (! File.Exists(jslFileName))
+            {
+
+                // Download the DatamoverJSL archive
+                await WebUtils.DownloadAsync(jslUrl, jslFileName);
+                if (!File.Exists(jslFileName))
+                {
+                    // Inform
+                    string msg = "Could not download Datamover JSL!";
+
+                    sLogger.Error(msg);
+                    throw new FileNotFoundException(msg);
+                }
             }
 
             // Decompress the file

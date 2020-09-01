@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
 using NLog;
+using obit_manager_api.core;
 
 namespace obit_manager_settings.components.io
 {
@@ -51,8 +54,16 @@ namespace obit_manager_settings.components.io
             this.Load();
         }
 
-        public bool Load()
+        public void Load()
         {
+            // Keep track of which expected Datamover/DatamoverJSL does 
+            // not have a valid settings file and needs default values
+            Dictionary<string, bool> needDefaults = new Dictionary<string, bool>();
+
+            // To speed things up keep track the number of configuration that
+            // need default values.
+            int numOfConfThatNeedDefaults = 0;
+
             // Since we will update the dictionary, we cannot iterate 
             // directly over it.
             List<string> keys = new List<string>(this.mMap.Keys);
@@ -80,6 +91,12 @@ namespace obit_manager_settings.components.io
                         // Log
                         sLogger.Error("Could not read Datamover settings file '" + fileName + "'.");
 
+                        // Mark as incomplete: need for default values.
+                        needDefaults[key] = true;
+
+                        // Update the counter
+                        numOfConfThatNeedDefaults++;
+
                         continue;
                     }
 
@@ -101,28 +118,30 @@ namespace obit_manager_settings.components.io
                     // Append to the list of maps
                     this.mMap[key] = map;
 
+                    // Mark as fine
+                    needDefaults[key] = false;
+
                     // Inform
                     sLogger.Info("Successfully parsed Datamover settings file '" + fileName + "'.");
                 }
                 else
                 {
+                    // Mark as incomplete: need for default values.
+                    needDefaults[key] = true;
+
+                    // Update the counter
+                    numOfConfThatNeedDefaults++;
+
                     // Inform
                     sLogger.Warn("Expected Datamover settings file '" + fileName + "' was not found.");
                 }
             }
 
-            if (this.mMap.Count == 0)
+            if (numOfConfThatNeedDefaults > 0)
             {
-                // Log
-                sLogger.Info("No Datamover settings files found!");
-
-                // Create default configuration
-                this.CreateDefault();
-
-                return false;
+                // Create defaults (but do not save them yet)
+                this.CreateDefaults(needDefaults);
             }
-
-            return true;
         }
 
         public bool Save()
@@ -175,7 +194,7 @@ namespace obit_manager_settings.components.io
 
                 // Log
                 sLogger.Error("Could not set setting '" + key +
-                              "' with value '" + value + "' to configuration '" + 
+                              "' with value '" + value + "' to configuration '" +
                               confName + "'.");
             }
 
@@ -187,28 +206,81 @@ namespace obit_manager_settings.components.io
         /// <summary>
         /// Create default settings.
         /// </summary>
-        private void CreateDefault()
+        private void CreateDefaults(Dictionary<string, bool> needDefaults)
         {
-            // Clear all configurations
-            this.mMap = new Dictionary<string, Dictionary<string, string>>();
+            int n = 0;
 
-            // Create default configuration
-            Dictionary<string, string> map = new Dictionary<string, string>();
-            this.mMap["obit_datamoder_jsl"] = map;
+            foreach (KeyValuePair<string, bool> entry in needDefaults)
+            {
+                if (entry.Value == false)
+                {
+                    // This configuration does not require defaults
+                    continue;
+                }
 
-            // Set defaults
-            this.Set("obit_datamover_jsl", "incoming-target", "D:/Datamover/incoming");
-            this.Set("obit_datamover_jsl", "skip-accessibility-test-on-incoming", "false");
-            this.Set("obit_datamover_jsl", "buffer-dir", "D:/Datamover/buffer");
-            this.Set("obit_datamover_jsl", "buffer-dir-highwater-mark", "1048576");
-            this.Set("obit_datamover_jsl", "outgoing-target", "openbis@bs-openbis05.ethz.ch:/links/groups/scu/openbis/data/incoming-microscopy");
-            this.Set("obit_datamover_jsl", "outgoing-target-highwater-mark", "1048576");
-            this.Set("obit_datamover_jsl", "skip-accessibility-test-on-outgoing", "true");
-            this.Set("obit_datamover_jsl", "data-completed-script", "scripts/ata_completed_script.bat");
-            this.Set("obit_datamover_jsl", "manual-intervention-dir", "D:/Datamover/ manual_intervention");
-            this.Set("obit_datamover_jsl", "quiet-period", "60");
-            this.Set("obit_datamover_jsl", "check-interval", "60");
-            this.Set("obit_datamover_jsl", "outgoing-host-lastchanged-executable", "/local0/openbis/openbis/bin/lastchanged");
+
+                // Extract installation dir and Datamover JSL subfolder from key
+                String normalizedPath = FileSystem.NormalizePath(entry.Key);
+                int index = normalizedPath.LastIndexOf("\\");
+                String relativeFolder;
+                if (index == -1)
+                {
+                    // Fall back
+                    relativeFolder = "Datamover";
+                }
+                else
+                {
+                    relativeFolder = normalizedPath.Substring(index + 1);
+
+                    int index_datamover = relativeFolder.ToLower().LastIndexOf("datamover");
+                    if (index_datamover == -1)
+                    {
+                        if (n > 0)
+                        {
+                            relativeFolder = "Datamover_" + n;
+                        }
+                        else
+                        {
+                            relativeFolder = "Datamover";
+                        }
+                    }
+                    else
+                    {
+                        relativeFolder = relativeFolder.Substring(index_datamover);
+                        relativeFolder = relativeFolder.First().ToString().ToUpper() + relativeFolder.Substring(1);
+                    }
+                }
+
+                // Remove jsl from serviceName
+                relativeFolder = Regex.Replace(relativeFolder, "_jsl", "", RegexOptions.IgnoreCase);
+
+                // Update the counter
+                n++;
+
+                // Create default configuration
+                Dictionary<string, string> map = new Dictionary<string, string>();
+                this.mMap[entry.Key] = map;
+
+                // Set defaults
+                this.Set(entry.Key, "incoming-target", 
+                    FileSystem.ChangeBackwardToForwardSlashesInPath(Path.Combine("D:\\", relativeFolder, "incoming"))
+                );
+                this.Set(entry.Key, "skip-accessibility-test-on-incoming", "false");
+                this.Set(entry.Key, "buffer-dir",
+                    FileSystem.ChangeBackwardToForwardSlashesInPath(Path.Combine("D:\\", relativeFolder, "buffer"))
+                );
+                this.Set(entry.Key, "buffer-dir-highwater-mark", "1048576");
+                this.Set(entry.Key, "outgoing-target", "openbis@bs-openbis05.ethz.ch:/links/groups/scu/openbis/data/incoming-microscopy");
+                this.Set(entry.Key, "outgoing-target-highwater-mark", "1048576");
+                this.Set(entry.Key, "skip-accessibility-test-on-outgoing", "true");
+                this.Set(entry.Key, "data-completed-script", "scripts/ata_completed_script.bat");
+                this.Set(entry.Key, "manual-intervention-dir",
+                    FileSystem.ChangeBackwardToForwardSlashesInPath(Path.Combine("D:\\", relativeFolder, "manual_intervention"))
+                );
+                this.Set(entry.Key, "quiet-period", "60");
+                this.Set(entry.Key, "check-interval", "60");
+                this.Set(entry.Key, "outgoing-host-lastchanged-executable", "/local0/openbis/openbis/bin/lastchanged");
+            }
         }
     }
 }

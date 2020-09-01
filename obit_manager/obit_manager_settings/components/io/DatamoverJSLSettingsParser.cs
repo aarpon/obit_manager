@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Eventing.Reader;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using IniParser;
 using IniParser.Model;
 using NLog;
+using obit_manager_api.core;
 
 namespace obit_manager_settings.components.io
 {
@@ -81,6 +84,14 @@ namespace obit_manager_settings.components.io
         /// </summary>
         public void Load()
         {
+            // Keep track of which expected Datamover/DatamoverJSL does 
+            // not have a valid settings file and needs default values
+            Dictionary<string, bool> needDefaults = new Dictionary<string, bool>();
+
+            // To speed things up keep track the number of configuration that
+            // need default values.
+            int numOfConfThatNeedDefaults = 0;
+
             // Since we will update the dictionary, we cannot iterate 
             // directly over it.
             List<string> keys = new List<string>(this.mMap.Keys);
@@ -100,23 +111,29 @@ namespace obit_manager_settings.components.io
                     // Update the dictionary
                     this.mMap[key] = data;
 
+                    // Mark as fine
+                    needDefaults[key] = false;
+
                     // Log
                     sLogger.Info("Successfully parsed DatamoverJSL settings file '" + fileName + "'.");
                 }
                 else
                 {
+                    // Mark as incomplete: need for default values.
+                    needDefaults[key] = true;
+
+                    // Update the counter
+                    numOfConfThatNeedDefaults++;
+
                     // Log
                     sLogger.Warn("The expected DatamoverJSL settings file '" + fileName + "' was not found.");
                 }
             }
 
-            if (this.mMap.Count == 0)
+            if (numOfConfThatNeedDefaults > 0)
             {
-                // Log
-                sLogger.Warn("No Datamover JSL settings files found!");
-
                 // Create defaults (but do not save them yet)
-                this.CreateDefault();
+                this.CreateDefaults(needDefaults);
             }
         }
 
@@ -241,48 +258,107 @@ namespace obit_manager_settings.components.io
         /// <summary>
         /// Create default settings.
         /// </summary>
-        private void CreateDefault()
+        private void CreateDefaults(Dictionary<string, bool> needDefaults)
         {
-            // Clear all configurations
-            this.mMap = new Dictionary<string, IniData>();
+            int n = 0;
 
-            // New data
-            IniData data = new IniData();
+            foreach (KeyValuePair<string, bool> entry in needDefaults)
+            {
+                if (entry.Value == false)
+                {
+                    // This configuration does not require defaults
+                    continue;
+                }
 
-            // Add to the map
-            this.mMap["obit_datamover_jsl"] = data;
+                // Extract installation dir and Datamover JSL subfolder from key;
+                // also build the service name from the subfolder
+                String normalizedPath = FileSystem.NormalizePath(entry.Key);
+                int index = normalizedPath.LastIndexOf("\\");
+                String installationDir;
+                String relativeFolder;
+                String serviceName;
+                if (index == -1 )
+                {
+                    // Fall back
+                    installationDir = "C:\\oBIT";
+                    relativeFolder = "obit_datamover_jsl";
+                    if (n > 0)
+                    {
+                        serviceName = "Datamover_" + n;
+                    }
+                    else
+                    {
+                        serviceName = "Datamover";
+                    }
+                }
+                else
+                {
+                    installationDir = normalizedPath.Substring(0, index);
+                    relativeFolder = normalizedPath.Substring(index + 1);
 
-            // Section: "defines" (empty)
-            data.Sections.AddSection("defines");
+                    int index_datamover = relativeFolder.ToLower().LastIndexOf("datamover");
+                    if (index_datamover == -1)
+                    {
+                        if (n > 0)
+                        {
+                            serviceName = "Datamover_" + n;
+                        }
+                        else
+                        {
+                            serviceName = "Datamover";
+                        }
+                    }
+                    else
+                    {
+                        serviceName = relativeFolder.Substring(index_datamover);
+                        serviceName = serviceName.First().ToString().ToUpper() + serviceName.Substring(1);
+                    }
+                }
 
-            // Section: "service"
-            data.Sections.AddSection("service");
+                // Remove jsl from serviceName
+                serviceName = Regex.Replace(serviceName, "_jsl", "", RegexOptions.IgnoreCase);
 
-            // Add all "service" settings
-            this.Set("obit_datamover_jsl", "service", "appname", "Datamover");
-            this.Set("obit_datamover_jsl", "service", "servicename", "Datamover");
-            this.Set("obit_datamover_jsl", "service", "displayname", "Datamover");
-            this.Set("obit_datamover_jsl", "service", "servicedescription", "Datamover as Windows Service");
-            this.Set("obit_datamover_jsl", "service", "stringbuffer", "16000");
-            this.Set("obit_datamover_jsl", "service", "starttype", "auto");
-            this.Set("obit_datamover_jsl", "service", "loadordergroup", "someorder");
-            this.Set("obit_datamover_jsl", "service", "useconsolehandler", "false");
-            this.Set("obit_datamover_jsl", "service", "stopclass", "java/lang/System");
-            this.Set("obit_datamover_jsl", "service", "stopmethod", "exit");
-            this.Set("obit_datamover_jsl", "service", "stopsignature", "(I)V");
-            this.Set("obit_datamover_jsl", "service", "account", @".\openbis");
+                // Update the counter
+                n++;
 
-            // Section: "java"
-            data.Sections.AddSection("java");
+                // New data
+                IniData data = new IniData();
 
-            // Add all "java" settings
-            this.Set("obit_datamover_jsl", "java", "jrepath", @"C:\oBIT\jre");
-            this.Set("obit_datamover_jsl", "java", "jvmtype", "server");
-            this.Set("obit_datamover_jsl", "java", "wrkdir", @"C:\oBIT\obit_datamover_jsl\datamover");
-            this.Set("obit_datamover_jsl", "java", "cmdline",
-                @"-cp lib\datamover.jar; lib\log4j.jar; lib\cisd - base.jar; lib\cisd - args4j.jar; lib\commons - lang.jar; " +
-                @"lib\commons - io.jar; lib\activation.jar; lib\mail.jar ch.systemsx.cisd.datamover.Main--rsync - executable = " +
-                @"bin\win\rsync.exe--ssh - executable = bin\win\ssh.exe--ln - executable = bin\win\ln.exe");
+                // Add to the map
+                this.mMap[entry.Key] = data;
+
+                // Section: "defines" (empty)
+                data.Sections.AddSection("defines");
+
+                // Section: "service"
+                data.Sections.AddSection("service");
+
+                // Add all "service" settings
+                this.Set(entry.Key, "service", "appname", serviceName);
+                this.Set(entry.Key, "service", "servicename", serviceName);
+                this.Set(entry.Key, "service", "displayname", serviceName);
+                this.Set(entry.Key, "service", "servicedescription", "Datamover as Windows Service");
+                this.Set(entry.Key, "service", "stringbuffer", "16000");
+                this.Set(entry.Key, "service", "starttype", "auto");
+                this.Set(entry.Key, "service", "loadordergroup", "someorder");
+                this.Set(entry.Key, "service", "useconsolehandler", "false");
+                this.Set(entry.Key, "service", "stopclass", "java/lang/System");
+                this.Set(entry.Key, "service", "stopmethod", "exit");
+                this.Set(entry.Key, "service", "stopsignature", "(I)V");
+                this.Set(entry.Key, "service", "account", @".\openbis");
+
+                // Section: "java"
+                data.Sections.AddSection("java");
+
+                // Add all "java" settings
+                this.Set(entry.Key, "java", "jrepath", Path.Combine(installationDir, "jre"));
+                this.Set(entry.Key, "java", "jvmtype", "server");
+                this.Set(entry.Key, "java", "wrkdir", Path.Combine(installationDir, relativeFolder, "datamover"));
+                this.Set(entry.Key, "java", "cmdline",
+                    @"-cp lib\datamover.jar; lib\log4j.jar; lib\cisd - base.jar; lib\cisd - args4j.jar; lib\commons - lang.jar; " +
+                    @"lib\commons - io.jar; lib\activation.jar; lib\mail.jar ch.systemsx.cisd.datamover.Main--rsync - executable = " +
+                    @"bin\win\rsync.exe--ssh - executable = bin\win\ssh.exe--ln - executable = bin\win\ln.exe");
+            }
         }
     }
 }

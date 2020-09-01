@@ -28,61 +28,61 @@ namespace obit_manager_test
         [TestMethod]
         public async Task TestToolsDownloadsAndSetUp64bitJDK()
         {
-            await Tools.DownloadCheckAndInstallJDKAsync(is64bit: true, this.InstallationFolder);
+            await Operations.DownloadCheckAndInstallJDKAsync(is64bit: true, this.InstallationFolder);
         }
 
         [TestMethod]
         public async Task TestToolsDownloadsAndSetUp32bitJDK()
         {
-            await Tools.DownloadCheckAndInstallJDKAsync(is64bit: false, this.InstallationFolder);
+            await Operations.DownloadCheckAndInstallJDKAsync(is64bit: false, this.InstallationFolder);
         }
 
         [TestMethod]
         public async Task TestToolsDownloadsAndSetupAnnotationTool64bit()
         {
-            await Tools.DownloadCheckAndInstallAnnotationToolAsync(is64bit: true, this.InstallationFolder);
+            await Operations.DownloadCheckAndInstallAnnotationToolAsync(is64bit: true, this.InstallationFolder);
         }
 
         [TestMethod]
         public async Task TestToolsDownloadsAndSetupAnnotationTool32bit()
         {
-            await Tools.DownloadCheckAndInstallAnnotationToolAsync(is64bit: false, this.InstallationFolder);
+            await Operations.DownloadCheckAndInstallAnnotationToolAsync(is64bit: false, this.InstallationFolder);
         }
 
         [TestMethod]
         public async Task TestToolsDownloadsAndSetupDatamover64bit()
         {
-            await Tools.DownloadCheckAndInstallDatamoverJSL(is64bit: true, this.InstallationFolder);
+            await Operations.DownloadCheckAndInstallDatamoverJSL(is64bit: true, this.InstallationFolder);
         }
 
         [TestMethod]
         public async Task TestToolsDownloadsAndSetupDatamoverWithDifferentName64bit()
         {
-            await Tools.DownloadCheckAndInstallDatamoverJSL(is64bit: true, this.InstallationFolder, "obit_datamover_jsl_alt");
+            await Operations.DownloadCheckAndInstallDatamoverJSL(is64bit: true, this.InstallationFolder, "obit_datamover_jsl_alt");
         }
 
         [TestMethod]
         public async Task TestToolsDownloadsAndSetupDatamover32bit()
         {
-            await Tools.DownloadCheckAndInstallDatamoverJSL(is64bit: false, this.InstallationFolder);
+            await Operations.DownloadCheckAndInstallDatamoverJSL(is64bit: false, this.InstallationFolder);
         }
 
         [TestMethod]
         public async Task TestToolsDownloadsAndSetupDatamoverWithDifferentName32bit()
         {
-            await Tools.DownloadCheckAndInstallDatamoverJSL(is64bit: false, this.InstallationFolder, @"obit_datamover_jsl_alt");
+            await Operations.DownloadCheckAndInstallDatamoverJSL(is64bit: false, this.InstallationFolder, @"obit_datamover_jsl_alt");
         }
 
         [TestMethod]
         public void TestDeleteDownloadedArchives64bit()
         {
-            Tools.DeleteDownloadedArchives(is64bit: true, this.InstallationFolder);
+            Operations.DeleteDownloadedArchives(is64bit: true, this.InstallationFolder);
         }
 
         [TestMethod]
         public void TestDeleteDownloadedArchives32bit()
         {
-            Tools.DeleteDownloadedArchives(is64bit: false, this.InstallationFolder);
+            Operations.DeleteDownloadedArchives(is64bit: false, this.InstallationFolder);
         }
     }
 }
