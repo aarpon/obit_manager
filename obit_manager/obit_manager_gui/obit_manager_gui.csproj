@@ -119,7 +119,6 @@
     <Compile Include="dialogs\ServerConfigurationDialog.Designer.cs">
       <DependentUpon>ServerConfigurationDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="tools\Tools.cs" />
     <EmbeddedResource Include="dialogs\AnnotatiolToolConfigurationDialog.resx">
       <DependentUpon>AnnotatiolToolConfigurationDialog.cs</DependentUpon>
     </EmbeddedResource>
@@ -178,6 +177,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\obit_manager_config\obit_manager_config.csproj">
+      <Project>{1E426DEE-8F0D-4258-AD79-2B4CDBFAAC5C}</Project>
+      <Name>obit_manager_config</Name>
+    </ProjectReference>
     <ProjectReference Include="..\obit_manager_api\obit_manager_api.csproj">
       <Project>{9cce9a17-179a-44fb-937a-e97d6a2a4529}</Project>
       <Name>obit_manager_api</Name>

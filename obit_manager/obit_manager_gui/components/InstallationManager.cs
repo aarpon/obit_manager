@@ -1,8 +1,10 @@
 ﻿using obit_manager_api.core;
+using obit_manager_config;
 using obit_manager_settings;
 using obit_manager_settings.components;
-using System.Collections.Generic;
+using System;
 using System.IO;
+
 
 namespace obit_manager_gui.components
 {
@@ -38,6 +40,16 @@ namespace obit_manager_gui.components
             // Start with the installation directory
             success = this.PrepareInstallationDir();
 
+            if (success == false)
+            {
+                // Send failure
+                this.SendToLogAndOutputPane("Operation failed: " + this.ErrorMessage);
+            }
+
+            // Check if the expected tools subdirectories exist in the Installation Dir,
+            // otherwise download and setup.
+            success = this.SearchAndPrepareTools();
+
             if (success == true)
             {
                 // Send success
@@ -51,10 +63,6 @@ namespace obit_manager_gui.components
 
             // Reset the error message
             this.ErrorMessage = "";
-
-            // Check if the expected tools subdirectories exist in the Installation Dir,
-            // otherwise download and setup.
-            success = this.SearchAndPrepareTools();
 
             // Return success status
             return success;
@@ -74,7 +82,18 @@ namespace obit_manager_gui.components
 
             // First check if the installation directory exists.
             // If not create it.
-            if (FileSystem.CreateIfDoesNotExist(settingsManager.InstallationDir))
+            bool created;
+            try
+            {
+                created = FileSystem.CreateIfDoesNotExist(settingsManager.InstallationDir);
+            }
+            catch (Exception e)
+            {
+                this.ErrorMessage = e.Message;
+                created = false;
+            }
+
+            if (!created)
             {
                 // Log
                 this.SendToLogOnly("Installation directory '" +
@@ -107,8 +126,16 @@ namespace obit_manager_gui.components
             // Send to operations bar
             this.SendToOperations("Look for oBIT tools.", true);
 
+            // Set some flags
+            bool downloadAnnotationTool = false;
+            bool downloadDatamover = false;
+            bool downloadJRE = false;
+
             // Check for the existence of the Annotation Tool
-            string annotationToolPath = Path.Combine(settingsManager.InstallationDir, "obit_annotation_tool");
+            string annotationToolPath = Path.Combine(
+                settingsManager.InstallationDir,
+                "obit_annotation_tool"
+            );
             if (Directory.Exists(annotationToolPath))
             {
                 this.SendToLogAndOutputPane("Annotation Tool found in '" +
@@ -117,6 +144,24 @@ namespace obit_manager_gui.components
             else
             {
                 this.SendToLogAndOutputPane("Annotation Tool not installed yet.");
+
+                // Does the expected archive exist?
+                string annotationToolArchiveFileName;
+                if (Environment.Is64BitOperatingSystem)
+                {
+                    annotationToolArchiveFileName = Constants.AnnotationTool64bitArchiveFileName;
+                }
+                else
+                {
+                    annotationToolArchiveFileName = Constants.AnnotationTool32bitArchiveFileName;
+                }
+                if (! File.Exists(Path.Combine(
+                    settingsManager.InstallationDir,
+                    annotationToolArchiveFileName)))
+                {
+                    downloadAnnotationTool = true;
+                }
+
             }
 
             // Get the list of Datamover installations
@@ -126,7 +171,10 @@ namespace obit_manager_gui.components
                 Datamover datamover = settingsManager.GetDatamoverFromInstanceWithIndex(i);
 
                 // Does the folder exist?
-                string datamoverJSLPath = Path.Combine(settingsManager.InstallationDir, datamover.InstallationSubDir);
+                string datamoverJSLPath = Path.Combine(
+                    settingsManager.InstallationDir,
+                    datamover.InstallationSubDir
+                );
                 if (Directory.Exists(datamoverJSLPath))
                 {
                     this.SendToLogAndOutputPane("Datamover '" + datamover.ServiceName + "' found in '" +
@@ -134,16 +182,20 @@ namespace obit_manager_gui.components
                 }
                 else
                 {
-                    this.SendToLogAndOutputPane("Datamover '" + datamover.ServiceName + 
+                    this.SendToLogAndOutputPane("Datamover '" + datamover.ServiceName +
                         "' not installed yet.");
                 }
             }
 
             // Check for the existance of a Java runtime
-            string jrePath = Path.Combine(settingsManager.InstallationDir, "jre");
+            string jrePath = Path.Combine(
+                settingsManager.InstallationDir,
+                "jre"
+            );
             if (Directory.Exists(jrePath))
             {
-                this.SendToLogAndOutputPane("Java runtime found in '" + jrePath + "'.");
+                this.SendToLogAndOutputPane("Java runtime found in '" +
+                    jrePath + "'.");
             }
             else
             {
@@ -157,7 +209,7 @@ namespace obit_manager_gui.components
                 // Get the client
                 Client client = settingsManager.GetClientFromInstanceWithIndex(i);
 
-                // Check for existance of the 
+                // Check for existance of the
             }
 
             return true;
@@ -179,10 +231,10 @@ namespace obit_manager_gui.components
         /// <summary>
         /// Send text to Operations bar. If needed also to Log and OutputPane.
         /// </summary>
-        /// 
-        /// Operations are meant to have higher granularity than the rest of the 
+        ///
+        /// Operations are meant to have higher granularity than the rest of the
         /// notifications; therefore, other types of reports are optional here.
-        /// 
+        ///
         /// <param name="text">Text to be sent.</param>
         /// <param name="toAll">Set to true to send to Log and Output pane as well.</param>
         private void SendToOperations(string text, bool toAll = false)
@@ -195,7 +247,6 @@ namespace obit_manager_gui.components
             {
                 this.SendToLogAndOutputPane(text);
             }
-
         }
 
         /// <summary>

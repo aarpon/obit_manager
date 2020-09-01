@@ -2,6 +2,7 @@
 using System.IO;
 using NLog;
 using obit_manager_api.core;
+using obit_manager_config;
 using obit_manager_settings;
 
 namespace obit_manager_gui.fs

@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using obit_manager_api.core;
+using obit_manager_config;
 using obit_manager_gui.components;
 using obit_manager_gui.dialogs;
 using obit_manager_settings;
@@ -256,11 +257,11 @@ namespace obit_manager_gui
             var taskAT = WebUtils.DownloadAsync(annotationToolURL, annotationToolArchiveFileName);
             var taskDM = WebUtils.DownloadAsync(datamoverURL, datamoverArchiveFileName);
             var taskDMJSL = WebUtils.DownloadAsync(datamoverJslURL, datamoverJslArchiveFileName);
+            var taskJRE = WebUtils.DownloadAsync(jdkMD5URL, jdkMD5FileName);
 
-            await Task.WhenAll(taskJDK, taskAT, taskDM, taskDMJSL);
+            await Task.WhenAll(taskJDK, taskAT, taskDM, taskDMJSL, taskJRE);
 
             // Check the checksum of the JDK
-            await WebUtils.DownloadAsync(jdkMD5URL, jdkMD5FileName);
             string JdkMD5Checksum = FileSystem.CalculateMD5Checksum(jdkArchiveFileName);
 
             // Read  the checksum

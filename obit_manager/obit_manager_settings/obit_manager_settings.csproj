@@ -46,15 +46,9 @@
     <Compile Include="components\Server.cs" />
     <Compile Include="components\io\DatamoverSettingsParser.cs" />
     <Compile Include="HardwareInventory.cs" />
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
     <Compile Include="components\SettingAttribute.cs" />
     <Compile Include="SettingsManager.cs" />
     <Compile Include="components\Client.cs" />
-    <Compile Include="Constants.cs" />
     <Compile Include="components\Instance.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="components\io\ManagerSettingsParser.cs" />
@@ -62,10 +56,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="ini-parser">
@@ -76,6 +66,10 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\obit_manager_config\obit_manager_config.csproj">
+      <Project>{1E426DEE-8F0D-4258-AD79-2B4CDBFAAC5C}</Project>
+      <Name>obit_manager_config</Name>
+    </ProjectReference>
     <ProjectReference Include="..\obit_manager_api\obit_manager_api.csproj">
       <Project>{9cce9a17-179a-44fb-937a-e97d6a2a4529}</Project>
       <Name>obit_manager_api</Name>

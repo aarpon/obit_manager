@@ -96,6 +96,8 @@ namespace obit_manager_test
         [TestMethod]
         public void TestPathOperations()
         {
+            // Test FileSystem.ChangeBackwardToForwardSlashesInPath()
+
             string path = "C:\\\\Test\\\\file.txt";
             string processedPath = FileSystem.ChangeBackwardToForwardSlashesInPath(path);
             string expectedPath = "C:/Test/file.txt";
@@ -115,6 +117,39 @@ namespace obit_manager_test
             processedPath = FileSystem.ChangeBackwardToForwardSlashesInPath(path);
             expectedPath = "C:/Test/file.txt";
             Assert.AreEqual(processedPath, expectedPath);
+
+            // Test FileSystem.NormalizePath()
+
+            path = "C:\\\\Test\\\\folder";
+            processedPath = FileSystem.NormalizePath(path);
+            expectedPath = "C:\\Test\\folder";
+            Assert.AreEqual(processedPath, expectedPath);
+
+            path = "C:\\Test\\folder";
+            processedPath = FileSystem.NormalizePath(path);
+            expectedPath = "C:\\Test\\folder";
+            Assert.AreEqual(processedPath, expectedPath);
+
+            path = "C:\\Test\\\\folder\\\\";
+            processedPath = FileSystem.NormalizePath(path);
+            expectedPath = "C:\\Test\\folder";
+            Assert.AreEqual(processedPath, expectedPath);
+
+            path = "C:\\Test\\folder\\";
+            processedPath = FileSystem.NormalizePath(path);
+            expectedPath = "C:\\Test\\folder";
+            Assert.AreEqual(processedPath, expectedPath);
+
+            path = "C:/Test/folder/";
+            processedPath = FileSystem.NormalizePath(path);
+            expectedPath = "C:\\Test\\folder";
+            Assert.AreEqual(processedPath, expectedPath);
+
+            path = "C:/Test/folder";
+            processedPath = FileSystem.NormalizePath(path);
+            expectedPath = "C:\\Test\\folder";
+            Assert.AreEqual(processedPath, expectedPath);
+
         }
     }
 }

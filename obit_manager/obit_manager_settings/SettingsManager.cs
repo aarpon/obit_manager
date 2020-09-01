@@ -4,7 +4,7 @@ using obit_manager_settings.components.io;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using static obit_manager_settings.Constants;
+using static obit_manager_config.Constants;
 
 namespace obit_manager_settings
 {
